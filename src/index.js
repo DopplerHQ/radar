@@ -39,18 +39,14 @@ async function scanDirectory(path) {
     return Promise.reject(new Error(`Path must be a directory: ${path}`));
   }
 
-  const scanResults = {};
-  await _scanDirectory(path, scanResults)
-    .catch(console.error);
-
-  return scanResults;
+  return _scanDirectory(path);
 }
 
 /**
  * @param {String} path
  * @param {Array<Object>} results array containing all scan results
  */
-async function _scanDirectory(path, results) {
+async function _scanDirectory(path, results = {}) {
   const dirEntries = await filesystem.getDirectoryEntries(path)
     .catch((err) => {
       console.error(err);
@@ -105,6 +101,8 @@ async function _scanDirectory(path, results) {
       }
     }
   }
+
+  return results;
 }
 
 /**
