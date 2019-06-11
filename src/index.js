@@ -27,7 +27,7 @@ async function scanDirectory(path) {
   // TODO some security around relative paths
   const exists = await filesystem.isPathExists(path);
   if (!exists) {
-    return Promise.reject(new Error(`Path does not exist: ${path}`));
+    return Promise.reject(`Path does not exist: ${path}`);
   }
 
   const pathStats = await filesystem.getFileStats(path)
@@ -36,7 +36,7 @@ async function scanDirectory(path) {
       return null;
     })
   if ((pathStats === null) || !pathStats.isDirectory()) {
-    return Promise.reject(new Error(`Path must be a directory: ${path}`));
+    return Promise.reject(`Path must be a directory: ${path}`);
   }
 
   return _scanDirectory(path);
@@ -53,7 +53,7 @@ async function _scanDirectory(path, results = {}) {
       return null;
     })
   if (dirEntries === null) {
-    return Promise.reject(new Error(`Error reading path: ${path}`));
+    return Promise.reject(`Error reading path: ${path}`);
   }
 
   for (const entry of dirEntries) {
@@ -80,7 +80,7 @@ async function _scanDirectory(path, results = {}) {
           return null;
         });
       if (fileStats === null) {
-        return Promise.reject(new Error(`Error reading file: ${entryPath}`));
+        return Promise.reject(`Error reading file: ${entryPath}`);
       }
 
       const fileSize = fileStats.size;
