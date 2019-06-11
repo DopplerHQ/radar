@@ -1,6 +1,3 @@
-const fs = require('fs');
-const readline = require('readline');
-
 const filesystem = require('./filesystem');
 const filetypes = require('./filetypes.json');
 const { Key, File, ScannedFile } = require('./objects');
@@ -70,7 +67,7 @@ async function _scanDirectory(path, results = {}) {
       }
 
       const fullPath = file.fullPath();
-      const scannedFile = await _scanFile(file);
+      const scannedFile = await scanFileForKeys(file);
       if (scannedFile.hasKeys()) {
         results[fullPath] = scannedFile.toObject();
       }
@@ -83,48 +80,27 @@ async function _scanDirectory(path, results = {}) {
 /**
  * @param {File} file
  */
-async function _scanFile(file) {
-  return scanFileForKeys(file)
+async function scanFileForKeys(file, onRead) {
+  const scannedFile = new ScannedFile(file);
+  return filesystem.readFile(scannedFile, onLineRead)
     .catch(() => new ScannedFile(file));
 }
 
 /**
- * @param {File} file
+ *
+ * @param {ScannedFile} scannedFile
+ * @param {String} line
+ * @param {Number} lineNumber
  */
-async function scanFileForKeys(file) {
-  const rl = readline.createInterface({
-    input: fs.createReadStream(file.fullPath()),
-    crlfDelay: Infinity
-  });
-
-  return new Promise((resolve, reject) => {
-    try {
-      const scannedFile = new ScannedFile(file);
-      let lineNumber = 0;
-
-      rl.on('line', async (line) => {
-        ++lineNumber;
-        // copy the line number so it can be asynchronously incremented without messing up our local number
-        const currLineNumber = lineNumber;
-
+async function onLineRead(scannedFile, line, lineNumber) {
         const keys = await findKeys(line);
         if (keys.length === 0) {
           return;
         }
 
         for (const key of keys) {
-          scannedFile.addKey(new Key(key, currLineNumber));
-        }
-      });
-
-      rl.on('close', () => {
-        resolve(scannedFile);
-      })
+    scannedFile.addKey(new Key(key, lineNumber));
     }
-    catch(err) {
-      reject(err);
-    }
-  });
 }
 
 /**

@@ -1,4 +1,6 @@
 const fs = require('fs');
+const readline = require('readline');
+const { ScannedFile } = require('./objects');
 
 /**
  * @param {String} path
@@ -39,4 +41,36 @@ async function getDirectoryEntries(path) {
   })
 }
 
-module.exports = { pathExists, getFileStats, getDirectoryEntries }
+/**
+ *
+ * @param {ScannedFile} scannedFile file to read
+ * @param {Function} onLineRead function to call after a new line is read from the file
+ */
+async function readFile(scannedFile, onLineRead) {
+  const filePath = scannedFile.file().fullPath();
+  const rl = readline.createInterface({
+    input: fs.createReadStream(filePath),
+    crlfDelay: Infinity
+  });
+
+  return new Promise((resolve, reject) => {
+    try {
+      let lineNumber = 0;
+
+      rl.on('line', async (line) => {
+        ++lineNumber;
+        const currLineNumber = lineNumber;
+        onLineRead(scannedFile, line, currLineNumber);
+      });
+
+      rl.on('close', () => {
+        resolve(scannedFile);
+      })
+    }
+    catch(err) {
+      reject(err);
+    }
+  });
+}
+
+module.exports = { pathExists, getFileStats, getDirectoryEntries, readFile }
