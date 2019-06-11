@@ -12,6 +12,8 @@ const Config = {
   excludedDirectories: ['.git', 'node_modules', '.vscode'],
 };
 
+const oneMebibyte = 1024 * 1024;
+
 async function scanFile(path) {
   // TODO implement
 }
@@ -26,12 +28,8 @@ async function scanDirectory(path) {
     return Promise.reject(`Path does not exist: ${path}`);
   }
 
-  const pathStats = await filesystem.getFileStats(path)
-    .catch((err) => {
-      console.error(err);
-      return null;
-    })
-  if ((pathStats === null) || !pathStats.isDirectory()) {
+  const pathStats = await filesystem.getFileStats(path);
+  if (!pathStats.isDirectory()) {
     return Promise.reject(`Path must be a directory: ${path}`);
   }
 
@@ -43,14 +41,7 @@ async function scanDirectory(path) {
  * @param {Array<Object>} results array containing all scan results
  */
 async function _scanDirectory(path, results = {}) {
-  const dirEntries = await filesystem.getDirectoryEntries(path)
-    .catch((err) => {
-      console.error(err);
-      return null;
-    })
-  if (dirEntries === null) {
-    return Promise.reject(`Error reading path: ${path}`);
-  }
+  const dirEntries = await filesystem.getDirectoryEntries(path);
 
   for (const entry of dirEntries) {
     const entryPath = `${path}/${entry.name}`;
@@ -70,17 +61,9 @@ async function _scanDirectory(path, results = {}) {
         continue;
       }
 
-      const fileStats = await filesystem.getFileStats(entryPath)
-        .catch((err) => {
-          console.error(err);
-          return null;
-        });
-      if (fileStats === null) {
-        return Promise.reject(`Error reading file: ${entryPath}`);
-      }
-
+      const fileStats = await filesystem.getFileStats(entryPath);
       const fileSize = fileStats.size;
-      const fileSizeInMiB = (fileSize / (1024 * 1024));
+      const fileSizeInMiB = (fileSize / oneMebibyte);
       if (fileSizeInMiB > Config.maxFileSizeMiB) {
         continue;
       }
@@ -105,17 +88,8 @@ async function _scanDirectory(path, results = {}) {
  * @param {File} file
  */
 async function _scanFile(file) {
-  const scannedFile = await scanFileForKeys(file)
-    .catch((err) => {
-      console.error(new Error(`Error reading file: ${file.fullPath()}`));
-      return null;
-    });
-
-  if (scannedFile === null) {
-    return new ScannedFile(file);
-  }
-
-  return scannedFile;
+  return scanFileForKeys(file)
+    .catch(() => new ScannedFile(file));
 }
 
 /**
