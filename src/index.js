@@ -2,16 +2,12 @@ const fs = require('fs');
 const readline = require('readline');
 
 const filesystem = require('./filesystem');
+const filetypes = require('./filetypes.json');
 const { Key, File, ScannedFile } = require('./objects');
-
-const audioFileTypes = ['aif', 'cda', 'mid', 'mp3', 'mpa', 'ogg', 'wav', 'wma', 'wpl'];
-const videoFileTypes = ['3g2', '3gp', 'avi', 'flv', 'h264', 'm4v', 'mkv', 'mov', 'mp4', 'mpg', 'mpeg', 'rm', 'swf', 'vob', 'wmv'];
-const imageFileTypes = ['ai', 'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'ps', 'psd', 'svg', 'tif', 'tiff'];
-const compressedFileTypes = ['7z', 'arj', 'deb', 'pkg', 'rar', 'rpm', 'gz', 'z', 'zip'];
 
 const Config = {
   maxFileSizeMiB: 10,
-  excludedFileTypes: [...audioFileTypes, ...videoFileTypes, ...imageFileTypes, ...compressedFileTypes],
+  excludedFileTypes: [...filetypes.audio, ...filetypes.video, ...filetypes.image, ...filetypes.compressed],
   excludedFiles: ['package-lock.json'],
   excludedDirectories: ['.git', 'node_modules', '.vscode'],
 };
