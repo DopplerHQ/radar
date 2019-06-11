@@ -23,15 +23,11 @@ async function scanFile(path) {
  */
 async function scanDirectory(path) {
   // TODO some security around relative paths
-  const exists = await filesystem.isPathExists(path);
-  if (!exists) {
-    return Promise.reject(`Path does not exist: ${path}`);
-  }
+  await filesystem.pathExists(path)
+    .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
-  const pathStats = await filesystem.getFileStats(path);
-  if (!pathStats.isDirectory()) {
-    return Promise.reject(`Path must be a directory: ${path}`);
-  }
+  await filesystem.getFileStats(path)
+    .then(stats => (!stats.isDirectory() && Promise.reject(`Path must be a directory: ${path}`)))
 
   return _scanDirectory(path);
 }

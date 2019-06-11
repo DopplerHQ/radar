@@ -3,7 +3,7 @@ const fs = require('fs');
 /**
  * @param {String} path
  */
-async function isPathExists(path) {
+async function pathExists(path) {
   return new Promise((resolve) => {
     if (fs.existsSync(path))
       return resolve(true);
@@ -39,4 +39,4 @@ async function getDirectoryEntries(path) {
   })
 }
 
-module.exports = { isPathExists, getFileStats, getDirectoryEntries }
+module.exports = { pathExists, getFileStats, getDirectoryEntries }
