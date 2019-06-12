@@ -1,23 +1,36 @@
 const fs = require('fs');
 const path = require('path');
 
-const qualifiersPath = path.resolve(__dirname, 'qualifiers')
-const qualifiers = [];
-fs.readdirSync(qualifiersPath).forEach((file) => {
+// a-z A-Z 0-9 . @ + = - _ : / \
+const validCharactersRegex = (/[a-zA-Z0-9\.@+=-_:\/\\]/);
+
+const filtersPath = path.resolve(__dirname, 'filters')
+const filters = [];
+// NOTE this will execute synchronously on this file's initial load
+fs.readdirSync(filtersPath).forEach((file) => {
   if (file.endsWith('.js')) {
-    const qualifier = require(qualifiersPath + '/' + file);
-    qualifiers.push(qualifier);
+    const filter = require(filtersPath + '/' + file);
+    filters.push(filter);
   }
 });
 
-async function findKeys(text) {
+function isValidCharacter(char) {
+  return validCharactersRegex.test(char);
+}
+
+function preFilter(text) {
+  return text.split('').map(char => (isValidCharacter(char) ? char : ' ')).join('');
+}
+
+async function findKeys(text, ) {
+  const filteredText = preFilter(text);
   const keys = [];
-  for (const term of text.split(' ')) {
+  for (const term of filteredText.split(/ +/)) {
     let totalWeight = 0;
     let weightedScore = 0;
-    qualifiers.forEach((qualifier) => {
-      const { name, weight, negativeWeight } = qualifier;
-      const score = qualifier.matchScore(term);
+    filters.forEach((filter) => {
+      const { name, weight, negativeWeight } = filter;
+      const score = filter.checkMatch(term);
 
       if (score === 0) {
         totalWeight += negativeWeight;
