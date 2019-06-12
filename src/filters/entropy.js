@@ -26,4 +26,4 @@ function calculateEntropy(str) {
   }, 0);
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch };
+module.exports = { name, weight, negativeWeight, checkMatch, calculateEntropy };
