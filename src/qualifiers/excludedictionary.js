@@ -16,15 +16,16 @@ function checkMatch(term) {
 function splitIntoTerms(term) {
   let modifiedTerm = term;
 
-  // remove hyphens, underscores, quotes, at symbol, parentheses, brackets, braces, (semi) colons, commas, periods, question marks, exclamation points, and slashes
+  // remove - _ ' " @ ( ) [ ] < > { } ; : , . ? ! / \
   modifiedTerm = modifiedTerm.replace(/[-_'"@\(\)\[\]<>{};:,\.\?!\/\\]/g, ' ');
-  // remove numbers
+  // remove 0-9
   modifiedTerm = modifiedTerm.replace(/([0-9]+)/g, ' ');
 
   // separate camelCase terms
   modifiedTerm = modifiedTerm.replace(/([A-Z]+?)([A-Z][a-z])/g, '$1 $2')
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .toLowerCase();
+    .replace(/([a-z])([A-Z])/g, '$1 $2');
+
+  modifiedTerm = modifiedTerm.toLowerCase();
 
   // split into individual terms
   return modifiedTerm.trim().split(/ +/);
