@@ -105,8 +105,8 @@ async function scanFileForKeys(file, onRead) {
  * @param {String} line
  * @param {Number} lineNumber
  */
-async function onLineRead(scannedFile, line, lineNumber) {
-  const keys = await findKeys(line);
+function onLineRead(scannedFile, line, lineNumber) {
+  const keys = findKeys(line);
   if (keys.length === 0) {
     return;
   }
