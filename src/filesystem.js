@@ -29,10 +29,11 @@ async function getFileStats(path) {
 
 /**
  * @param {String} path
+ * @param {Boolean} withFileTypes true if fs.Dirent objects should be returned
  */
-async function getDirectoryEntries(path) {
+async function getDirectoryEntries(path, withFileTypes = false) {
   return new Promise((resolve, reject) => {
-    fs.readdir(path, { withFileTypes: true }, (err, files) => {
+    fs.readdir(path, { withFileTypes }, (err, files) => {
       if (err) {
         return reject(err);
       }

@@ -34,7 +34,7 @@ async function scanDirectory(path) {
  * @param {Array<Object>} results array containing all scan results
  */
 async function _scanDirectory(path, results = {}) {
-  const dirEntries = await filesystem.getDirectoryEntries(path);
+  const dirEntries = await filesystem.getDirectoryEntries(path, true);
 
   for (const entry of dirEntries) {
     const entryPath = `${path}/${entry.name}`;
