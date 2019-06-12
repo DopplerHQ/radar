@@ -2,7 +2,7 @@ const name = 'Length';
 const weight = 2;
 const negativeWeight = 1;
 
-function matchScore(term) {
+function checkMatch(term) {
   if (term.length >= 32) {
     return 1;
   }
@@ -18,4 +18,4 @@ function matchScore(term) {
   return 0;
 }
 
-module.exports = { name, weight, negativeWeight, matchScore };
+module.exports = { name, weight, negativeWeight, checkMatch };

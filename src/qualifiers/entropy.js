@@ -2,7 +2,7 @@ const name = 'Entropy';
 const weight = 5;
 const negativeWeight = 5;
 
-function matchScore(term) {
+function checkMatch(term) {
   const entropy = measureEntropy(term);
   // console.log(entropy);
   if (entropy >= 4.5) return 1;
@@ -30,4 +30,4 @@ function escapeRegex(text) {
   return text.replace(matchOperatorsRegex, '\\$&');
 }
 
-module.exports = { name, weight, negativeWeight, matchScore };
+module.exports = { name, weight, negativeWeight, checkMatch };

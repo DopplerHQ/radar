@@ -6,7 +6,7 @@ const negativeWeight = 100;
 
 const minimumMatchPercentage = 0.35;
 
-function matchScore(term) {
+function checkMatch(term) {
   const percentMatches = checkDictionary(term);
   // we want to exclude matches, so treat a match as a negative case
   return (percentMatches >= minimumMatchPercentage) ? 0 : 1;
@@ -47,4 +47,4 @@ function checkDictionary(term) {
   return percentMatches;
 }
 
-module.exports = { name, weight, negativeWeight, matchScore };
+module.exports = { name, weight, negativeWeight, checkMatch };

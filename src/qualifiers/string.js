@@ -2,7 +2,7 @@ const name = 'String';
 const weight = 1;
 const negativeWeight = 0;
 
-function matchScore(term) {
+function checkMatch(term) {
   const isString = ((term.startsWith('\'') && term.endsWith('\''))
     || (term.startsWith('"') && term.endsWith('"'))
     || (term.startsWith('`') && term.endsWith('`')));
@@ -10,4 +10,4 @@ function matchScore(term) {
   return isString ? 1 : 0;
 }
 
-module.exports = { name, weight, negativeWeight, matchScore };
+module.exports = { name, weight, negativeWeight, checkMatch };
