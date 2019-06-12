@@ -26,10 +26,4 @@ function calculateEntropy(str) {
   }, 0);
 }
 
-// from https://github.com/sindresorhus/escape-string-regexp/blob/master/index.js
-function escapeRegex(text) {
-  const matchOperatorsRegex = /[|\\{}()[\]^$+*?.-]/g;
-  return text.replace(matchOperatorsRegex, '\\$&');
-}
-
 module.exports = { name, weight, negativeWeight, checkMatch };
