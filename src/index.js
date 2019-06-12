@@ -5,12 +5,24 @@ const { findKeys } = require('./scanner');
 
 const Config = {
   maxFileSizeMiB: 10,
+  includedFileTypes: [],
+  includedFiles: [],
+  includedDirectories: [],
   excludedFileTypes: [...filetypes.audio, ...filetypes.video, ...filetypes.image, ...filetypes.compressed],
   excludedFiles: ['package-lock.json'],
   excludedDirectories: ['.git', 'node_modules', '.vscode'],
 };
 
 const oneMebibyte = 1024 * 1024;
+
+/**
+TODO:
+- support globs (folders and asterisks)
+- support git repos
+- support just scanning a file
+- test against an api leak list to check effectiveness and false positive rate
+- scan strings for high entropy words http://blog.dkbza.org/2007/05/scanning-data-for-entropy-anomalies.html
+*/
 
 async function scanFile(path) {
   // TODO implement
@@ -94,15 +106,15 @@ async function scanFileForKeys(file, onRead) {
  * @param {Number} lineNumber
  */
 async function onLineRead(scannedFile, line, lineNumber) {
-        const keys = await findKeys(line);
-        if (keys.length === 0) {
-          return;
-        }
+  const keys = await findKeys(line);
+  if (keys.length === 0) {
+    return;
+  }
 
-        for (const key of keys) {
+  for (const key of keys) {
     const { term, confidence } = key;
     scannedFile.addKey(new Key(term, lineNumber, confidence));
-    }
+  }
 }
 
 module.exports = { scanDirectory, scanFile }
