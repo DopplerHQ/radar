@@ -1,6 +1,7 @@
 const filesystem = require('./filesystem');
 const filetypes = require('./filetypes.json');
 const { Key, File, ScannedFile } = require('./objects');
+const { findKeys } = require('./scanner');
 
 const Config = {
   maxFileSizeMiB: 10,
@@ -99,83 +100,9 @@ async function onLineRead(scannedFile, line, lineNumber) {
         }
 
         for (const key of keys) {
-    scannedFile.addKey(new Key(key, lineNumber));
+    const { term, confidence } = key;
+    scannedFile.addKey(new Key(term, lineNumber, confidence));
     }
-}
-
-/**
- * @param {String} line
- */
-async function findKeys(line) {
-  const keys = [];
-  for (const word of line.split(' ')) {
-    if (!isValidCharacters(word)) {
-      continue;
-    }
-
-    let ruleMatches = 0;
-
-    if (word.length > 15) {
-      ++ruleMatches;
-    }
-
-    if ((word.startsWith('\'') && word.endsWith('\''))
-      || (word.startsWith('"') && word.endsWith('"'))
-      || (word.startsWith('`') && word.endsWith('`'))) {
-      ++ruleMatches;
-    }
-
-    if (word.includes('://')) {
-      ++ruleMatches;
-    }
-
-    if (containsLetters(word) && containsNumbers(word)) {
-      ++ruleMatches;
-    }
-
-    if (containsDelimeters(word)) {
-      ++ruleMatches;
-    }
-
-    // TODO explicitly check for (and include) email addresses?
-    // TODO check strings against a dictionary?
-    // TODO check word entropy
-
-    // TODO weight each of the above rules, rather than this simplistic algo
-    if (ruleMatches >= 2) {
-      keys.push(word);
-    }
-  }
-  return keys;
-}
-
-/**
- * Checks for alphanumerics and common symbols
- * @param {String} text
- */
-function isValidCharacters(text) {
-  for (let i = 0; i < text.length; ++i) {
-    const charCode = text[i].charCodeAt(0);
-    const isValid = (charCode >= 33) && (charCode <= 126);
-    if (!isValid) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function containsLetters(text) {
-  return text.match(/[a-zA-Z]/i);
-}
-
-function containsNumbers(text) {
-  return text.match(/[0-9]/i);
-}
-
-function containsDelimeters(text) {
-  // removed period and underscore due to prevalence in variable names
-  // return text.match(/(\.|-|_|\+|&|=)/i);
-  return text.match(/(-|\+|&|=)/i);
 }
 
 module.exports = { scanDirectory, scanFile }
