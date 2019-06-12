@@ -3,25 +3,27 @@ const weight = 5;
 const negativeWeight = 5;
 
 function checkMatch(term) {
-  const entropy = measureEntropy(term);
-  // console.log(entropy);
-  if (entropy >= 4.5) return 1;
+  const entropy = calculateEntropy(term);
+  if (entropy >= 5.5) return 1;
+  if (entropy >= 4.7) return .9;
   if (entropy >= 4) return .8;
-  if (entropy >= 3.75) return .6;
+  if (entropy >= 3.75) return .7;
   return 0;
 }
 
-// from https://gist.github.com/ppseprus/afab8500dec6394c401734cb6922d220
-function measureEntropy(str) {
-  return [...new Set(str)]
-    .map((char) => {
-      const regex = escapeRegex(char);
-      return str.match(new RegExp(regex, 'g')).length;
-    })
-    .reduce((sum, frequency) => {
-      const p = (frequency / str.length);
-      return sum + (p * Math.log2(1 / p));
-    }, 0);
+function calculateEntropy(str) {
+  const occurrences = {};
+  str.split('').forEach((char) => {
+    const count = (occurrences[char] || 0);
+    occurrences[char] = count + 1;
+  });
+
+  const strLength = str.length;
+  return Object.keys(occurrences).reduce((acc, char) => {
+    const count = occurrences[char];
+    const probability = (count / strLength)
+    return (acc + (probability * Math.log2(1 / probability)));
+  }, 0);
 }
 
 // from https://github.com/sindresorhus/escape-string-regexp/blob/master/index.js
