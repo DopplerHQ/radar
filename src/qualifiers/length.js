@@ -8,7 +8,7 @@ function checkMatch(term) {
   }
 
   if (term.length >= 24) {
-    return 5;
+    return .85;
   }
 
   if (term.length >= 15) {
