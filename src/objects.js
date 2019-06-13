@@ -38,10 +38,6 @@ class File {
     return this._name;
   }
 
-  path() {
-    return this._path;
-  }
-
   fullPath() {
     return `${this._path}/${this._name}`;
   }
