@@ -51,7 +51,6 @@ function calculateConfidence(filterScores) {
     const { score, weight, negativeWeight } = filterScore;
     if (score === 0) {
       totalWeight += negativeWeight;
-      weightedScore += (negativeWeight * score);
     }
     else {
       totalWeight += weight;
