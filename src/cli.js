@@ -1,4 +1,4 @@
-const { scanDirectory } = require('./index');
+const { scan } = require('./index');
 
 if (process.argv.length <= 2) {
   console.error("You must specify a directory");
@@ -17,7 +17,7 @@ User configurable:
 
  */
 
-const dirPath = process.argv[2];
-scanDirectory(dirPath)
+const path = process.argv[2];
+scan(path)
   .then(result => console.dir(result, { depth: 3 } ))
   .catch(console.error);

@@ -24,29 +24,30 @@ TODO:
 - scan strings for high entropy words http://blog.dkbza.org/2007/05/scanning-data-for-entropy-anomalies.html
 */
 
-async function scanFile(path) {
-  // TODO implement
-}
+async function scan(path) {
+  const stats = await filesystem.getFileStats(path);
 
-/**
- * @param {String} path
- */
-async function scanDirectory(path) {
-  // TODO some security around relative paths
   await filesystem.pathExists(path)
     .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
-  await filesystem.getFileStats(path)
-    .then(stats => (!stats.isDirectory() && Promise.reject(`Path must be a directory: ${path}`)))
+  if (stats.isDirectory()) {
+    return scanDirectory(path);
+  }
 
-  return _scanDirectory(path);
+  if (stats.isFile()) {
+    const name = path.substring(path.lastIndexOf('/') + 1);
+    const parentDirPath = path.substring(0, path.lastIndexOf('/'));
+    const results = await scanFile(name, parentDirPath);
+
+    return results ? results.toObject() : {};
+  }
 }
 
 /**
  * @param {String} path
  * @param {Array<Object>} results array containing all scan results
  */
-async function _scanDirectory(path, results = {}) {
+async function scanDirectory(path, results = {}) {
   const dirEntries = await filesystem.getDirectoryEntries(path, true);
 
   for (const entry of dirEntries) {
@@ -58,36 +59,41 @@ async function _scanDirectory(path, results = {}) {
         continue;
       }
 
-      await _scanDirectory(entryPath, results);
+      await scanDirectory(entryPath, results);
     }
 
     if (entry.isFile()) {
-      const isFileExcluded = Config.excludedFiles.includes(entry.name);
-      if (isFileExcluded) {
-        continue;
-      }
-
-      const fileStats = await filesystem.getFileStats(entryPath);
-      const fileSize = fileStats.size;
-      const fileSizeInMiB = (fileSize / oneMebibyte);
-      if (fileSizeInMiB > Config.maxFileSizeMiB) {
-        continue;
-      }
-
-      const file = new File(entry.name, path, fileSize);
-      if (Config.excludedFileTypes.includes(file.extension())) {
-        continue;
-      }
-
-      const fullPath = file.fullPath();
-      const scannedFile = await scanFileForKeys(file);
-      if (scannedFile.hasKeys()) {
-        results[fullPath] = scannedFile.toObject();
+      const scannedFile = await scanFile(entry.name, path)
+        .catch(() => null);
+      if (scannedFile && scannedFile.hasKeys()) {
+        results[entryPath] = scannedFile.toObject();
       }
     }
   }
 
   return results;
+}
+
+async function scanFile(name, path) {
+  const isFileExcluded = Config.excludedFiles.includes(name);
+  if (isFileExcluded) {
+    return Promise.reject();
+  }
+
+  const fullPath = `${path}/${name}`;
+  const fileStats = await filesystem.getFileStats(fullPath);
+  const fileSize = fileStats.size;
+  const fileSizeInMiB = (fileSize / oneMebibyte);
+  if (fileSizeInMiB > Config.maxFileSizeMiB) {
+    return Promise.reject();
+  }
+
+  const file = new File(name, path, fileSize);
+  if (Config.excludedFileTypes.includes(file.extension())) {
+    return Promise.reject();
+  }
+
+  return scanFileForKeys(file);
 }
 
 /**
@@ -117,4 +123,4 @@ function onLineRead(scannedFile, line, lineNumber) {
   }
 }
 
-module.exports = { scanDirectory, scanFile }
+module.exports = { scan }
