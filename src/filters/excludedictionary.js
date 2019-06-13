@@ -1,7 +1,7 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
 const name = 'Exclude dictionary words';
-const weight = 1;
+const weight = 0;
 const negativeWeight = 100;
 
 const minimumMatchPercentage = 0.35;
