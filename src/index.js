@@ -8,10 +8,11 @@ const Config = {
   includedFileTypes: [],
   includedFiles: [],
   includedDirectories: [],
-  excludedFileTypes: [...filetypes.audio, ...filetypes.video, ...filetypes.image, ...filetypes.compressed],
+  excludedFileTypes: [],
   excludedFiles: ['package-lock.json'],
   excludedDirectories: ['.git', 'node_modules', '.vscode'],
 };
+Object.keys(filetypes).forEach(filetype => Config.excludedFileTypes.push(...filetypes[filetype]));
 
 const oneMebibyte = 1024 * 1024;
 
