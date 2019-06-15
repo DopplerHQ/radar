@@ -1,6 +1,8 @@
 const Filesystem = require('./filesystem');
 const filetypes = require('./filetypes.json');
-const { Key, File, ScannedFile } = require('./objects');
+const File = require('./objects/file');
+const Key = require('./objects/key');
+const ScannedFile = require('./objects/scannedfile');
 const { findKeys } = require('./scanner');
 
 const Config = {
