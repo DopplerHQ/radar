@@ -20,9 +20,7 @@ const oneMebibyte = 1024 * 1024;
 TODO:
 - support globs (folders and asterisks)
 - support git repos
-- support just scanning a file
 - test against an api leak list to check effectiveness and false positive rate
-- scan strings for high entropy words http://blog.dkbza.org/2007/05/scanning-data-for-entropy-anomalies.html
 */
 
 async function scan(path) {
