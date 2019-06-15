@@ -1,6 +1,8 @@
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Length';
-const weight = 2;
-const negativeWeight = 1;
+const weight = FilterWeights.MEDIUM;
+const negativeWeight = FilterWeights.LOW;
 
 function checkMatch(term) {
   if (term.length >= 32) {

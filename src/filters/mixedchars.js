@@ -1,6 +1,8 @@
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Mixed alphanumeric characters';
-const weight = 2;
-const negativeWeight = 2;
+const weight = FilterWeights.MEDIUM;
+const negativeWeight = FilterWeights.MEDIUM;
 
 function checkMatch(term) {
   const containsLetters = term.match(/[a-zA-Z]/i);

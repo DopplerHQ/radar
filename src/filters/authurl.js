@@ -1,6 +1,8 @@
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Auth URL';
-const weight = 100;
-const negativeWeight = 0;
+const weight = FilterWeights.MAX;
+const negativeWeight = FilterWeights.NONE;
 
 function checkMatch(term) {
   return (term.includes('://') && term.includes('@')) ? 1 : 0;

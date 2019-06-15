@@ -1,6 +1,8 @@
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Exclude file paths';
-const weight = 1;
-const negativeWeight = 100;
+const weight = FilterWeights.LOW;
+const negativeWeight = FilterWeights.MAX;
 
 function checkMatch(term) {
   const hasPathNavigation = (term.includes('../') || term.includes('./'));

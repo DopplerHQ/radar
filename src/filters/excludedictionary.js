@@ -1,8 +1,10 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Exclude dictionary words';
-const weight = 0;
-const negativeWeight = 100;
+const weight = FilterWeights.NONE;
+const negativeWeight = FilterWeights.MAX;
 
 const minimumMatchPercentage = 0.35;
 

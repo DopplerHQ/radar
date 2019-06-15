@@ -1,6 +1,8 @@
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Entropy';
-const weight = 5;
-const negativeWeight = 5;
+const weight = FilterWeights.VERYHIGH;
+const negativeWeight = FilterWeights.VERYHIGH;
 
 function checkMatch(term) {
   const entropy = calculateEntropy(term);

@@ -1,6 +1,8 @@
+const FilterWeights = require('../objects/filterweights');
+
 const name = 'Email';
-const weight = 2;
-const negativeWeight = 0;
+const weight = FilterWeights.MEDIUM;
+const negativeWeight = FilterWeights.NONE;
 
 function checkMatch(term) {
   // the simplest email regex will suffice
