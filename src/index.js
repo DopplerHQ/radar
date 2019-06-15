@@ -1,4 +1,4 @@
-const filesystem = require('./filesystem');
+const Filesystem = require('./filesystem');
 const filetypes = require('./filetypes.json');
 const { Key, File, ScannedFile } = require('./objects');
 const { findKeys } = require('./scanner');
@@ -26,9 +26,9 @@ TODO:
 */
 
 async function scan(path) {
-  const stats = await filesystem.getFileStats(path);
+  const stats = await Filesystem.getFileStats(path);
 
-  await filesystem.pathExists(path)
+  await Filesystem.pathExists(path)
     .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
   if (stats.isDirectory()) {
@@ -49,7 +49,7 @@ async function scan(path) {
  * @param {Array<Object>} results array containing all scan results
  */
 async function scanDirectory(path, results = {}) {
-  const dirEntries = await filesystem.getDirectoryEntries(path, true);
+  const dirEntries = await Filesystem.getDirectoryEntries(path, true);
 
   for (const entry of dirEntries) {
     const entryPath = `${path}/${entry.name}`;
@@ -82,7 +82,7 @@ async function scanFile(name, path) {
   }
 
   const fullPath = `${path}/${name}`;
-  const fileStats = await filesystem.getFileStats(fullPath);
+  const fileStats = await Filesystem.getFileStats(fullPath);
   const fileSize = fileStats.size;
   const fileSizeInMiB = (fileSize / oneMebibyte);
   if (fileSizeInMiB > Config.maxFileSizeMiB) {
@@ -102,7 +102,7 @@ async function scanFile(name, path) {
  */
 async function scanFileForKeys(file, onRead) {
   const scannedFile = new ScannedFile(file);
-  return filesystem.readFile(scannedFile, onLineRead)
+  return Filesystem.readFile(scannedFile, onLineRead)
     .catch(() => new ScannedFile(file));
 }
 
