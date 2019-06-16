@@ -1,4 +1,4 @@
-const { scan } = require('./index');
+const { scan } = require('./radar');
 
 if (process.argv.length <= 2) {
   console.error("You must specify a directory");
