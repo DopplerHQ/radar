@@ -17,7 +17,11 @@ User configurable:
 
  */
 
-const path = process.argv[2];
-scan(path)
-  .then(result => console.dir(result, { depth: 3 } ))
-  .catch(console.error);
+async function run() {
+  const path = process.argv[2];
+  scan(path)
+    .then(result => console.dir(result, { depth: 3 } ))
+    .catch(console.error);
+}
+
+run();
