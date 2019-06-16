@@ -1,4 +1,4 @@
-const { scan } = require('./radar');
+const Radar = require('./radar');
 
 if (process.argv.length <= 2) {
   console.error("You must specify a directory");
@@ -19,7 +19,7 @@ User configurable:
 
 async function run() {
   const path = process.argv[2];
-  scan(path)
+  Radar.scan(path)
     .then(result => console.dir(result, { depth: 3 } ))
     .catch(console.error);
 }
