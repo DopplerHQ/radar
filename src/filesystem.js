@@ -1,5 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
+const temp = require('temp').track();
 
 const ScannedFile = require('./objects/scannedfile');
 
@@ -73,6 +74,19 @@ class Filesystem {
       catch(err) {
         reject(err);
       }
+    });
+  }
+
+  static async makeTempDirectory(name) {
+    return new Promise((resolve, reject) => {
+      temp.mkdir(name, (err, info) => {
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(info);
+        }
+      });
     });
   }
 }

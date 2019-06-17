@@ -2,11 +2,8 @@ const program = require('commander');
 
 const package = require('../package');
 const Radar = require('./radar');
-
-if (process.argv.length <= 2) {
-  console.error("You must specify a directory");
-  process.exit(1);
-}
+const Git = require('./git');
+const Filesystem = require('./filesystem');
 
 /**
 TODO:
@@ -24,9 +21,18 @@ async function run() {
   program
     .version(package.version)
     .option("-p, --path <path>", "Scan the specified path")
+    .option("-r, --repo <url>", "Scan the specied git repo url")
     .parse(process.argv);
 
-  const { path } = program;
+  let { path } = program;
+  const { repo } = program;
+
+  if (repo) {
+    const tempPath = await Filesystem.makeTempDirectory();
+    await Git.clone(repo, tempPath)
+    path = tempPath;
+  }
+
   if (!path) {
     return Promise.reject("You must specify a path");
   }
