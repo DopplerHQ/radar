@@ -1,3 +1,6 @@
+const program = require('commander');
+
+const package = require('../package');
 const Radar = require('./radar');
 
 if (process.argv.length <= 2) {
@@ -18,10 +21,19 @@ User configurable:
  */
 
 async function run() {
-  const path = process.argv[2];
+  program
+    .version(package.version)
+    .option("-p, --path <path>", "Scan the specified path")
+    .parse(process.argv);
+
+  const { path } = program;
+  if (!path) {
+    return Promise.reject("You must specify a path");
+  }
+
   Radar.scan(path)
-    .then(result => console.dir(result, { depth: 3 } ))
-    .catch(console.error);
+    .then(result => console.dir(result, { depth: 3 } ));
 }
 
-run();
+run()
+  .catch((err) => console.error(err));
