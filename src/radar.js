@@ -25,23 +25,6 @@ TODO:
 - test against an api leak list to check effectiveness and false positive rate
 */
 
-/**
- * @param {ScannedFile} scannedFile
- * @param {String} line
- * @param {Number} lineNumber
- */
-const onLineRead = (scannedFile, line, lineNumber) => {
-  const keys = Scanner.findKeys(line);
-  if (keys.length === 0) {
-    return;
-  }
-
-  for (const key of keys) {
-    const { term, confidence } = key;
-    scannedFile.addKey(new Key(term, lineNumber, confidence));
-  }
-};
-
 class Radar {
   static async scan(path) {
     const stats = await Filesystem.getFileStats(path);
@@ -118,10 +101,27 @@ class Radar {
   /**
    * @param {File} file
    */
-  static async _scanFileForKeys(file, onRead) {
+  static async _scanFileForKeys(file) {
     const scannedFile = new ScannedFile(file);
-    return Filesystem.readFile(scannedFile, onLineRead)
+    return Filesystem.readFile(scannedFile, Radar._onLineRead)
       .catch(() => new ScannedFile(file));
+  }
+
+  /**
+   * @param {ScannedFile} scannedFile
+   * @param {String} line
+   * @param {Number} lineNumber
+   */
+  static _onLineRead(scannedFile, line, lineNumber) {
+    const keys = Scanner.findKeys(line);
+    if (keys.length === 0) {
+      return;
+    }
+
+    for (const key of keys) {
+      const { term, confidence } = key;
+      scannedFile.addKey(new Key(term, lineNumber, confidence));
+    }
   }
 }
 
