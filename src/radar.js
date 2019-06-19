@@ -21,7 +21,6 @@ const oneMebibyte = 1024 * 1024;
 /**
 TODO:
 - support globs (folders and asterisks)
-- support git repos
 - test against an api leak list to check effectiveness and false positive rate
 */
 
