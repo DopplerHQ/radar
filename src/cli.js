@@ -22,14 +22,15 @@ async function run() {
     .version(package.version)
     .option("-p, --path <path>", "Scan the specified path")
     .option("-r, --repo <url>", "Scan the specied git repo url")
+    .option("-b, --branch <name>", "Scan the specied git branch")
     .parse(process.argv);
 
   let { path } = program;
-  const { repo } = program;
+  const { repo, branch } = program;
 
   if (repo) {
     const tempPath = await Filesystem.makeTempDirectory();
-    await Git.clone(repo, tempPath)
+    await Git.clone(repo, tempPath, branch);
     path = tempPath;
   }
 
