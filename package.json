@@ -2,7 +2,7 @@
   "name": "@dopplerhq/radar",
   "version": "1.0.0",
   "description": "Detect API keys, database urls, and other sensitive secrets in a directory",
-  "main": "index.js",
+  "main": "src/radar.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DopplerHQ/radar.git"
