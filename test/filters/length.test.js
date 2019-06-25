@@ -1,9 +1,9 @@
 const { checkMatch } = require('../../src/filters/length');
 
 test('lengths', () => {
-  expect(checkMatch("abcdefghijklmnopqrstuvwxyz012345")).toBe(1);
-  expect(checkMatch("abcdefghijklmnopqrstuvwx")).toBe(.85);
-  expect(checkMatch("abcdefghijklmno")).toBe(.7);
-  expect(checkMatch("abcdefghijklmn")).toBe(0);
-  expect(checkMatch("abc")).toBe(0);
+  expect(checkMatch("abcdefghijklmnopqrstuvwxyz012345")).toStrictEqual(1);
+  expect(checkMatch("abcdefghijklmnopqrstuvwx")).toStrictEqual(.85);
+  expect(checkMatch("abcdefghijklmno")).toStrictEqual(.7);
+  expect(checkMatch("abcdefghijklmn")).toStrictEqual(0);
+  expect(checkMatch("abc")).toStrictEqual(0);
 });
