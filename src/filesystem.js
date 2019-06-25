@@ -9,11 +9,7 @@ class Filesystem {
    * @param {String} path
    */
   static async pathExists(path) {
-    return new Promise((resolve) => {
-      if (fs.existsSync(path))
-        return resolve(true);
-      return resolve(false);
-    });
+    return Promise.resolve(fs.existsSync(path));
   }
 
   /**
