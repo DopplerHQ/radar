@@ -1,6 +1,7 @@
 const program = require('commander');
 
 const package = require('../package');
+const Config = require('./config');
 const Radar = require('./radar');
 const Git = require('./git');
 const Filesystem = require('./filesystem');
@@ -9,12 +10,8 @@ const Filesystem = require('./filesystem');
 TODO:
 
 User configurable:
-- max file size
-- exclude extensions
 - exclude files/directories
-- include extensions
 - include files/directories
-
  */
 
 async function run() {
@@ -23,6 +20,9 @@ async function run() {
     .option("-p, --path <path>", "Scan the specified path")
     .option("-r, --repo <url>", "Scan the specied git repo url")
     .option("-b, --branch <name>", "Scan the specied git branch")
+    .option("--max-file-size <MiB>", "Maximum size of files to scan")
+    .option("--include-file-exts <list>", "File extensions to include")
+    .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
     .parse(process.argv);
 
   let { path } = program;
@@ -35,11 +35,32 @@ async function run() {
   }
 
   if (!path) {
-    return Promise.reject("You must specify a path");
+    return Promise.reject("You must specify a path or repo");
   }
 
-  Radar.scan(path)
+  const config = getConfig(program);
+  const radar = new Radar(config);
+  radar.scan(path)
     .then(result => console.dir(result, { depth: 3 } ));
+}
+
+function getConfig(program) {
+  const { maxFileSize, includeFileExts, excludeFileExts } = program;
+  const config = new Config();
+
+  if (maxFileSize) {
+    config.setMaxFileSizeMiB(maxFileSize);
+  }
+
+  if (includeFileExts) {
+    config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
+  }
+
+  if (excludeFileExts) {
+    config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
+  }
+
+  return config;
 }
 
 run()

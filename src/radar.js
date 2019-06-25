@@ -4,17 +4,7 @@ const File = require('./objects/file');
 const Key = require('./objects/key');
 const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./scanner');
-
-const Config = {
-  maxFileSizeMiB: 10,
-  includedFileTypes: [],
-  includedFiles: [],
-  includedDirectories: [],
-  excludedFileTypes: [],
-  excludedFiles: ['package-lock.json'],
-  excludedDirectories: ['.git', 'node_modules', '.vscode'],
-};
-Object.keys(filetypes).forEach(filetype => Config.excludedFileTypes.push(...filetypes[filetype]));
+const Config = require('./config');
 
 const oneMebibyte = 1024 * 1024;
 
@@ -25,7 +15,12 @@ TODO:
 */
 
 class Radar {
-  static async scan(path) {
+  constructor(config = new Config()) {
+    Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
+    this._config = config;
+  }
+
+  async scan(path) {
     const stats = await Filesystem.getFileStats(path);
 
     await Filesystem.pathExists(path)
@@ -48,14 +43,14 @@ class Radar {
    * @param {String} path
    * @param {Array<Object>} results array containing all scan results
    */
-  static async _scanDirectory(path, results = {}) {
+  async _scanDirectory(path, results = {}) {
     const dirEntries = await Filesystem.getDirectoryEntries(path, true);
 
     for (const entry of dirEntries) {
       const entryPath = `${path}/${entry.name}`;
 
       if (entry.isDirectory()) {
-        const isDirectoryExcluded = Config.excludedDirectories.includes(entry.name);
+        const isDirectoryExcluded = this._config.getExcludedDirectories().includes(entry.name);
         if (isDirectoryExcluded) {
           continue;
         }
@@ -75,8 +70,8 @@ class Radar {
     return results;
   }
 
-  static async _scanFile(name, path) {
-    const isFileExcluded = Config.excludedFiles.includes(name);
+  async _scanFile(name, path) {
+    const isFileExcluded = this._config.getExcludedFiles().includes(name);
     if (isFileExcluded) {
       return Promise.reject();
     }
@@ -85,16 +80,19 @@ class Radar {
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
     const fileSizeInMiB = (fileSize / oneMebibyte);
-    if (fileSizeInMiB > Config.maxFileSizeMiB) {
+    if (fileSizeInMiB > this._config.getMaxFileSizeMiB()) {
       return Promise.reject();
     }
 
     const file = new File(name, path, fileSize);
-    if (Config.excludedFileTypes.includes(file.extension())) {
+    const fileExt = file.extension();
+    const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(fileExt);
+    const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(fileExt);
+    if (!isExtensionWhitelisted && isExtensionBlacklisted) {
       return Promise.reject();
     }
 
-    return this._scanFileForKeys(file);
+    return Radar._scanFileForKeys(file);
   }
 
   /**
