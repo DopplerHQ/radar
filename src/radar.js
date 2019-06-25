@@ -27,7 +27,8 @@ class Radar {
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
     if (stats.isDirectory()) {
-      return this._scanDirectory(path);
+      const scanResults = await this._scanDirectory(path);
+      return Radar._replaceAbsolutePaths(path, scanResults);
     }
 
     if (stats.isFile()) {
@@ -119,6 +120,19 @@ class Radar {
       const { term, confidence } = key;
       scannedFile.addKey(new Key(term, lineNumber, confidence));
     }
+  }
+
+  static _replaceAbsolutePaths(path, scanResults) {
+    const results = {};
+    const pathLength = path.length;
+    Object.keys(scanResults).forEach((key) => {
+      let relativePath = key.substring(pathLength);
+      if (relativePath.startsWith('/')) {
+        relativePath = relativePath.substring(1);
+      }
+      results[relativePath] = scanResults[key];
+    });
+    return results;
   }
 }
 
