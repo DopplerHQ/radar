@@ -2,10 +2,10 @@
 
 Radar is a tool for detecting and identifying API keys, database URLs, and other sensitive secrets stored in your codebase. It is language agnostic and helps prevent API token leakage and other security misconfigurations. Radar is an important part of an application's security pipeline and can be integrated into your CI/CD pipeline to detect secrets before they're merged upstream.
 
-## Why does it matter
+## Why it matters
 API token leakage is rampant. In a high profile study, North Carolina State University identified over 200,000 secrets across 100,000 public GitHub repositories. These secrets were sitting on the public internet and available to any adversary. With these secrets, anyone could have accessed confidential (and possibly even legally protected) data. Static secrets also tend to indicate the use of that same secret across all environments, breaking another security best practice. Security is hard™, but a few small steps can go a long way towards increasing your organization's security posture.
 
-## How does it work
+## How it works
 
 Radar uses filters to calculate the likelihood that a string is a stored secret. This includes things like the string's entropy, the inclusion of dictionary words, and more. A list of identified secrets is returned so that action may be taken.
 
