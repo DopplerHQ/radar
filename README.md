@@ -8,9 +8,9 @@ Radar is a tool for detecting and identifying API keys, database URLs, and other
 
 ## CLI usage
 
-Scan a git repo: `radar --repo [REPO_URL] <--branch [BRANCH]>`
+Scan a git repo: `radar --repo REPO_URL [--branch BRANCH]`
 
-Scan a local file/directory: `radar --path [PATH]`
+Scan a local file/directory: `radar --path PATH`
 
 You can see a full list of configuration options by running `radar --help`
 
