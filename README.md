@@ -2,6 +2,27 @@
 
 Radar is a tool for detecting and identifying API keys, database URLs, and other sensitive secrets stored in your codebase. It is language agnostic and helps prevent API token leakage and other security misconfigurations. Radar is an important part of an application's security pipeline and can be integrated into your CI/CD pipeline to detect secrets before they're merged upstream.
 
+## Installation
+
+`npm install -g @dopplerhq/radar`
+
+## CLI usage
+
+Scan a git repo: `radar --repo [REPO_URL] <--branch [BRANCH]>`
+
+Scan a local file/directory: `radar --path [PATH]`
+
+You can see a full list of configuration options by running `radar --help`
+
+### Library usage
+
+Scan a local file/directory:
+
+```
+const radar = require("@dopplerhq/radar");
+const results = new radar().scan(PATH);
+```
+
 ## Why it matters
 API token leakage is rampant. In a high profile study, North Carolina State University identified over 200,000 secrets across 100,000 public GitHub repositories. These secrets were sitting on the public internet and available to any adversary. With these secrets, anyone could have accessed confidential (and possibly even legally protected) data. Static secrets also tend to indicate the use of that same secret across all environments, breaking another security best practice. Security is hard™, but a few small steps can go a long way towards increasing your organization's security posture.
 
