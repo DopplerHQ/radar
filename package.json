@@ -10,6 +10,9 @@
   "scripts": {
     "test": "jest ./test/"
   },
+  "bin": {
+    "radar": "src/cli.js"
+  },
   "author": "Doppler",
   "license": "Apache-2.0",
   "bugs": {
