@@ -46,7 +46,7 @@ Options:
 
 Scan a local file/directory:
 
-```
+``` js
 const radar = require("@dopplerhq/radar");
 const results = new radar().scan(PATH);
 ```
