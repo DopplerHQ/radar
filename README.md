@@ -6,19 +6,28 @@ Note: Radar does not perform any network requests and the secrets analysis will 
 
 ## Installation
 
-`npm install -g @dopplerhq/radar`
+```
+npm install -g @dopplerhq/radar
+```
 
 ## Usage
 
 ### Command Line
 
-Scan a git repo: `radar --repo REPO_URL [--branch BRANCH]`
-
-Scan a local file/directory: `radar --path PATH`
-
-You can see a full list of configuration options by running `radar --help`
-
+Scan a git repo: 
 ```
+$ radar --repo REPO_URL [--branch BRANCH]
+```
+
+Scan a local file/directory: 
+```
+$ radar --path PATH
+```
+
+You can see a full list of configuration options by running 
+```
+$ radar --help
+
 Usage: radar [options]
 
 Options:
