@@ -37,6 +37,7 @@ function getConfig(program) {
 return Promise.resolve()
   .then(async () => {
     program
+      .name("radar")
       .version(package.version)
       .option("-p, --path <path>", "Scan the specified path")
       .option("-r, --repo <url>", "Scan the specied git repo url")
