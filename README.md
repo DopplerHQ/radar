@@ -1,8 +1,6 @@
 # Doppler Radar
 
-Radar is a token scanning tool that detects API keys, credentials, database urls, and other sensitive secrets in your codebase. It curbs fraudulent use and unauthorized access of your secrets that were accidentally committed.
-
-For security to be built into every application, Radar can integrate with your CI/CD pipeline to continuously monitor and halt leaks before they are merged upstream. Do you know how many secrets have already slipped into your repos? Radar can help you track them down. You wouldn't ride in a leaky boat; why would you ship a leaky app?
+Radar is a token scanning tool that detects API keys, credentials, database urls, and other sensitive secrets in your codebase. It curbs fraudulent use and unauthorized access of your secrets that were accidentally committed. For security to be built into every application, Radar can integrate with your CI/CD pipeline to continuously monitor and halt leaks before they are merged upstream. And do you know how many secrets have already slipped into your repos? Radar can help you track them down.
 
 Note: Radar does not perform any network requests and the secrets analysis will be performed entirely locally. This might seem obvious to you, but we want it to be especially explicit.
 
@@ -78,3 +76,5 @@ API token leakage is rampant. In a high profile study, North Carolina State Univ
 Radar uses filters to calculate the likelihood that a string is a stored secret. This includes things like the string's entropy, the inclusion of dictionary words, and more. A list of identified secrets is returned so that action may be taken.
 
 Radar's model is a bit different than other tools. These tools typically employ a set of regex patterns to identify tokens from common service providers. This is highly reliable for supported services, but has the obvious shortcomings of a) supporting a limited number of services and b) not supporting other types of static secrets. The filter approach that Radar employs casts a wider net, which can result in false positives. Radar has the explicit goal of minimizing these false positives to avoid generating useless noise. We tend to find that when a security tool is overly noisy, humans begin to ignore all of its output.
+
+You wouldn't ride in a leaky boat; why would you ship a leaky app?
