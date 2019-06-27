@@ -6,7 +6,9 @@ Radar is a tool for detecting and identifying API keys, database URLs, and other
 
 `npm install -g @dopplerhq/radar`
 
-## CLI usage
+## Usage
+
+### Command Line
 
 Scan a git repo: `radar --repo REPO_URL [--branch BRANCH]`
 
@@ -14,13 +16,54 @@ Scan a local file/directory: `radar --path PATH`
 
 You can see a full list of configuration options by running `radar --help`
 
-### Library usage
+```
+Usage: radar [options]
+
+Options:
+  -V, --version               output the version number
+  -p, --path <path>           Scan the specified path
+  -r, --repo <url>            Scan the specied git repo url
+  -b, --branch <name>         Scan the specied git branch
+  --max-file-size <MiB>       Maximum size of files to scan
+  --include-file-exts <list>  File extensions to include
+  --exclude-file-exts <list>  File extensions to exclude (e.g. "json, map, csv")
+  -h, --help                  output usage information
+```
+
+### Library
 
 Scan a local file/directory:
 
 ```
 const radar = require("@dopplerhq/radar");
 const results = new radar().scan(PATH);
+```
+
+## Sample output
+
+This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. If using the library directly, this same output will be returned as a JavaScript object by `scan()`.
+
+```json
+{
+  ".env": {
+    "metadata": {
+      "fileSize": 903,
+      "fileExtension": "env"
+    },
+    "keys": [
+      {
+        "key": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
+        "lineNumber": 4,
+        "score": 0.9
+      },
+      {
+        "key": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
+        "lineNumber": 11,
+        "score": 0.95
+      }
+    ]
+  }
+}
 ```
 
 ## Why it matters
