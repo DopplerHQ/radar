@@ -1,5 +1,6 @@
 const defaultConfig = {
   maxFileSizeMiB: 10,
+  minMatchScore: 0.7,
   includedFileExts: [],
   excludedFileExts: [],
   excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json'],
@@ -19,6 +20,14 @@ class Config {
 
   setMaxFileSizeMiB(maxFileSizeMiB) {
     this.data.maxFileSizeMiB = maxFileSizeMiB;
+  }
+
+  getMinMatchScore() {
+    return this.data.minMatchScore;
+  }
+
+  setMinMatchScore(minMatchScore) {
+    this.data.minMatchScore = minMatchScore;
   }
 
   getIncludedFileExts() {
