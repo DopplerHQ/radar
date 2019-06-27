@@ -22,8 +22,8 @@ Usage: radar [options]
 Options:
   -V, --version               output the version number
   -p, --path <path>           Scan the specified path
-  -r, --repo <url>            Scan the specied git repo url
-  -b, --branch <name>         Scan the specied git branch
+  -r, --repo <url>            Scan the specified git repo url
+  -b, --branch <name>         Scan the specified git branch
   --max-file-size <MiB>       Maximum size of files to scan
   --include-file-exts <list>  File extensions to include
   --exclude-file-exts <list>  File extensions to exclude (e.g. "json, map, csv")
