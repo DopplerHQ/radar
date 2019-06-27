@@ -16,11 +16,15 @@ User configurable:
 
 
 function getConfig(program) {
-  const { maxFileSize, includeFileExts, excludeFileExts } = program;
+  const { maxFileSize, minMatchScore, includeFileExts, excludeFileExts } = program;
   const config = new Config();
 
   if (maxFileSize) {
     config.setMaxFileSizeMiB(maxFileSize);
+  }
+
+  if (minMatchScore) {
+    config.setMinMatchScore(minMatchScore);
   }
 
   if (includeFileExts) {
@@ -42,6 +46,7 @@ return Promise.resolve()
       .option("-r, --repo <url>", "Scan the specied git repo url")
       .option("-b, --branch <name>", "Scan the specied git branch")
       .option("--max-file-size <MiB>", "Maximum size of files to scan")
+      .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
       .option("--include-file-exts <list>", "File extensions to include")
       .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
       .parse(process.argv);

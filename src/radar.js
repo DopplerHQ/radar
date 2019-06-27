@@ -18,6 +18,9 @@ class Radar {
   constructor(config = new Config()) {
     Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
     this._config = config;
+
+    // this function gets executed outside of this context, so explicitly bind to this context
+    this._onLineRead = this._onLineRead.bind(this);
   }
 
   async scan(path) {
@@ -93,15 +96,15 @@ class Radar {
       return Promise.reject();
     }
 
-    return Radar._scanFileForKeys(file);
+    return this._scanFileForKeys(file);
   }
 
   /**
    * @param {File} file
    */
-  static async _scanFileForKeys(file) {
+  async _scanFileForKeys(file) {
     const scannedFile = new ScannedFile(file);
-    return Filesystem.readFile(scannedFile, Radar._onLineRead)
+    return Filesystem.readFile(scannedFile, this._onLineRead)
       .catch(() => new ScannedFile(file));
   }
 
@@ -110,8 +113,8 @@ class Radar {
    * @param {String} line
    * @param {Number} lineNumber
    */
-  static _onLineRead(scannedFile, line, lineNumber) {
-    const keys = Scanner.findKeys(line);
+  _onLineRead(scannedFile, line, lineNumber) {
+    const keys = Scanner.findKeys(line, this._config.getMinMatchScore());
     if (keys.length === 0) {
       return;
     }

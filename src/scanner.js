@@ -3,7 +3,6 @@ const path = require('path');
 
 // a-z A-Z 0-9 . @ + = - _ : / \
 const validCharactersRegex = (/[a-zA-Z0-9\.@+=-_:\/\\]/);
-const minimumMatchConfidence = 0.7;
 
 const filtersPath = path.resolve(__dirname, 'filters')
 const Filters = [];
@@ -62,14 +61,14 @@ class Scanner {
     return (weightedScore / totalWeight);
   }
 
-  static findKeys(line) {
+  static findKeys(line, minScore) {
     const keys = [];
     const terms = this.preFilter(line).split(/ +/);
     terms.forEach((term) => {
       const filterScores = this.scoreTerm(term, Filters);
       const confidence = this.calculateConfidence(filterScores);
 
-      if (confidence < minimumMatchConfidence) {
+      if (confidence < minScore) {
         return;
       }
 
