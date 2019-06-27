@@ -1,6 +1,10 @@
 # Doppler Radar
 
-Radar is a tool for detecting and identifying API keys, database URLs, and other sensitive secrets stored in your codebase. It is language agnostic and helps prevent API token leakage and other security misconfigurations. Radar is an important part of an application's security pipeline and can be integrated into your CI/CD pipeline to detect secrets before they're merged upstream.
+Radar is a token scanning tool that detects API keys, credentials, database urls, and other sensitive secrets in your codebase. It curbs fraudulent use and unauthorized access of your secrets that were accidentally committed.
+
+For security to be built into every application, Radar can integrate with your CI/CD pipeline to continuously monitor and halt leaks before they are merged upstream. Do you know how many secrets have already slipped into your repos? Radar can help you track them down. You wouldn't ride in a leaky boat; why would you ship a leaky app?
+
+Note: Radar does not perform any network requests and the secrets analysis will be performed entirely locally. This might seem obvious to you, but we want it to be especially explicit.
 
 ## Installation
 
