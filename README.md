@@ -7,7 +7,7 @@ Note: Radar does not perform any network requests and the secrets analysis will 
 ## Installation
 
 ```
-npm install -g @dopplerhq/radar
+$ npm install -g @dopplerhq/radar
 ```
 
 ## Usage
