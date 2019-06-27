@@ -41,10 +41,11 @@ function getConfig(program) {
 return Promise.resolve()
   .then(async () => {
     program
+      .name("radar")
       .version(package.version)
       .option("-p, --path <path>", "Scan the specified path")
-      .option("-r, --repo <url>", "Scan the specied git repo url")
-      .option("-b, --branch <name>", "Scan the specied git branch")
+      .option("-r, --repo <url>", "Scan the specified git repo url")
+      .option("-b, --branch <name>", "Scan the specified git branch")
       .option("--max-file-size <MiB>", "Maximum size of files to scan")
       .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
       .option("--include-file-exts <list>", "File extensions to include")
