@@ -27,6 +27,7 @@ Options:
   -r, --repo <url>            Scan the specified git repo url
   -b, --branch <name>         Scan the specified git branch
   --max-file-size <MiB>       Maximum size of files to scan
+  --min-match-score <number>  Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7
   --include-file-exts <list>  File extensions to include
   --exclude-file-exts <list>  File extensions to exclude (e.g. "json, map, csv")
   -h, --help                  output usage information
