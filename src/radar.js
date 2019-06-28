@@ -55,9 +55,9 @@ class Radar {
 
       if (entry.isFile()) {
         const file = await this._getFileObject(path, entry.name);
-        await this._shouldScanFile(file)
-          .then(() => filesToScan.push(file))
-          .catch(() => {});
+        if (this._shouldScanFile(file)) {
+          filesToScan.push(file);
+        }
       }
     }
 
@@ -80,7 +80,7 @@ class Radar {
     return new File(name, path, fileSize);
   }
 
-  async _shouldScanFile(file) {
+  _shouldScanFile(file) {
     const name = file.name();
     const size = file.size();
     const fileExt = file.extension();
@@ -88,21 +88,21 @@ class Radar {
     const isFileIncluded = this._config.getIncludedFiles().includes(name);
     const isFileExcluded = this._config.getExcludedFiles().includes(name);
     if (!isFileIncluded && isFileExcluded) {
-      return Promise.reject();
+      return false;
     }
 
     const fileSizeInMiB = (size / oneMebibyte);
     if (fileSizeInMiB > this._config.getMaxFileSizeMiB()) {
-      return Promise.reject();
+      return false;
     }
 
     const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(fileExt);
     const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(fileExt);
     if (!isExtensionWhitelisted && isExtensionBlacklisted) {
-      return Promise.reject();
+      return false;
     }
 
-    return Promise.resolve();
+    return true;
   }
 
   /**
