@@ -85,9 +85,8 @@ class Radar {
     const size = file.size();
     const fileExt = file.extension();
 
-    const isFileIncluded = this._config.getIncludedFiles().includes(name);
     const isFileExcluded = this._config.getExcludedFiles().includes(name);
-    if (!isFileIncluded && isFileExcluded) {
+    if (isFileExcluded) {
       return false;
     }
 
