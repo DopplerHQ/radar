@@ -26,12 +26,19 @@ class Radar {
     await Filesystem.pathExists(path)
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
-    const filesToScan = stats.isDirectory()
-        ? await this._getDirectoryFiles(path)
-        : [await this._getFileObject(path)];
-
+    if (stats.isDirectory()) {
+      const filesToScan = await this._getDirectoryFiles(path);
     return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
       .then(results => Radar._getResultsMap(path, results.filter(result => result.hasKeys())));
+  }
+
+    if (stats.isFile()) {
+      const fileName = path.substring(path.lastIndexOf('/') + 1);
+      const filePath = path.substring(0, path.lastIndexOf('/'));
+      return this._getFileObject(filePath, fileName)
+        .then(this._scanFile)
+        .then(results => Radar._getResultsMap(filePath, [results]));
+    }
   }
 
   /**
@@ -64,16 +71,7 @@ class Radar {
     return filesToScan;
   }
 
-  /**
-   * @param {String} path file path, excluding file name. include the file name if not sending a name argument
-   * @param {String} name file name. will be extracted from path argument if not specified
-   */
-  async _getFileObject(path, name = "") {
-    if (name === "") {
-      name = path.substring(path.lastIndexOf('/') + 1);
-      path = path.substring(0, path.lastIndexOf('/'));
-    }
-
+  async _getFileObject(path, name) {
     const fullPath = `${path}/${name}`;
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
