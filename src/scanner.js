@@ -14,67 +14,71 @@ fs.readdirSync(filtersPath).forEach((file) => {
   }
 });
 
-function isValidCharacter(char) {
-  return validCharactersRegex.test(char);
-}
+class Scanner {
+  static isValidCharacter(char) {
+    return validCharactersRegex.test(char);
+  }
 
-function preFilter(text) {
-  return text.split('').map(char => (isValidCharacter(char) ? char : ' ')).join('');
-}
+  static preFilter(text) {
+    return text.split('').map(char => (Scanner.isValidCharacter(char) ? char : ' ')).join('');
+  }
 
-/**
- * Calculate a term's score against each each filter
- * @param {String} term
- * @param {Array<Filters} filters
- * @returns Array of objects representing each filter's score
- */
-function scoreTerm(term, filters) {
-  return filters.map((filter) => {
-    const { name, weight, negativeWeight } = filter;
-    const score = filter.checkMatch(term);
+  /**
+   * Calculate a term's score against each each filter
+   * @param {String} term
+   * @param {Array<Filters} filters
+   * @returns Array of objects representing each filter's score
+   */
+  static scoreTerm(term, filters) {
+    return filters.map((filter) => {
+      const { name, weight, negativeWeight } = filter;
+      const score = filter.checkMatch(term);
 
-    return {
-      name,
-      weight,
-      negativeWeight,
-      score,
-    };
-  });
-}
+      return {
+        name,
+        weight,
+        negativeWeight,
+        score,
+      };
+    });
+  }
 
-function calculateConfidence(filterScores) {
-  let totalWeight = 0;
-  let weightedScore = 0;
+  static calculateConfidence(filterScores) {
+    let totalWeight = 0;
+    let weightedScore = 0;
 
-  filterScores.forEach(((filterScore) => {
-    const { score, weight, negativeWeight } = filterScore;
-    if (score === 0) {
-      totalWeight += negativeWeight;
-    }
-    else {
-      totalWeight += weight;
-      weightedScore += (weight * score);
-    }
-  }))
+    filterScores.forEach(((filterScore) => {
+      const { score, weight, negativeWeight } = filterScore;
+      if (score === 0) {
+        totalWeight += negativeWeight;
+      }
+      else {
+        totalWeight += weight;
+        weightedScore += (weight * score);
+      }
+    }))
 
-  return (weightedScore / totalWeight);
-}
+    return (weightedScore / totalWeight);
+  }
 
-module.exports.findKeys = (line, minScore) => {
-  const terms = preFilter(line).split(/ +/);
-  return terms.map((term) => {
-    const filterScores = scoreTerm(term, Filters);
-    const confidence = calculateConfidence(filterScores);
+  static findKeys(line, minScore) {
+    const terms = Scanner.preFilter(line).split(/ +/);
+    return terms.map((term) => {
+      const filterScores = Scanner.scoreTerm(term, Filters);
+      const confidence = Scanner.calculateConfidence(filterScores);
 
-    if (confidence < minScore) {
-      return null;
-    }
+      if (confidence < minScore) {
+        return null;
+      }
 
-    return {
-      term,
-      filterScores,
-      confidence,
-    };
-  })
-    .filter(key => (key !== null));
-}
+      return {
+        term,
+        filterScores,
+        confidence,
+      };
+    })
+      .filter(key => (key !== null));
+  }
+};
+
+module.exports = Scanner;

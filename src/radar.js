@@ -5,7 +5,7 @@ const filetypes = require('./filetypes.json');
 const File = require('./objects/file');
 const Key = require('./objects/key');
 const ScannedFile = require('./objects/scannedfile');
-const { findKeys } = require('./scanner');
+const Scanner = require('./scanner');
 const Config = require('./config');
 
 const oneMebibyte = 1024 * 1024;
@@ -118,7 +118,7 @@ class Radar {
    * @param {Number} lineNumber
    */
   _onLineRead(scannedFile, line, lineNumber) {
-    const keys = findKeys(line, this._config.getMinMatchScore());
+    const keys = Scanner.findKeys(line, this._config.getMinMatchScore());
     if (keys.length === 0) {
       return;
     }
