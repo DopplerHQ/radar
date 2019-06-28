@@ -1,3 +1,5 @@
+const asyncPool = require("tiny-async-pool");
+
 const Filesystem = require('./filesystem');
 const filetypes = require('./filetypes.json');
 const File = require('./objects/file');
@@ -8,19 +10,14 @@ const Config = require('./config');
 
 const oneMebibyte = 1024 * 1024;
 
-/**
-TODO:
-- support globs (folders and asterisks)
-- test against an api leak list to check effectiveness and false positive rate
-*/
-
 class Radar {
   constructor(config = new Config()) {
     Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
     this._config = config;
 
-    // this function gets executed outside of this context, so explicitly bind to this context
+    // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
+    this._scanFile = this._scanFile.bind(this);
   }
 
   async scan(path) {
@@ -29,25 +26,19 @@ class Radar {
     await Filesystem.pathExists(path)
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
-    if (stats.isDirectory()) {
-      const scanResults = await this._scanDirectory(path);
-      return Radar._replaceAbsolutePaths(path, scanResults);
-    }
+    const filesToScan = stats.isDirectory()
+        ? await this._getDirectoryFiles(path)
+        : [await this._getFileObject(path)];
 
-    if (stats.isFile()) {
-      const name = path.substring(path.lastIndexOf('/') + 1);
-      const parentDirPath = path.substring(0, path.lastIndexOf('/'));
-      const results = await this._scanFile(name, parentDirPath);
-
-      return results ? results.toObject() : {};
-    }
+    return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
+      .then(results => Radar._getResultsMap(path, results.filter(result => result.hasKeys())));
   }
 
   /**
    * @param {String} path
-   * @param {Array<Object>} results array containing all scan results
+   * @param {Array<File>} filesToScan array of files to scan
    */
-  async _scanDirectory(path, results = {}) {
+  async _getDirectoryFiles(path, filesToScan = []) {
     const dirEntries = await Filesystem.getDirectoryEntries(path, true);
 
     for (const entry of dirEntries) {
@@ -59,50 +50,65 @@ class Radar {
           continue;
         }
 
-        await this._scanDirectory(entryPath, results);
+        await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
       if (entry.isFile()) {
-        const scannedFile = await this._scanFile(entry.name, path)
-          .catch(() => null);
-        if (scannedFile && scannedFile.hasKeys()) {
-          results[entryPath] = scannedFile.toObject();
-        }
+        const file = await this._getFileObject(path, entry.name);
+        await this._shouldScanFile(file)
+          .then(() => filesToScan.push(file))
+          .catch(() => {});
       }
     }
 
-    return results;
+    return filesToScan;
   }
 
-  async _scanFile(name, path) {
-    const isFileExcluded = this._config.getExcludedFiles().includes(name);
-    if (isFileExcluded) {
-      return Promise.reject();
+  /**
+   * @param {String} path file path, excluding file name. include the file name if not sending a name argument
+   * @param {String} name file name. will be extracted from path argument if not specified
+   */
+  async _getFileObject(path, name = "") {
+    if (name === "") {
+      name = path.substring(path.lastIndexOf('/') + 1);
+      path = path.substring(0, path.lastIndexOf('/'));
     }
 
     const fullPath = `${path}/${name}`;
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
-    const fileSizeInMiB = (fileSize / oneMebibyte);
+    return new File(name, path, fileSize);
+  }
+
+  async _shouldScanFile(file) {
+    const name = file.name();
+    const size = file.size();
+    const fileExt = file.extension();
+
+    const isFileIncluded = this._config.getIncludedFiles().includes(name);
+    const isFileExcluded = this._config.getExcludedFiles().includes(name);
+    if (!isFileIncluded && isFileExcluded) {
+      return Promise.reject();
+    }
+
+    const fileSizeInMiB = (size / oneMebibyte);
     if (fileSizeInMiB > this._config.getMaxFileSizeMiB()) {
       return Promise.reject();
     }
 
-    const file = new File(name, path, fileSize);
-    const fileExt = file.extension();
     const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(fileExt);
     const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(fileExt);
     if (!isExtensionWhitelisted && isExtensionBlacklisted) {
       return Promise.reject();
     }
 
-    return this._scanFileForKeys(file);
+    return Promise.resolve();
   }
 
   /**
    * @param {File} file
    */
-  async _scanFileForKeys(file) {
+  async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
     return Filesystem.readFile(scannedFile, this._onLineRead)
       .catch(() => new ScannedFile(file));
@@ -125,16 +131,19 @@ class Radar {
     }
   }
 
-  static _replaceAbsolutePaths(path, scanResults) {
+  static _getResultsMap(path, scanResults) {
     const results = {};
     const pathLength = path.length;
-    Object.keys(scanResults).forEach((key) => {
-      let relativePath = key.substring(pathLength);
+
+    scanResults.forEach((scannedFile) => {
+      const fullPath = scannedFile.file().fullPath();
+      let relativePath = fullPath.substring(pathLength);
       if (relativePath.startsWith('/')) {
         relativePath = relativePath.substring(1);
       }
-      results[relativePath] = scanResults[key];
+      results[relativePath] = scannedFile.toObject();
     });
+
     return results;
   }
 }

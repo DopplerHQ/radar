@@ -1,6 +1,7 @@
 const defaultConfig = {
   maxFileSizeMiB: 10,
   minMatchScore: 0.7,
+  maxConcurrentFileReads: 10,
   includedFileExts: [],
   excludedFileExts: [],
   excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json'],
@@ -28,6 +29,14 @@ class Config {
 
   setMinMatchScore(minMatchScore) {
     this.data.minMatchScore = minMatchScore;
+  }
+
+  getMaxConcurrentFileReads() {
+    return this.data.maxConcurrentFileReads;
+  }
+
+  setMaxConcurrentFileReads(maxConcurrentFileReads) {
+    this.data.maxConcurrentFileReads = maxConcurrentFileReads;
   }
 
   getIncludedFileExts() {
