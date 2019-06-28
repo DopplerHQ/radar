@@ -61,21 +61,20 @@ function calculateConfidence(filterScores) {
 }
 
 module.exports.findKeys = (line, minScore) => {
-  const keys = [];
   const terms = preFilter(line).split(/ +/);
-  terms.forEach((term) => {
+  return terms.map((term) => {
     const filterScores = scoreTerm(term, Filters);
     const confidence = calculateConfidence(filterScores);
 
     if (confidence < minScore) {
-      return;
+      return null;
     }
 
-    keys.push({
+    return {
       term,
       filterScores,
       confidence,
-    });
-  });
-  return keys;
+    };
+  })
+    .filter(key => (key !== null));
 }
