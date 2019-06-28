@@ -9,6 +9,9 @@ test('extension', () => {
 
   const file3 = new File("master.tar.gz");
   expect(file3.extension()).toStrictEqual("gz");
+
+  const file4 = new File("noextension");
+  expect(file4.extension()).toStrictEqual("");
 });
 
 test('full path', () => {
