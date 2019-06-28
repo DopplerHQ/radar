@@ -107,8 +107,9 @@ class Radar {
    */
   async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
-    return Filesystem.readFile(scannedFile, this._onLineRead)
-      .catch(() => new ScannedFile(file));
+    await Filesystem.readFile(scannedFile, this._onLineRead)
+      .catch(() => {});
+    return scannedFile;
   }
 
   /**
