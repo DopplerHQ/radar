@@ -131,18 +131,21 @@ class Radar {
 
   static _getResultsMap(path, scanResults) {
     const results = {};
-    const pathLength = path.length;
-
     scanResults.forEach((scannedFile) => {
-      const fullPath = scannedFile.file().fullPath();
-      let relativePath = fullPath.substring(pathLength);
-      if (relativePath.startsWith('/')) {
-        relativePath = relativePath.substring(1);
-      }
+      const relativePath = Radar._getRelativePath(path, scannedFile.file().fullPath());
       results[relativePath] = scannedFile.toObject();
     });
-
     return results;
+  }
+
+  /**
+   *
+   * @param {String} basePath file path without the file name
+   * @param {String} fullPath file path with the file name
+   */
+  static _getRelativePath(basePath, fullPath) {
+    const relativePath = fullPath.substring(basePath.length);
+    return relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
   }
 }
 
