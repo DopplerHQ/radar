@@ -5,7 +5,7 @@ const filetypes = require('./filetypes.json');
 const File = require('./objects/file');
 const Key = require('./objects/key');
 const ScannedFile = require('./objects/scannedfile');
-const { findKeys } = require('./scanner');
+const Scanner = require('./scanner');
 const Config = require('./config');
 
 const oneMebibyte = 1024 * 1024;
@@ -118,7 +118,7 @@ class Radar {
    * @param {Number} lineNumber
    */
   _onLineRead(scannedFile, line, lineNumber) {
-    const keys = findKeys(line, this._config.getMinMatchScore());
+    const keys = Scanner.findKeys(line, this._config.getMinMatchScore());
     if (keys.length === 0) {
       return;
     }
@@ -131,18 +131,21 @@ class Radar {
 
   static _getResultsMap(path, scanResults) {
     const results = {};
-    const pathLength = path.length;
-
     scanResults.forEach((scannedFile) => {
-      const fullPath = scannedFile.file().fullPath();
-      let relativePath = fullPath.substring(pathLength);
-      if (relativePath.startsWith('/')) {
-        relativePath = relativePath.substring(1);
-      }
+      const relativePath = Radar._getRelativePath(path, scannedFile.file().fullPath());
       results[relativePath] = scannedFile.toObject();
     });
-
     return results;
+  }
+
+  /**
+   *
+   * @param {String} basePath file path without the file name
+   * @param {String} fullPath file path with the file name
+   */
+  static _getRelativePath(basePath, fullPath) {
+    const relativePath = fullPath.substring(basePath.length);
+    return relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
   }
 }
 
