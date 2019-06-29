@@ -18,8 +18,8 @@ test('toObject- no keys', () => {
 test('toObject- with keys', () => {
   const file = new File("test.txt", "/root", 123);
   const scannedFile = new ScannedFile(file);
-  scannedFile.addKey(new Key("thisisasecret", 13, .8));
-  scannedFile.addKey(new Key("anothersecret", 21, .95));
+  scannedFile.addKey(new Key("thisisasecret", "text thisisasecret more text", 13, .8));
+  scannedFile.addKey(new Key("anothersecret", "hi anothersecret", 21, .95));
 
   expect(scannedFile.toObject()).toStrictEqual({
     metadata: {
@@ -29,11 +29,13 @@ test('toObject- with keys', () => {
     keys: [
       {
         key: "thisisasecret",
+        line: "text thisisasecret more text",
         lineNumber: 13,
         score: .8,
       },
       {
         key: "anothersecret",
+        line: "hi anothersecret",
         lineNumber: 21,
         score: .95,
       },

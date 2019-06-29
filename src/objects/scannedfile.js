@@ -37,7 +37,8 @@ class ScannedFile {
     };
     object.keys = this._keys.map(key => ({
       key: key.key(),
-      lineNumber: key.line(),
+      line: key.line(),
+      lineNumber: key.lineNumber(),
       score: key.confidence(),
     }));
     return object;

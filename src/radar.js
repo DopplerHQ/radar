@@ -125,7 +125,7 @@ class Radar {
 
     for (const key of keys) {
       const { term, confidence } = key;
-      scannedFile.addKey(new Key(term, lineNumber, confidence));
+      scannedFile.addKey(new Key(term, line, lineNumber, confidence));
     }
   }
 
