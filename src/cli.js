@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const progress = require('cli-progress');
 
 const packageFile = require('../package');
 const Config = require('./config');
@@ -15,6 +16,19 @@ User configurable:
 - exclude files/directories
 - include files/directories
  */
+
+let progressBar;
+function initProgressBar() {
+  progressBar = new progress.Bar({ stopOnComplete: true, clearOnComplete: true }, progress.Presets.shades_classic);
+}
+
+function onFilesToScan(num) {
+  progressBar.start(num, 0);
+}
+
+function onFileScanned() {
+  progressBar.increment()
+}
 
 class CLI {
   constructor() {
@@ -51,7 +65,8 @@ class CLI {
   }
 
   async scan(path) {
-    const radar = new Radar(this.config);
+    initProgressBar();
+    const radar = new Radar(this.config, onFilesToScan, onFileScanned);
     return radar.scan(path);
   }
 
