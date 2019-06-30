@@ -4,7 +4,7 @@ const defaultConfig = {
   maxConcurrentFileReads: 10,
   includedFileExts: [],
   excludedFileExts: [],
-  excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json'],
+  excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock'],
   excludedDirectories: ['.git', 'node_modules', '.vscode'],
 };
 Object.freeze(defaultConfig);
