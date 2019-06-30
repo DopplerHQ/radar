@@ -1,7 +1,9 @@
 const Radar = require('../src/radar');
 const Config = require('../src/config');
+const File = require('../src/objects/file');
+const ScannedFile = require('../src/objects/scannedfile');
 
-test("absolute path replacement - no trailing slash", () => {
+test("relative path - no trailing slash", () => {
   const path = "/root/dir";
 
   expect(Radar._getRelativePath(path, `${path}/test.txt`)).toStrictEqual("test.txt");
@@ -9,7 +11,7 @@ test("absolute path replacement - no trailing slash", () => {
   expect(Radar._getRelativePath(path, `${path}/dir3/dir4/test.txt`)).toStrictEqual("dir3/dir4/test.txt");
 });
 
-test("absolute path replacement - trailing slash(es)", () => {
+test("relative path - trailing slash(es)", () => {
   const path = "/root/dir////";
 
   expect(Radar._getRelativePath(path, `${path}/test.txt`)).toStrictEqual("test.txt");
@@ -56,4 +58,30 @@ test("file size exclusion", () => {
   expect(radar2._isFileTooLarge(10485759)).toBe(false);
   expect(radar2._isFileTooLarge(10485760)).toBe(false);
   expect(radar2._isFileTooLarge(10485761)).toBe(true);
+});
+
+test("results map", () => {
+  const path = "/root"
+  const scannedFile1 = new ScannedFile(new File("test.txt", path, 123));
+  const scannedFile2 = new ScannedFile(new File("anothertest.ext", path, 456));
+  const scanResults = [scannedFile1, scannedFile2];
+
+  expect(Radar._getResultsMap(path, scanResults)).toStrictEqual(
+    {
+      "test.txt": {
+        metadata: {
+          fileSize: 123,
+          fileExtension: "txt",
+        },
+        keys: [],
+      },
+      "anothertest.ext": {
+        metadata: {
+          fileSize: 456,
+          fileExtension: "ext",
+        },
+        keys: [],
+      },
+    }
+  );
 });
