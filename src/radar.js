@@ -8,7 +8,7 @@ const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./scanner');
 const Config = require('./config');
 
-const oneMebibyte = 1024 * 1024;
+const OneMebibyte = 1024 * 1024;
 
 class Radar {
   constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
@@ -85,25 +85,37 @@ class Radar {
   _shouldScanFile(file) {
     const name = file.name();
     const size = file.size();
-    const fileExt = file.extension();
+    const ext = file.extension();
 
-    const isFileExcluded = this._config.getExcludedFiles().includes(name);
-    if (isFileExcluded) {
+    if (this._isFileExcluded(name, ext)) {
       return false;
     }
 
-    const fileSizeInMiB = (size / oneMebibyte);
-    if (fileSizeInMiB > this._config.getMaxFileSizeMiB()) {
-      return false;
-    }
-
-    const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(fileExt);
-    const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(fileExt);
-    if (!isExtensionWhitelisted && isExtensionBlacklisted) {
+    if (this._isFileTooLarge(size)) {
       return false;
     }
 
     return true;
+  }
+
+  _isFileExcluded(name, ext) {
+    const isNameBlacklisted = this._config.getExcludedFiles().includes(name);
+    if (isNameBlacklisted) {
+      return true;
+    }
+
+    const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(ext);
+    const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
+    if (!isExtensionWhitelisted && isExtensionBlacklisted) {
+      return true;
+    }
+
+    return false;
+  }
+
+  _isFileTooLarge(bytes) {
+    const sizeMiB = (bytes / OneMebibyte);
+    return sizeMiB > this._config.getMaxFileSizeMiB()
   }
 
   /**

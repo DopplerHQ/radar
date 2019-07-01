@@ -26,7 +26,7 @@ class Scanner {
   /**
    * Calculate a term's score against each each filter
    * @param {String} term
-   * @param {Array<Filters} filters
+   * @param {Array<Filter>} filters
    * @returns Array of objects representing each filter's score
    */
   static scoreTerm(term, filters) {

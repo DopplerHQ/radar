@@ -43,6 +43,28 @@ test('toObject- with keys', () => {
   });
 });
 
+test('toObject- max length', () => {
+  const file = new File("test.txt", "/root", 123);
+  const scannedFile = new ScannedFile(file);
+  const stringLongerThan100Chars = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
+  scannedFile.addKey(new Key("thisisasecret", stringLongerThan100Chars, 13, .8));
+
+  expect(scannedFile.toObject()).toStrictEqual({
+    metadata: {
+      fileSize: 123,
+      fileExtension: "txt",
+    },
+    keys: [
+      {
+        key: "thisisasecret",
+        line: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv",
+        lineNumber: 13,
+        score: .8,
+      },
+    ],
+  });
+});
+
 test('hasKeys', () => {
   const file = new File("test.txt", "/root", 123);
 

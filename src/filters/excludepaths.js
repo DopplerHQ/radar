@@ -1,7 +1,7 @@
 const FilterWeights = require('../objects/filterweights');
 
 const name = 'Exclude file paths';
-const weight = FilterWeights.LOW;
+const weight = FilterWeights.NONE;
 const negativeWeight = FilterWeights.MAX;
 
 function checkMatch(term) {

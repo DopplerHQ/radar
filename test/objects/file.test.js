@@ -5,13 +5,16 @@ test('extension', () => {
   expect(file1.extension()).toStrictEqual("txt");
 
   const file2 = new File("index.min.js");
-  expect(file2.extension()).toStrictEqual("js");
+  expect(file2.extension()).toStrictEqual("min.js");
 
-  const file3 = new File("master.tar.gz");
-  expect(file3.extension()).toStrictEqual("gz");
+  const file3 = new File("indexmin.js");
+  expect(file3.extension()).toStrictEqual("js");
 
-  const file4 = new File("noextension");
-  expect(file4.extension()).toStrictEqual("");
+  const file4 = new File("master.tar.gz");
+  expect(file4.extension()).toStrictEqual("tar.gz");
+
+  const file5 = new File("noextension");
+  expect(file5.extension()).toStrictEqual("");
 });
 
 test('full path', () => {

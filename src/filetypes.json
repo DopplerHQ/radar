@@ -2,8 +2,8 @@
   "audio": ["aif", "cda", "mid", "mp3", "mpa", "ogg", "wav", "wma", "wpl"],
   "video": ["3g2", "3gp", "avi", "flv", "h264", "m4v", "mkv", "mov", "mp4", "mpg", "mpeg", "rm", "swf", "vob", "wmv"],
   "image": ["ai", "bmp", "gif", "ico", "jpeg", "jpg", "png", "ps", "psd", "svg", "tif", "tiff"],
-  "compressed": ["7z", "arj", "deb", "pkg", "rar", "rpm", "gz", "z", "zip"],
+  "compressed": ["7z", "arj", "deb", "pkg", "rar", "rpm", "gz", "z", "zip", "tar.gz", "tar", "bz2"],
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
-  "other": ["log", "sql", "map", "xml"]
+  "other": ["log", "sql", "map", "xml", "min.js", "min.css"]
 }

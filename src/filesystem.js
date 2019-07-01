@@ -70,7 +70,8 @@ class Filesystem {
       catch(err) {
         reject(err);
       }
-    });
+    })
+      .finally(() => rl.close());
   }
 
   static async makeTempDirectory(name) {
