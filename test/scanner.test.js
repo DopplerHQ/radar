@@ -69,3 +69,35 @@ test('confidence calculation- mixed weights', () => {
   const confidence = ((FilterWeights.HIGH * .9) + (FilterWeights.MEDIUM * 0) + (FilterWeights.LOW * .5)) / (FilterWeights.HIGH + FilterWeights.MEDIUM + FilterWeights.LOW);
   expect(Scanner.calculateConfidence(scores)).toStrictEqual(confidence);
 });
+
+test('score term', () => {
+  const filters = [
+    {
+      name: "test",
+      weight: 1,
+      negativeWeight: 2,
+      checkMatch: () => 1,
+    },
+    {
+      name: "another test",
+      weight: 3,
+      negativeWeight: 4,
+      checkMatch: () => 0,
+    },
+  ];
+
+  expect(Scanner.scoreTerm("", filters)).toStrictEqual([
+    {
+      name: "test",
+      weight: 1,
+      negativeWeight: 2,
+      score: 1,
+    },
+    {
+      name: "another test",
+      weight: 3,
+      negativeWeight: 4,
+      score: 0,
+    },
+  ]);
+});
