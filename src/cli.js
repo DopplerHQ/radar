@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const progress = require('cli-progress');
 
-const package = require('../package');
+const packageFile = require('../package');
 const Config = require('./config');
 const Radar = require('./radar');
 const Git = require('./git');
@@ -16,35 +17,28 @@ User configurable:
 - include files/directories
  */
 
-
-function getConfig(program) {
-  const { maxFileSize, minMatchScore, includeFileExts, excludeFileExts } = program;
-  const config = new Config();
-
-  if (maxFileSize) {
-    config.setMaxFileSizeMiB(maxFileSize);
-  }
-
-  if (minMatchScore) {
-    config.setMinMatchScore(minMatchScore);
-  }
-
-  if (includeFileExts) {
-    config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
-  }
-
-  if (excludeFileExts) {
-    config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
-  }
-
-  return config;
+let progressBar;
+function initProgressBar() {
+  progressBar = new progress.Bar({ stopOnComplete: true, clearOnComplete: true }, progress.Presets.shades_classic);
 }
 
-return Promise.resolve()
-  .then(async () => {
+function onFilesToScan(num) {
+  progressBar.start(num, 0);
+}
+
+function onFileScanned() {
+  progressBar.increment()
+}
+
+class CLI {
+  constructor() {
+    this.config = new Config();
+  }
+
+  async run() {
     program
       .name("radar")
-      .version(package.version)
+      .version(packageFile.version)
       .option("-p, --path <path>", "Scan the specified path")
       .option("-r, --repo <url>", "Scan the specified git repo url")
       .option("-b, --branch <name>", "Scan the specified git branch")
@@ -54,22 +48,55 @@ return Promise.resolve()
       .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
       .parse(process.argv);
 
+    this.setConfig(program);
+
     let { path } = program;
     const { repo, branch } = program;
 
     if (repo) {
-      const tempPath = await Filesystem.makeTempDirectory();
-      await Git.clone(repo, tempPath, branch);
-      path = tempPath;
+      path = await CLI.cloneRepo(repo, branch);
     }
 
     if (!path) {
       return Promise.reject("You must specify a path or repo");
     }
 
-    const config = getConfig(program);
-    const radar = new Radar(config);
+    return this.scan(path);
+  }
+
+  async scan(path) {
+    initProgressBar();
+    const radar = new Radar(this.config, onFilesToScan, onFileScanned);
     return radar.scan(path);
-  })
+  }
+
+  static async cloneRepo(repo, branch) {
+    const tempPath = await Filesystem.makeTempDirectory();
+    await Git.clone(repo, tempPath, branch);
+    return tempPath;
+  }
+
+  setConfig(program) {
+    const { maxFileSize, minMatchScore, includeFileExts, excludeFileExts } = program;
+
+    if (maxFileSize) {
+      this.config.setMaxFileSizeMiB(maxFileSize);
+    }
+
+    if (minMatchScore) {
+      this.config.setMinMatchScore(minMatchScore);
+    }
+
+    if (includeFileExts) {
+      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
+    }
+
+    if (excludeFileExts) {
+      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
+    }
+  }
+}
+
+return new CLI().run()
     .then(result => console.dir(result, { depth: 3 } ))
     .catch((err) => console.error(err));

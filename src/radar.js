@@ -11,9 +11,11 @@ const Config = require('./config');
 const OneMebibyte = 1024 * 1024;
 
 class Radar {
-  constructor(config = new Config()) {
+  constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
     Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
     this._config = config;
+    this._onFilesToScan = onFilesToScan;
+    this._onFileScanned = onFileScanned;
 
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
@@ -28,11 +30,13 @@ class Radar {
 
     if (stats.isDirectory()) {
       const filesToScan = await this._getDirectoryFiles(path);
+      this._onFilesToScan(filesToScan.length);
       return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
         .then(results => Radar._getResultsMap(path, results.filter(result => result.hasKeys())));
     }
 
     if (stats.isFile()) {
+      this._onFilesToScan(1);
       const fileName = path.substring(path.lastIndexOf('/') + 1);
       const filePath = path.substring(0, path.lastIndexOf('/'));
       return this._getFileObject(filePath, fileName)
@@ -121,6 +125,7 @@ class Radar {
     const scannedFile = new ScannedFile(file);
     await Filesystem.readFile(scannedFile, this._onLineRead)
       .catch(() => {});
+    this._onFileScanned();
     return scannedFile;
   }
 
