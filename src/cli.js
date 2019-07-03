@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-const progress = require('cli-progress');
 
 const packageFile = require('../package');
 const Config = require('./config');
 const Radar = require('./radar');
 const Git = require('./git');
 const Filesystem = require('./filesystem');
+const ProgressBar = require('./progressbar');
 
 /**
 TODO:
@@ -17,22 +17,18 @@ User configurable:
 - include files/directories
  */
 
-let progressBar;
-function initProgressBar() {
-  progressBar = new progress.Bar({ stopOnComplete: true, clearOnComplete: true }, progress.Presets.shades_classic);
-}
-
-function onFilesToScan(num) {
-  progressBar.start(num, 0);
-}
-
-function onFileScanned() {
-  progressBar.increment()
-}
-
 class CLI {
+  onFilesToScan(num) {
+    this.progressBar.init(num);
+  }
+
+  onFileScanned() {
+    this.progressBar.increment();
+  }
+
   constructor() {
     this.config = new Config();
+    this.progressBar = new ProgressBar();
   }
 
   async run() {
@@ -61,13 +57,12 @@ class CLI {
       return Promise.reject("You must specify a path or repo");
     }
 
-    return this.scan(path);
-  }
-
-  async scan(path) {
-    initProgressBar();
-    const radar = new Radar(this.config, onFilesToScan, onFileScanned);
-    return radar.scan(path);
+    const radar = new Radar(this.config, this.onFilesToScan.bind(this), this.onFileScanned.bind(this));
+    return radar.scan(path)
+      .then((resp) => {
+        debugger;
+        return resp;
+      })
   }
 
   static async cloneRepo(repo, branch) {
