@@ -57,11 +57,7 @@ class CLI {
     }
 
     const radar = new Radar(this.config, this.onFilesToScan.bind(this), this.onFileScanned.bind(this));
-    return radar.scan(path)
-      .then((resp) => {
-        debugger;
-        return resp;
-      })
+    return radar.scan(path);
   }
 
   static async cloneRepo(repo, branch) {
