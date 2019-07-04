@@ -126,11 +126,6 @@ class Radar {
     await Filesystem.readFile(scannedFile, this._onLineRead)
       .catch(() => {});
     this._onFileScanned();
-
-    if (global.gc) {
-      global.gc();
-    }
-
     return scannedFile;
   }
 
