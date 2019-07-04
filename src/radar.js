@@ -11,6 +11,12 @@ const Config = require('./config');
 const OneMebibyte = 1024 * 1024;
 
 class Radar {
+  /**
+   *
+   * @param {Config} config
+   * @param {function} onFilesToScan called with the total number of files to be scanned
+   * @param {function} onFileScanned called whenever a file is scanned
+   */
   constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
     Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
     this._config = config;
@@ -22,6 +28,10 @@ class Radar {
     this._scanFile = this._scanFile.bind(this);
   }
 
+  /**
+   *
+   * @param {String} path
+   */
   async scan(path) {
     const stats = await Filesystem.getFileStats(path);
 
@@ -75,6 +85,12 @@ class Radar {
     return filesToScan;
   }
 
+  /**
+   *
+   * @param {String} path
+   * @param {String} name
+   * @returns {File}
+   */
   async _getFileObject(path, name) {
     const fullPath = `${path}/${name}`;
     const fileStats = await Filesystem.getFileStats(fullPath);
@@ -82,6 +98,11 @@ class Radar {
     return new File(name, path, fileSize);
   }
 
+  /**
+   *
+   * @param {File} file
+   * @returns {Boolean}
+   */
   _shouldScanFile(file) {
     const name = file.name();
     const size = file.size();
@@ -98,6 +119,12 @@ class Radar {
     return true;
   }
 
+  /**
+   *
+   * @param {String} name
+   * @param {String} ext
+   * @returns {Boolean}
+   */
   _isFileExcluded(name, ext) {
     const isNameBlacklisted = this._config.getExcludedFiles().includes(name);
     if (isNameBlacklisted) {
@@ -113,6 +140,11 @@ class Radar {
     return false;
   }
 
+  /**
+   *
+   * @param {Number} bytes
+   * @return {Boolean}
+   */
   _isFileTooLarge(bytes) {
     const sizeMiB = (bytes / OneMebibyte);
     return sizeMiB > this._config.getMaxFileSizeMiB()
@@ -120,6 +152,7 @@ class Radar {
 
   /**
    * @param {File} file
+   * @returns {ScannedFile}
    */
   async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
@@ -146,6 +179,11 @@ class Radar {
     }
   }
 
+  /**
+   *
+   * @param {String} path
+   * @param {Array<ScannedFile>} scanResults
+   */
   static _getResultsMap(path, scanResults) {
     const results = {};
     scanResults.forEach((scannedFile) => {
@@ -159,6 +197,7 @@ class Radar {
    *
    * @param {String} basePath file path without the file name
    * @param {String} fullPath file path with the file name
+   * @returns {String}
    */
   static _getRelativePath(basePath, fullPath) {
     const relativePath = fullPath.substring(basePath.length);
@@ -166,4 +205,4 @@ class Radar {
   }
 }
 
-module.exports = Radar;
+module.exports = { Radar, Config };
