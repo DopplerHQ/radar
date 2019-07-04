@@ -11,6 +11,12 @@ const Config = require('./config');
 const OneMebibyte = 1024 * 1024;
 
 class Radar {
+  /**
+   *
+   * @param {Config} config
+   * @param {function} onFilesToScan called with the total number of files to be scanned
+   * @param {function} onFileScanned called whenever a file is scanned
+   */
   constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
     Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
     this._config = config;
@@ -166,4 +172,4 @@ class Radar {
   }
 }
 
-module.exports = Radar;
+module.exports = { Radar, Config };

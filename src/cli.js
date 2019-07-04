@@ -3,8 +3,7 @@
 const program = require('commander');
 
 const packageFile = require('../package');
-const Config = require('./config');
-const Radar = require('./radar');
+const { Radar, Config } = require('./radar');
 const Git = require('./git');
 const Filesystem = require('./filesystem');
 const ProgressBar = require('./progressbar');
