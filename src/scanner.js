@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// a-z A-Z 0-9 . @ + = - _ : / \
-const validCharactersRegex = (/[a-zA-Z0-9\.@+=-_:\/\\]/);
+// a-z A-Z 0-9 . @ + = - _ : / #
+const validCharactersRegex = (/[a-zA-Z0-9\.@+=-_:\/#]/);
 
 const filtersPath = path.resolve(__dirname, 'filters')
 const Filters = [];
