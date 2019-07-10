@@ -1,5 +1,4 @@
-const Radar = require('../src/radar');
-const Config = require('../src/config');
+const { Radar, Config } = require('../src/radar');
 const File = require('../src/objects/file');
 const ScannedFile = require('../src/objects/scannedfile');
 
