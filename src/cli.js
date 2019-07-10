@@ -53,7 +53,8 @@ class CLI {
     }
 
     if (!path) {
-      return Promise.reject("You must specify a path or repo");
+      program.help();
+      return Promise.reject();
     }
 
     const radar = new Radar(this.config, this.onFilesToScan.bind(this), this.onFileScanned.bind(this));
