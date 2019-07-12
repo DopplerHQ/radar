@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const Table = require('easy-table');
 
 const packageFile = require('../package');
 const { Radar, Config } = require('./radar');
@@ -28,9 +29,7 @@ class CLI {
   constructor() {
     this.config = new Config();
     this.progressBar = new ProgressBar();
-  }
 
-  async run() {
     program
       .name("radar")
       .version(packageFile.version)
@@ -41,9 +40,12 @@ class CLI {
       .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
       .option("--include-file-exts <list>", "File extensions to include")
       .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
-      .parse(process.argv);
+      .option("--json", "Output results as json blob");
+  }
 
-    this.setConfig(program);
+  async run(args) {
+    program.parse(args);
+    this.setConfig();
 
     let { path } = program;
     const { repo, branch } = program;
@@ -61,13 +63,37 @@ class CLI {
     return radar.scan(path);
   }
 
+  print(results) {
+    if (program.json) {
+      console.dir(results, { depth: 3 } );
+    }
+    else {
+      const resultsArr = [];
+      const maxKeyLength = 75;
+      Object.keys(results).forEach((file) => {
+        results[file].keys.forEach((key, i) => {
+          const object = {
+            File: (i === 0) ? file : "",
+            Line: key.lineNumber,
+            Key: (key.key.length > maxKeyLength) ? `${key.key.substring(0, maxKeyLength)}...` : key.key,
+            Score: key.score.toPrecision(2),
+          }
+
+          resultsArr.push(object);
+        });
+      });
+
+      console.log(Table.print(resultsArr));
+    }
+  }
+
   static async cloneRepo(repo, branch) {
     const tempPath = await Filesystem.makeTempDirectory();
     await Git.clone(repo, tempPath, branch);
     return tempPath;
   }
 
-  setConfig(program) {
+  setConfig() {
     const { maxFileSize, minMatchScore, includeFileExts, excludeFileExts } = program;
 
     if (maxFileSize) {
@@ -88,6 +114,7 @@ class CLI {
   }
 }
 
-return new CLI().run()
-    .then(result => console.dir(result, { depth: 3 } ))
-    .catch((err) => console.error(err));
+const cli = new CLI();
+return cli.run(process.argv)
+    .then(cli.print)
+    .catch(console.error);
