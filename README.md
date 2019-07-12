@@ -52,6 +52,17 @@ const { Radar } = require("@dopplerhq/radar");
 const results = new Radar().scan(directory_path);
 ```
 
+#### Configuration
+
+You can further configure the Node library by passing it a `Config` object.
+
+``` js
+const { Radar, Config } = require("@dopplerhq/radar");
+const config = new Config();
+config.setMinMatchScore(.9);
+const results = new Radar(config).scan(directory_path);
+```
+
 ## Sample output
 
 This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. Scan results are printed in a tabular format.
