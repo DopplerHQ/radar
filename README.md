@@ -39,6 +39,7 @@ Options:
   --min-match-score <number>  Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7
   --include-file-exts <list>  File extensions to include
   --exclude-file-exts <list>  File extensions to exclude (e.g. "json, map, csv")
+  --json                      Output results as json blob
   -h, --help                  output usage information
 ```
 
@@ -53,7 +54,16 @@ const results = new radar().scan(directory_path);
 
 ## Sample output
 
-This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. If using the library directly, this same output will be returned as a JavaScript object by `scan()`.
+This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. Scan results are printed in a tabular format.
+
+```
+File  Line  Key                                               Score
+----  ----  ------------------------------------------------  -----
+.env  4     BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG          0.90
+      11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  0.95
+```
+
+You can instruct the CLI to output JSON by specifying the `--json` flag. This output is identical to the results returned by the Node library's `scan()` function.
 
 ```json
 {
