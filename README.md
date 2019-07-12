@@ -48,8 +48,8 @@ Options:
 Scan a local file/directory:
 
 ``` js
-const radar = require("@dopplerhq/radar");
-const results = new radar().scan(directory_path);
+const { Radar } = require("@dopplerhq/radar");
+const results = new Radar().scan(directory_path);
 ```
 
 ## Sample output
