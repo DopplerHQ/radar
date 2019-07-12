@@ -24,7 +24,7 @@ Scan a local file/directory:
 $ radar --path PATH
 ```
 
-You can see a full list of configuration options by running 
+You can see a full list of configuration options by running `radar --help`
 ```
 $ radar --help
 
@@ -43,7 +43,7 @@ Options:
   -h, --help                  output usage information
 ```
 
-### Library
+### Node library
 
 Scan a local file/directory:
 
