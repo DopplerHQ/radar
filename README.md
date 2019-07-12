@@ -24,7 +24,7 @@ Scan a local file/directory:
 $ radar --path PATH
 ```
 
-You can see a full list of configuration options by running 
+You can see a full list of configuration options by running `radar --help`
 ```
 $ radar --help
 
@@ -39,21 +39,42 @@ Options:
   --min-match-score <number>  Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7
   --include-file-exts <list>  File extensions to include
   --exclude-file-exts <list>  File extensions to exclude (e.g. "json, map, csv")
+  --json                      Output results as json blob
   -h, --help                  output usage information
 ```
 
-### Library
+### Node library
 
 Scan a local file/directory:
 
 ``` js
-const radar = require("@dopplerhq/radar");
-const results = new radar().scan(directory_path);
+const { Radar } = require("@dopplerhq/radar");
+const results = new Radar().scan(directory_path);
+```
+
+#### Configuration
+
+You can further configure the Node library by passing it a `Config` object.
+
+``` js
+const { Radar, Config } = require("@dopplerhq/radar");
+const config = new Config();
+config.setMinMatchScore(.9);
+const results = new Radar(config).scan(directory_path);
 ```
 
 ## Sample output
 
-This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. If using the library directly, this same output will be returned as a JavaScript object by `scan()`.
+This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. Scan results are printed in a tabular format.
+
+```
+File  Line  Key                                               Score
+----  ----  ------------------------------------------------  -----
+.env  4     BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG          0.90
+      11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  0.95
+```
+
+You can instruct the CLI to output JSON by specifying the `--json` flag. This output is identical to the results returned by the Node library's `scan()` function.
 
 ```json
 {
