@@ -40,6 +40,7 @@ Options:
   --include-file-exts <list>  File extensions to include
   --exclude-file-exts <list>  File extensions to exclude (e.g. "json, map, csv")
   --json                      Output results as json blob
+  --no-progress               Disable the progress bar
   -h, --help                  output usage information
 ```
 
