@@ -19,11 +19,15 @@ User configurable:
 
 class CLI {
   onFilesToScan(num) {
-    this.progressBar.init(num);
+    if (program.progress) {
+      this.progressBar.init(num);
+    }
   }
 
   onFileScanned() {
-    this.progressBar.increment();
+    if (program.progress) {
+      this.progressBar.increment();
+    }
   }
 
   constructor() {
@@ -40,7 +44,8 @@ class CLI {
       .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
       .option("--include-file-exts <list>", "File extensions to include")
       .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
-      .option("--json", "Output results as json blob");
+      .option("--json", "Output results as json blob")
+      .option("--no-progress", "Disable the progress bar");
   }
 
   async run(args) {
