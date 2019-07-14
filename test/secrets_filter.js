@@ -1,4 +1,4 @@
-const Scanner = require("../src/scanner");
+const SecretsFilter = require("../src/secrets_filter");
 const FilterWeights = require("../src/objects/filterweights");
 
 test('confidence calculation- positive weights', () => {
@@ -10,7 +10,7 @@ test('confidence calculation- positive weights', () => {
     }
   ];
   let confidence = (FilterWeights.HIGH * .9) / FilterWeights.HIGH;
-  expect(Scanner.calculateConfidence(scores)).toStrictEqual(confidence);
+  expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(confidence);
 
   scores.push({
     name: "filter2",
@@ -18,7 +18,7 @@ test('confidence calculation- positive weights', () => {
     score: .75,
   });
   confidence = ((FilterWeights.HIGH * .9) + (FilterWeights.MEDIUM * .75)) / (FilterWeights.HIGH + FilterWeights.MEDIUM);
-  expect(Scanner.calculateConfidence(scores)).toStrictEqual(confidence);
+  expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(confidence);
 
   scores.push({
     name: "filter3",
@@ -26,7 +26,7 @@ test('confidence calculation- positive weights', () => {
     score: .5,
   });
   confidence = ((FilterWeights.HIGH * .9) + (FilterWeights.MEDIUM * .75) + (FilterWeights.LOW * .5)) / (FilterWeights.HIGH + FilterWeights.MEDIUM + FilterWeights.LOW);
-  expect(Scanner.calculateConfidence(scores)).toStrictEqual(confidence);
+  expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(confidence);
 });
 
 test('confidence calculation- negative weights', () => {
@@ -37,14 +37,14 @@ test('confidence calculation- negative weights', () => {
       score: 0,
     }
   ];
-  expect(Scanner.calculateConfidence(scores)).toStrictEqual(0);
+  expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(0);
 
   scores.push({
     name: "filter2",
     negativeWeight: FilterWeights.MEDIUM,
     score: 0,
   });
-  expect(Scanner.calculateConfidence(scores)).toStrictEqual(0);
+  expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(0);
 });
 
 test('confidence calculation- mixed weights', () => {
@@ -67,7 +67,7 @@ test('confidence calculation- mixed weights', () => {
   ];
 
   const confidence = ((FilterWeights.HIGH * .9) + (FilterWeights.MEDIUM * 0) + (FilterWeights.LOW * .5)) / (FilterWeights.HIGH + FilterWeights.MEDIUM + FilterWeights.LOW);
-  expect(Scanner.calculateConfidence(scores)).toStrictEqual(confidence);
+  expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(confidence);
 });
 
 test('score term', () => {
@@ -86,7 +86,7 @@ test('score term', () => {
     },
   ];
 
-  expect(Scanner.scoreTerm("", filters)).toStrictEqual([
+  expect(SecretsFilter.scoreTerm("", filters)).toStrictEqual([
     {
       name: "test",
       weight: 1,

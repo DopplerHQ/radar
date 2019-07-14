@@ -14,13 +14,13 @@ fs.readdirSync(filtersPath).forEach((file) => {
   }
 });
 
-class Scanner {
+class SecretsFilter {
   static isValidCharacter(char) {
     return validCharactersRegex.test(char);
   }
 
   static preFilter(text) {
-    return text.split('').map(char => (Scanner.isValidCharacter(char) ? char : ' ')).join('');
+    return text.split('').map(char => (SecretsFilter.isValidCharacter(char) ? char : ' ')).join('');
   }
 
   /**
@@ -62,10 +62,10 @@ class Scanner {
   }
 
   static findKeys(line, minScore) {
-    const terms = Scanner.preFilter(line).split(/ +/);
+    const terms = SecretsFilter.preFilter(line).split(/ +/);
     return terms.map((term) => {
-      const filterScores = Scanner.scoreTerm(term, Filters);
-      const confidence = Scanner.calculateConfidence(filterScores);
+      const filterScores = SecretsFilter.scoreTerm(term, Filters);
+      const confidence = SecretsFilter.calculateConfidence(filterScores);
 
       if (confidence < minScore) {
         return null;
@@ -81,4 +81,4 @@ class Scanner {
   }
 };
 
-module.exports = Scanner;
+module.exports = SecretsFilter;
