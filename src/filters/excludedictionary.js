@@ -1,5 +1,6 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
+const customDictionary = require('../customdictionary');
 const FilterWeights = require('../objects/filterweights');
 
 const name = 'Exclude dictionary words';
@@ -7,6 +8,11 @@ const weight = FilterWeights.NONE;
 const negativeWeight = FilterWeights.MAX;
 
 const minimumMatchPercentage = 0.35;
+const customDictionaryMap = {};
+
+for (const word of customDictionary) {
+  customDictionaryMap[word.toLowerCase()] = true;
+}
 
 function checkMatch(term) {
   const percentMatches = checkDictionary(term);
@@ -42,9 +48,10 @@ function checkDictionary(term) {
   const terms = splitIntoTerms(term);
   const uniqueTerms = getUniqueTerms(terms);
 
-  const matches = uniqueTerms.reduce((acc, word) => (
-    acc + ((word.length > 2) && dictionary.has(word))
-  ), 0);
+  const matches = uniqueTerms.reduce((acc, word) => {
+    const isDictionaryWord = ((word.length > 2) && (dictionary.has(word) || customDictionaryMap[word]));
+    return isDictionaryWord ? (acc + 1) : acc;
+  }, 0);
 
   const percentMatches = (matches / uniqueTerms.length);
   return percentMatches;
