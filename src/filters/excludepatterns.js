@@ -6,9 +6,11 @@ const negativeWeight = FilterWeights.MAX;
 
 function checkMatch(term) {
   // allow up to two equals signs for base64 encoding
-  const matchesRule = (term.match(/=/g) || []).length > 2;
+  const hasManyEqualsSigns = (term.match(/=/g) || []).length > 2;
+  // two colons is a common class separator
+  const hasDoubleColonSeparator = (/[a-zA-Z0-9]::[a-zA-Z0-9]/g).test(term);
   // we want to exclude paths, so treat a match as a negative case
-  return matchesRule ? 0 : 1;
+  return (hasManyEqualsSigns || hasDoubleColonSeparator) ? 0 : 1;
 }
 
 module.exports = { name, weight, negativeWeight, checkMatch };

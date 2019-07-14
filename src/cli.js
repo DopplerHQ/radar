@@ -9,14 +9,6 @@ const Git = require('./git');
 const Filesystem = require('./filesystem');
 const ProgressBar = require('./progressbar');
 
-/**
-TODO:
-
-User configurable:
-- exclude files/directories
-- include files/directories
- */
-
 class CLI {
   onFilesToScan(num) {
     if (program.progress) {
@@ -42,8 +34,12 @@ class CLI {
       .option("-b, --branch <name>", "Scan the specified git branch")
       .option("--max-file-size <MiB>", "Maximum size of files to scan")
       .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
-      .option("--include-file-exts <list>", "File extensions to include")
-      .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
+      .option("--include-files <list>", "File names to include, case-insensitive (overrides excluded files)")
+      .option("--exclude-files <list>", "File names to exclude, case-insensitive (e.g. \"package.json, CHANGELOG.md\")")
+      .option("--include-dirs <list>", "Directory names to include, case-insensitive (overrides excluded directories)")
+      .option("--exclude-dirs <list>", "Directory names to exclude, case-insensitive (e.g. \"test, e2e\")")
+      .option("--include-file-exts <list>", "File extensions to include, case-insensitive (overrides excluded file extensions)")
+      .option("--exclude-file-exts <list>", "File extensions to exclude, case-insensitive (e.g. \"md, tar.gz, csv\")")
       .option("--json", "Output results as json blob")
       .option("--no-progress", "Disable the progress bar");
   }
@@ -99,7 +95,7 @@ class CLI {
   }
 
   setConfig() {
-    const { maxFileSize, minMatchScore, includeFileExts, excludeFileExts } = program;
+    const { maxFileSize, minMatchScore, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = program;
 
     if (maxFileSize) {
       this.config.setMaxFileSizeMiB(maxFileSize);
@@ -109,12 +105,28 @@ class CLI {
       this.config.setMinMatchScore(minMatchScore);
     }
 
+    if (includeFiles) {
+      this.config.setIncludedFiles(includeFiles.split(",").map(name => name.trim().toLowerCase()));
+    }
+
+    if (excludeFiles) {
+      this.config.setExcludedFiles(excludeFiles.split(",").map(name => name.trim().toLowerCase()));
+    }
+
+    if (includeDirs) {
+      this.config.setIncludedDirectories(includeDirs.split(",").map(name => name.trim().toLowerCase()));
+    }
+
+    if (excludeDirs) {
+      this.config.setExcludedDirectories(excludeDirs.split(",").map(name => name.trim().toLowerCase()));
+    }
+
     if (includeFileExts) {
-      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
+      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
     }
 
     if (excludeFileExts) {
-      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
+      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
     }
   }
 }

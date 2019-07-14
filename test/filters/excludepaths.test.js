@@ -7,6 +7,7 @@ test('paths', () => {
   expect(checkMatch("./test")).toStrictEqual(0);
   expect(checkMatch("../test")).toStrictEqual(0);
   expect(checkMatch("////root")).toStrictEqual(0);
+  expect(checkMatch("C:\\\\Windows\\System32\\virus.exe")).toStrictEqual(0);
 });
 
 test('not paths', () => {
@@ -14,4 +15,5 @@ test('not paths', () => {
   expect(checkMatch("test.txt")).toStrictEqual(1);
   expect(checkMatch(".test.txt")).toStrictEqual(1);
   expect(checkMatch("test/test")).toStrictEqual(1);
+  expect(checkMatch("https://doppler.com")).toStrictEqual(1);
 });

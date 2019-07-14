@@ -19,29 +19,103 @@ test("relative path - trailing slash(es)", () => {
 });
 
 test("file name exclusion", () => {
-  // passing name, passing ext
+  // no white/blacklist
   let config = new Config();
   let radar = new Radar(config);
   expect(radar._isFileExcluded("goodfile", "goodext")).toBe(false);
 
-  // failing name, passing ext
+  // whitelisted name
+  config = new Config();
+  config.setIncludedFiles(["badfile"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("badfile", "goodext")).toBe(false);
+
+  // blacklisted name
   config = new Config();
   config.setExcludedFiles(["badfile"]);
   radar = new Radar(config);
   expect(radar._isFileExcluded("badfile", "goodext")).toBe(true);
 
-  // passing name, failing ext
+  // whitelisted ext
+  config = new Config();
+  config.setIncludedFileExts(["badext"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("goodfile", "badext")).toBe(false);
+
+  // blacklisted ext
   config = new Config();
   config.setExcludedFileExts(["badext"]);
   radar = new Radar(config);
   expect(radar._isFileExcluded("goodfile", "badext")).toBe(true);
 
-  // failing name, failing ext
+  // whitelisted name, blacklisted ext
+  config = new Config();
+  config.setIncludedFiles(["goodfile"]);
+  config.setExcludedFileExts(["badext"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("goodfile", "badext")).toBe(false);
+
+  // blacklisted name, whitelisted ext
+  config = new Config();
+  config.setExcludedFiles(["badfile"]);
+  config.setIncludedFileExts(["badext"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("badfile", "badext")).toBe(true);
+
+  // whitelisted name, whitelisted ext
+  config = new Config();
+  config.setIncludedFiles(["goodfile"]);
+  config.setIncludedFileExts(["goodext"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("goodfile", "goodext")).toBe(false);
+
+  // whitelisted name, blacklisted name
+  config = new Config();
+  config.setIncludedFiles(["goodfile"]);
+  config.setExcludedFiles(["goodfile"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("goodfile", "badext")).toBe(false);
+
+  // whitelisted ext, blacklisted ext
+  config = new Config();
+  config.setIncludedFileExts(["goodext"]);
+  config.setExcludedFileExts(["goodext"]);
+  radar = new Radar(config);
+  expect(radar._isFileExcluded("goodfile", "goodext")).toBe(false);
+
+  // blacklisted name, blacklisted ext
   config = new Config();
   config.setExcludedFiles(["badfile"]);
   config.setExcludedFileExts(["badext"]);
   radar = new Radar(config);
   expect(radar._isFileExcluded("badfile", "badext")).toBe(true);
+});
+
+
+test("directory name exclusion", () => {
+  // no white/blacklist
+  let config = new Config();
+  let radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("gooddir")).toBe(false);
+
+  // whitelisted
+  config = new Config();
+  config.setIncludedDirectories(["baddir"]);
+  radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("baddir")).toBe(false);
+
+  // blacklisted
+  config = new Config();
+  config.setExcludedDirectories(["baddir"]);
+  radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("baddir")).toBe(true);
+
+  // whitelisted and blacklisted
+  config = new Config();
+  config.setIncludedDirectories(["baddir"]);
+  config.setExcludedDirectories(["baddir"]);
+  radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("baddir")).toBe(false);
 });
 
 test("file size exclusion", () => {

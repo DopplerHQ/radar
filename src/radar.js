@@ -18,7 +18,7 @@ class Radar {
    * @param {function} onFileScanned called whenever a file is scanned
    */
   constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
-    Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
+    Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype].map(f => f.toLowerCase())));
     this._config = config;
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
@@ -65,12 +65,7 @@ class Radar {
     for (const entry of dirEntries) {
       const entryPath = `${path}/${entry.name}`;
 
-      if (entry.isDirectory()) {
-        const isDirectoryExcluded = this._config.getExcludedDirectories().includes(entry.name);
-        if (isDirectoryExcluded) {
-          continue;
-        }
-
+      if (entry.isDirectory() && !this._isDirectoryExcluded(entry.name)) {
         await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
@@ -95,7 +90,7 @@ class Radar {
     const fullPath = `${path}/${name}`;
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
-    return new File(name, path, fileSize);
+    return new File(name.toLowerCase(), path.toLowerCase(), fileSize);
   }
 
   /**
@@ -120,20 +115,45 @@ class Radar {
   }
 
   /**
-   *
+   * Checks if a file has been marked as excluded. Name white/blacklisting takes precedence over extension white/blacklisting
    * @param {String} name
    * @param {String} ext
    * @returns {Boolean}
    */
   _isFileExcluded(name, ext) {
+    const isNameWhitelisted = this._config.getIncludedFiles().includes(name);
+    if (isNameWhitelisted) {
+      return false;
+    }
     const isNameBlacklisted = this._config.getExcludedFiles().includes(name);
     if (isNameBlacklisted) {
       return true;
     }
 
     const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(ext);
+    if (isExtensionWhitelisted) {
+      return false;
+    }
     const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
-    if (!isExtensionWhitelisted && isExtensionBlacklisted) {
+    if (isExtensionBlacklisted) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks if a directory has been marked as excluded
+   * @param {String} name
+   * @returns {Boolean}
+   */
+  _isDirectoryExcluded(name) {
+    const isNameWhitelisted = this._config.getIncludedDirectories().includes(name);
+    if (isNameWhitelisted) {
+      return false;
+    }
+    const isNameBlacklisted = this._config.getExcludedDirectories().includes(name);
+    if (isNameBlacklisted) {
       return true;
     }
 

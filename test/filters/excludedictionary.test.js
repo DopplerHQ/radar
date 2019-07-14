@@ -50,3 +50,10 @@ test('symbols', () => {
   expect(checkMatch("another\\test")).toStrictEqual(0);
   expect(checkMatch("another-_@test")).toStrictEqual(0);
 });
+
+test('custom dictionary', () => {
+  expect(checkMatch("polyfill")).toStrictEqual(0);
+  expect(checkMatch("Polyfill")).toStrictEqual(0);
+  expect(checkMatch("AWS")).toStrictEqual(0);
+  expect(checkMatch("PolyfillAWS")).toStrictEqual(0);
+});
