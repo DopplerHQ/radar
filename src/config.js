@@ -6,6 +6,7 @@ class Config {
       minMatchScore: 0.7,
       maxConcurrentFileReads: 10,
       includedFiles: [],
+      includedDirectories: [],
       includedFileExts: [],
       excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock'],
       excludedDirectories: ['.git', 'node_modules', '.vscode'],
@@ -51,6 +52,14 @@ class Config {
 
   setIncludedFiles(includedFiles) {
     this.data.includedFiles.push(...includedFiles);
+  }
+
+  getIncludedDirectories() {
+    return this.data.includedDirectories;
+  }
+
+  setIncludedDirectories(includedDirectories) {
+    this.data.includedDirectories.push(...includedDirectories);
   }
 
   getExcludedFileExts() {

@@ -65,12 +65,7 @@ class Radar {
     for (const entry of dirEntries) {
       const entryPath = `${path}/${entry.name}`;
 
-      if (entry.isDirectory()) {
-        const isDirectoryExcluded = this._config.getExcludedDirectories().includes(entry.name);
-        if (isDirectoryExcluded) {
-          continue;
-        }
-
+      if (entry.isDirectory() && !this._isDirectoryExcluded(entry.name)) {
         await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
@@ -141,6 +136,24 @@ class Radar {
     }
     const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
     if (isExtensionBlacklisted) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks if a directory has been marked as excluded
+   * @param {String} name
+   * @returns {Boolean}
+   */
+  _isDirectoryExcluded(name) {
+    const isNameWhitelisted = this._config.getIncludedDirectories().includes(name);
+    if (isNameWhitelisted) {
+      return false;
+    }
+    const isNameBlacklisted = this._config.getExcludedDirectories().includes(name);
+    if (isNameBlacklisted) {
       return true;
     }
 

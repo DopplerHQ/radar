@@ -9,14 +9,6 @@ const Git = require('./git');
 const Filesystem = require('./filesystem');
 const ProgressBar = require('./progressbar');
 
-/**
-TODO:
-
-User configurable:
-- exclude files/directories
-- include files/directories
- */
-
 class CLI {
   onFilesToScan(num) {
     if (program.progress) {
@@ -44,6 +36,8 @@ class CLI {
       .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
       .option("--include-files <list>", "File names to include, case-insensitive (overrides file name exclusion)")
       .option("--exclude-files <list>", "File names to exclude, case-insensitive (e.g. \"package.json, CHANGELOG.md\")")
+      .option("--include-dirs <list>", "Directory names to include, case-insensitive (overrides excluded directories)")
+      .option("--exclude-dirs <list>", "Directory names to exclude, case-insensitive (e.g. \"test, e2e\")")
       .option("--include-file-exts <list>", "File extensions to include, case-insensitive (overrides exclusion)")
       .option("--exclude-file-exts <list>", "File extensions to exclude, case-insensitive (e.g. \"md, tar.gz, csv\")")
       .option("--json", "Output results as json blob")
@@ -101,7 +95,7 @@ class CLI {
   }
 
   setConfig() {
-    const { maxFileSize, minMatchScore, includeFiles, excludeFiles, includeFileExts, excludeFileExts } = program;
+    const { maxFileSize, minMatchScore, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = program;
 
     if (maxFileSize) {
       this.config.setMaxFileSizeMiB(maxFileSize);
@@ -117,6 +111,14 @@ class CLI {
 
     if (excludeFiles) {
       this.config.setExcludedFiles(excludeFiles.split(",").map(name => name.trim().toLowerCase()));
+    }
+
+    if (includeDirs) {
+      this.config.setIncludedDirectories(includeDirs.split(",").map(name => name.trim().toLowerCase()));
+    }
+
+    if (excludeDirs) {
+      this.config.setExcludedDirectories(excludeDirs.split(",").map(name => name.trim().toLowerCase()));
     }
 
     if (includeFileExts) {

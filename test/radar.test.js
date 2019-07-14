@@ -91,6 +91,33 @@ test("file name exclusion", () => {
   expect(radar._isFileExcluded("badfile", "badext")).toBe(true);
 });
 
+
+test("directory name exclusion", () => {
+  // no white/blacklist
+  let config = new Config();
+  let radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("gooddir")).toBe(false);
+
+  // whitelisted
+  config = new Config();
+  config.setIncludedDirectories(["baddir"]);
+  radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("baddir")).toBe(false);
+
+  // blacklisted
+  config = new Config();
+  config.setExcludedDirectories(["baddir"]);
+  radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("baddir")).toBe(true);
+
+  // whitelisted and blacklisted
+  config = new Config();
+  config.setIncludedDirectories(["baddir"]);
+  config.setExcludedDirectories(["baddir"]);
+  radar = new Radar(config);
+  expect(radar._isDirectoryExcluded("baddir")).toBe(false);
+});
+
 test("file size exclusion", () => {
   // passing name, passing ext
   let config = new Config();
