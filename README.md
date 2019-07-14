@@ -31,19 +31,21 @@ $ radar --help
 Usage: radar [options]
 
 Options:
-  -V, --version                  output the version number
-  -p, --path <path>              Scan the specified path
-  -r, --repo <url>               Scan the specified git repo url
-  -b, --branch <name>            Scan the specified git branch
-  --max-file-size <MiB>          Maximum size of files to scan
-  --min-match-score <number>     Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7
-  --include-files <list>         File names to include, case-insensitive (overrides file name exclusion)
-  --exclude-files <list>         File names to exclude, case-insensitive (e.g. "package.json, CHANGELOG.md")
-  --include-file-exts <list>     File extensions to include, case-insensitive (overrides exclusion)
-  --exclude-file-exts <list>     File extensions to exclude, case-insensitive (e.g. "md, tar.gz, csv")
-  --json                         Output results as json blob
-  --no-progress                  Disable the progress bar
-  -h, --help                     output usage information
+  -V, --version               output the version number
+  -p, --path <path>           Scan the specified path
+  -r, --repo <url>            Scan the specified git repo url
+  -b, --branch <name>         Scan the specified git branch
+  --max-file-size <MiB>       Maximum size of files to scan
+  --min-match-score <number>  Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7
+  --include-files <list>      File names to include, case-insensitive (overrides excluded files)
+  --exclude-files <list>      File names to exclude, case-insensitive (e.g. "package.json, CHANGELOG.md")
+  --include-dirs <list>       Directory names to include, case-insensitive (overrides excluded directories)
+  --exclude-dirs <list>       Directory names to exclude, case-insensitive (e.g. "test, e2e")
+  --include-file-exts <list>  File extensions to include, case-insensitive (overrides excluded file extensions)
+  --exclude-file-exts <list>  File extensions to exclude, case-insensitive (e.g. "md, tar.gz, csv")
+  --json                      Output results as json blob
+  --no-progress               Disable the progress bar
+  -h, --help                  output usage information
 ```
 
 ### Node library
