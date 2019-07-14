@@ -30,14 +30,7 @@ class SecretsFilter {
    * @returns Array of objects representing each filter's score
    */
   static scoreTerm(term, filters) {
-    return filters.map(({ name, checkMatch }) => {
-      const { weight, score } = checkMatch(term);
-      return {
-        name,
-        weight,
-        score,
-      };
-    });
+    return filters.map(filter => filter.checkMatch(term));
   }
 
   static calculateConfidence(filterScores) {

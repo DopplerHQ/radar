@@ -1,30 +1,27 @@
+const Filter = require('../objects/Filter');
 const FilterWeights = require('../objects/filterweights');
 
 const name = 'Length';
 const weight = FilterWeights.HIGH;
 const negativeWeight = FilterWeights.MAX;
 
-function returnObj(score) {
-  return {
-    score,
-    weight: (score === 0) ? negativeWeight : weight,
-  };
+class CustomFilter extends Filter {
+  checkMatch(term) {
+    if (term.length >= 32) {
+      return this._score(1);
+    }
+
+    if (term.length >= 24) {
+      return this._score(.85);
+    }
+
+    if (term.length >= 15) {
+      return this._score(.7);
+    }
+
+    return this._score(0);
+  }
 }
 
-function checkMatch(term) {
-  if (term.length >= 32) {
-    return returnObj(1);
-  }
-
-  if (term.length >= 24) {
-    return returnObj(.85);
-  }
-
-  if (term.length >= 15) {
-    return returnObj(.7);
-  }
-
-  return returnObj(0);
-}
-
-module.exports = { name, checkMatch };
+const filter = new CustomFilter(name, weight, negativeWeight);
+module.exports = filter;

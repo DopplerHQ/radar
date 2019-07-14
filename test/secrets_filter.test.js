@@ -84,12 +84,10 @@ test('score term', () => {
 
   expect(SecretsFilter.scoreTerm("", filters)).toStrictEqual([
     {
-      name: "test",
       weight: 1,
       score: 1,
     },
     {
-      name: "another test",
       weight: 4,
       score: 0,
     },
