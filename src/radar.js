@@ -18,7 +18,7 @@ class Radar {
    * @param {function} onFileScanned called whenever a file is scanned
    */
   constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
-    Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype]));
+    Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype].map(f => f.toLowerCase())));
     this._config = config;
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
@@ -95,7 +95,7 @@ class Radar {
     const fullPath = `${path}/${name}`;
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
-    return new File(name, path, fileSize);
+    return new File(name.toLowerCase(), path.toLowerCase(), fileSize);
   }
 
   /**

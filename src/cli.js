@@ -42,8 +42,8 @@ class CLI {
       .option("-b, --branch <name>", "Scan the specified git branch")
       .option("--max-file-size <MiB>", "Maximum size of files to scan")
       .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
-      .option("--include-file-exts <list>", "File extensions to include")
-      .option("--exclude-file-exts <list>", "File extensions to exclude (e.g. \"json, map, csv\")")
+      .option("--include-file-exts <list>", "File extensions to include, case-insensitive (overrides exclusion)")
+      .option("--exclude-file-exts <list>", "File extensions to exclude, case-insensitive (e.g. \"md, tar.gz, csv\")")
       .option("--json", "Output results as json blob")
       .option("--no-progress", "Disable the progress bar");
   }
@@ -110,11 +110,11 @@ class CLI {
     }
 
     if (includeFileExts) {
-      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
+      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
     }
 
     if (excludeFileExts) {
-      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
+      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
     }
   }
 }
