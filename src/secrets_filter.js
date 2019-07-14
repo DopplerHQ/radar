@@ -30,14 +30,12 @@ class SecretsFilter {
    * @returns Array of objects representing each filter's score
    */
   static scoreTerm(term, filters) {
-    return filters.map((filter) => {
-      const { name } = filter;
-      const results = filter.checkMatch(term);
-
+    return filters.map(({ name, checkMatch }) => {
+      const { weight, score } = checkMatch(term);
       return {
         name,
-        weight: results.weight,
-        score: results.score,
+        weight,
+        score,
       };
     });
   }
