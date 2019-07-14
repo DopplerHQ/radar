@@ -19,7 +19,7 @@ customDictionary.forEach((word) => {
 });
 Object.keys(filetypes).forEach((type) => {
   filetypes[type].forEach((filetype) => {
-    if ((filetype.length >= minimumWordLength) && ((/^[a-zA-Z]+$/g).test(filetype))) {
+    if ((filetype.length >= minimumWordLength) && ((/^[a-zA-Z0-9]+$/g).test(filetype))) {
       customDictionaryMap[filetype.toLowerCase()] = true;
     }
   });
@@ -31,23 +31,18 @@ function checkMatch(term) {
   return (percentMatches >= minimumMatchPercentage) ? 0 : 1;
 }
 
-// from https://github.com/auth0/repo-supervisor/blob/master/src/filters/entropy.meter/pre.filters/dictionary.words.js
 function splitIntoTerms(term) {
-  let modifiedTerm = term;
-
-  // remove - _ ' " @ ( ) [ ] < > { } ; : , . ? ! / \
-  modifiedTerm = modifiedTerm.replace(/[-_'"@\(\)\[\]<>{};:,\.\?!\/\\]/g, ' ');
-  // remove 0-9
-  modifiedTerm = modifiedTerm.replace(/([0-9]+)/g, ' ');
-
-  // separate camelCase terms
-  modifiedTerm = modifiedTerm.replace(/([A-Z]+?)([A-Z][a-z])/g, '$1 $2')
-    .replace(/([a-z])([A-Z])/g, '$1 $2');
-
-  modifiedTerm = modifiedTerm.toLowerCase();
-
-  // split into individual terms
-  return modifiedTerm.trim().split(/ +/);
+  return term
+    // allow letters, numbers, and hyphens
+    .replace(/[^a-zA-Z0-9-]+/gi, ' ')
+    // separate camelCase terms
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+?)([A-Z][a-z])/g, '$1 $2')
+    .trim()
+    .toLowerCase()
+    .split(/ +/)
+    // allow alphanumeric string or string w/ at most one hyphen located betweem other alphanumerics
+    .filter(t => (/^[a-z0-9]+$/g).test(t) || (/^[a-z]+(-)?[a-z]+$/g).test(t));
 }
 
 function getUniqueTerms(terms) {

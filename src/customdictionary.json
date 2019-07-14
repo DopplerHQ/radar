@@ -147,5 +147,6 @@
   "circleci",
   "bugsnag",
   "case-sensitive",
-  "case-insensitive"
+  "case-insensitive",
+  "404"
 ]

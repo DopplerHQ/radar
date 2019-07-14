@@ -7,7 +7,7 @@ test('mixed case', () => {
   expect(checkMatch("test lsdjfoasdfosdhf")).toStrictEqual(0);
 
   expect(checkMatch("randomgarbage")).toStrictEqual(1);
-  expect(checkMatch("foo barz")).toStrictEqual(1);
+  expect(checkMatch("fooz barz")).toStrictEqual(1);
   expect(checkMatch("test randomgarbage rndmgrbg")).toStrictEqual(1);
 });
 
@@ -18,37 +18,9 @@ test('camel case', () => {
   expect(checkMatch("notwordAlsonotword")).toStrictEqual(1);
 });
 
-test('numbers', () => {
-  expect(checkMatch("another9test")).toStrictEqual(0);
-  expect(checkMatch("9another test")).toStrictEqual(0);
-  expect(checkMatch("9test")).toStrictEqual(0);
-
-  expect(checkMatch("te9st")).toStrictEqual(1);
-});
-
 test('symbols', () => {
-  expect(checkMatch("another-test")).toStrictEqual(0);
-  expect(checkMatch("another_test")).toStrictEqual(0);
-  expect(checkMatch("another'test")).toStrictEqual(0);
-  expect(checkMatch("another\"test")).toStrictEqual(0);
-  expect(checkMatch("another@test")).toStrictEqual(0);
-  expect(checkMatch("another(test")).toStrictEqual(0);
-  expect(checkMatch("another)test")).toStrictEqual(0);
-  expect(checkMatch("another[test")).toStrictEqual(0);
-  expect(checkMatch("another]test")).toStrictEqual(0);
-  expect(checkMatch("another<test")).toStrictEqual(0);
-  expect(checkMatch("another>test")).toStrictEqual(0);
-  expect(checkMatch("another{test")).toStrictEqual(0);
-  expect(checkMatch("another}test")).toStrictEqual(0);
-  expect(checkMatch("another;test")).toStrictEqual(0);
-  expect(checkMatch("another:test")).toStrictEqual(0);
-  expect(checkMatch("another,test")).toStrictEqual(0);
-  expect(checkMatch("another.test")).toStrictEqual(0);
-  expect(checkMatch("another?test")).toStrictEqual(0);
-  expect(checkMatch("another!test")).toStrictEqual(0);
-  expect(checkMatch("another/test")).toStrictEqual(0);
-  expect(checkMatch("another\\test")).toStrictEqual(0);
-  expect(checkMatch("another-_@test")).toStrictEqual(0);
+  expect(checkMatch("case-sensitive")).toStrictEqual(0);
+  expect(checkMatch("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toStrictEqual(0);
 });
 
 test('custom dictionary', () => {
@@ -56,4 +28,9 @@ test('custom dictionary', () => {
   expect(checkMatch("Polyfill")).toStrictEqual(0);
   expect(checkMatch("AWS")).toStrictEqual(0);
   expect(checkMatch("PolyfillAWS")).toStrictEqual(0);
+});
+
+test('numbers', () => {
+  expect(checkMatch("404")).toStrictEqual(0);
+  expect(checkMatch("mp4")).toStrictEqual(0);
 });
