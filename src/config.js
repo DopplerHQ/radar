@@ -1,18 +1,16 @@
-const defaultConfig = {
-  maxFileSizeMiB: 10,
-  minMatchScore: 0.7,
-  maxConcurrentFileReads: 10,
-  includedFileExts: [],
-  excludedFileExts: [],
-  excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock'],
-  excludedDirectories: ['.git', 'node_modules', '.vscode'],
-};
-Object.freeze(defaultConfig);
-
 class Config {
   constructor() {
-    this.data = {};
-    Object.keys(defaultConfig).forEach(key => this.data[key] = defaultConfig[key]);
+    // default config
+    this.data = {
+      maxFileSizeMiB: 10,
+      minMatchScore: 0.7,
+      maxConcurrentFileReads: 10,
+      includedFiles: [],
+      includedFileExts: [],
+      excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock'],
+      excludedDirectories: ['.git', 'node_modules', '.vscode'],
+      excludedFileExts: [],
+    };
   }
 
   getMaxFileSizeMiB() {
@@ -45,6 +43,14 @@ class Config {
 
   setIncludedFileExts(includedFileExts) {
     this.data.includedFileExts.push(...includedFileExts);
+  }
+
+  getIncludedFiles() {
+    return this.data.includedFiles;
+  }
+
+  setIncludedFiles(includedFiles) {
+    this.data.includedFiles.push(...includedFiles);
   }
 
   getExcludedFileExts() {

@@ -120,20 +120,27 @@ class Radar {
   }
 
   /**
-   *
+   * Checks if a file has been marked as excluded. Name white/blacklisting takes precedence over extension white/blacklisting
    * @param {String} name
    * @param {String} ext
    * @returns {Boolean}
    */
   _isFileExcluded(name, ext) {
+    const isNameWhitelisted = this._config.getIncludedFiles().includes(name);
+    if (isNameWhitelisted) {
+      return false;
+    }
     const isNameBlacklisted = this._config.getExcludedFiles().includes(name);
     if (isNameBlacklisted) {
       return true;
     }
 
     const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(ext);
+    if (isExtensionWhitelisted) {
+      return false;
+    }
     const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
-    if (!isExtensionWhitelisted && isExtensionBlacklisted) {
+    if (isExtensionBlacklisted) {
       return true;
     }
 
