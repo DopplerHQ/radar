@@ -33,7 +33,7 @@ test('confidence calculation- negative weights', () => {
   const scores = [
     {
       name: "filter1",
-      negativeWeight: FilterWeights.HIGH,
+      weight: FilterWeights.HIGH,
       score: 0,
     }
   ];
@@ -41,7 +41,7 @@ test('confidence calculation- negative weights', () => {
 
   scores.push({
     name: "filter2",
-    negativeWeight: FilterWeights.MEDIUM,
+    weight: FilterWeights.MEDIUM,
     score: 0,
   });
   expect(SecretsFilter.calculateConfidence(scores)).toStrictEqual(0);
@@ -56,7 +56,7 @@ test('confidence calculation- mixed weights', () => {
     },
     {
       name: "filter2",
-      negativeWeight: FilterWeights.MEDIUM,
+      weight: FilterWeights.MEDIUM,
       score: 0,
     },
     {
@@ -74,15 +74,11 @@ test('score term', () => {
   const filters = [
     {
       name: "test",
-      weight: 1,
-      negativeWeight: 2,
-      checkMatch: () => 1,
+      checkMatch: () => ({ score: 1, weight: 1 }),
     },
     {
       name: "another test",
-      weight: 3,
-      negativeWeight: 4,
-      checkMatch: () => 0,
+      checkMatch: () => ({ score: 0, weight: 4 }),
     },
   ];
 
@@ -90,13 +86,11 @@ test('score term', () => {
     {
       name: "test",
       weight: 1,
-      negativeWeight: 2,
       score: 1,
     },
     {
       name: "another test",
-      weight: 3,
-      negativeWeight: 4,
+      weight: 4,
       score: 0,
     },
   ]);

@@ -31,14 +31,13 @@ class SecretsFilter {
    */
   static scoreTerm(term, filters) {
     return filters.map((filter) => {
-      const { name, weight, negativeWeight } = filter;
-      const score = filter.checkMatch(term);
+      const { name } = filter;
+      const results = filter.checkMatch(term);
 
       return {
         name,
-        weight,
-        negativeWeight,
-        score,
+        weight: results.weight,
+        score: results.score,
       };
     });
   }
@@ -47,15 +46,9 @@ class SecretsFilter {
     let totalWeight = 0;
     let weightedScore = 0;
 
-    filterScores.forEach(((filterScore) => {
-      const { score, weight, negativeWeight } = filterScore;
-      if (score === 0) {
-        totalWeight += negativeWeight;
-      }
-      else {
-        totalWeight += weight;
-        weightedScore += (weight * score);
-      }
+    filterScores.forEach((({ score, weight }) => {
+      totalWeight += weight;
+      weightedScore += (score * weight);
     }))
 
     return (weightedScore / totalWeight);

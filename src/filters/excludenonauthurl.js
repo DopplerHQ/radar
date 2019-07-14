@@ -5,6 +5,13 @@ const name = 'URL';
 const weight = FilterWeights.NONE;
 const negativeWeight = FilterWeights.MAX;
 
+function returnObj(score) {
+  return {
+    score,
+    weight: (score === 0) ? negativeWeight : weight,
+  };
+}
+
 /**
  * Exclude urls that don't explicitly include auth credentials
  * @param {String} term
@@ -12,15 +19,15 @@ const negativeWeight = FilterWeights.MAX;
 function checkMatch(term) {
   const isUrl = term.includes('://') || term.startsWith('//');
   if (!isUrl) {
-    return 1;
+    return returnObj(1);
   }
 
   const isAuthUrl = AuthUrlFilter.checkMatch(term);
-  if (isAuthUrl) {
-    return 1;
+  if (isAuthUrl.score !== 0) {
+    return returnObj(1);
   }
 
-  return 0;
+  return returnObj(0);
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch };
+module.exports = { name, checkMatch };

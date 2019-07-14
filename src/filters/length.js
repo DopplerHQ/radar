@@ -4,20 +4,27 @@ const name = 'Length';
 const weight = FilterWeights.HIGH;
 const negativeWeight = FilterWeights.MAX;
 
+function returnObj(score) {
+  return {
+    score,
+    weight: (score === 0) ? negativeWeight : weight,
+  };
+}
+
 function checkMatch(term) {
   if (term.length >= 32) {
-    return 1;
+    return returnObj(1);
   }
 
   if (term.length >= 24) {
-    return .85;
+    return returnObj(.85);
   }
 
   if (term.length >= 15) {
-    return .7;
+    return returnObj(.7);
   }
 
-  return 0;
+  return returnObj(0);
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch };
+module.exports = { name, checkMatch };

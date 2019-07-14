@@ -4,13 +4,20 @@ const name = 'Entropy';
 const weight = FilterWeights.VERYHIGH;
 const negativeWeight = FilterWeights.VERYHIGH;
 
+function returnObj(score) {
+  return {
+    score,
+    weight: (score === 0) ? negativeWeight : weight,
+  };
+}
+
 function checkMatch(term) {
   const entropy = calculateEntropy(term);
-  if (entropy >= 5.5) return 1;
-  if (entropy >= 4.7) return .9;
-  if (entropy >= 4) return .8;
-  if (entropy >= 3.75) return .7;
-  return 0;
+  if (entropy >= 5.5) return returnObj(1);
+  if (entropy >= 4.7) return returnObj(.9);
+  if (entropy >= 4) return returnObj(.8);
+  if (entropy >= 3.75) return returnObj(.7);
+  return returnObj(0);
 }
 
 function calculateEntropy(str) {
@@ -28,4 +35,4 @@ function calculateEntropy(str) {
   }, 0);
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch, calculateEntropy };
+module.exports = { name, checkMatch, calculateEntropy };

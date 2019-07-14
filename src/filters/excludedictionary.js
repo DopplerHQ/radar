@@ -25,10 +25,18 @@ Object.keys(filetypes).forEach((type) => {
   });
 });
 
+function returnObj(score) {
+  return {
+    score,
+    weight: (score === 0) ? negativeWeight : weight,
+  };
+}
+
 function checkMatch(term) {
   const percentMatches = checkDictionary(term);
   // we want to exclude matches, so treat a match as a negative case
-  return (percentMatches >= minimumMatchPercentage) ? 0 : 1;
+  const score = (percentMatches >= minimumMatchPercentage) ? 0 : 1;
+  return returnObj(score);
 }
 
 function splitIntoTerms(term) {
@@ -63,4 +71,4 @@ function checkDictionary(term) {
   return percentMatches;
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch };
+module.exports = { name, checkMatch };
