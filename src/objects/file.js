@@ -10,6 +10,7 @@ class File {
     this._name = name;
     this._path = path;
     this._size = size;
+    this._extension = null;
   }
 
   name() {
@@ -25,19 +26,25 @@ class File {
   }
 
   extension() {
-    const lastPeriod = this._name.lastIndexOf('.');
-    const secondLastPeriod = this._name.lastIndexOf('.', lastPeriod - 1);
-    if (secondLastPeriod !== lastPeriod) {
-      const compoundExt = this._name.substring(secondLastPeriod + 1, lastPeriod);
-      if (compoundExtensions.includes(compoundExt)) {
-        return this._name.substring(secondLastPeriod + 1);
-      }
-    }
-    if (lastPeriod === -1) {
-      return '';
+    if (this._extension == null) {
+      this._extension = (() => {
+        const lastPeriod = this._name.lastIndexOf('.');
+        const secondLastPeriod = this._name.lastIndexOf('.', lastPeriod - 1);
+        if (secondLastPeriod !== lastPeriod) {
+          const compoundExt = this._name.substring(secondLastPeriod + 1, lastPeriod);
+          if (compoundExtensions.includes(compoundExt)) {
+            return this._name.substring(secondLastPeriod + 1);
+          }
+        }
+        if (lastPeriod === -1) {
+          return '';
+        }
+
+        return this._name.substring(lastPeriod + 1);
+      })();
     }
 
-    return this._name.substring(lastPeriod + 1);
+    return this._extension;
   }
 }
 
