@@ -36,16 +36,16 @@ class CustomFilter extends Filter {
 
   _splitIntoTerms(term) {
     return term
-      // allow letters, numbers, and hyphens
-      .replace(/[^a-zA-Z0-9-]+/gi, ' ')
+      // allow letters, numbers, hyphens, and underscores
+      .replace(/[^a-zA-Z0-9-_]+/gi, ' ')
       // separate camelCase terms
       .replace(/([a-z])([A-Z])/g, '$1 $2')
       .replace(/([A-Z]+?)([A-Z][a-z])/g, '$1 $2')
       .trim()
       .toLowerCase()
       .split(/ +/)
-      // allow alphanumeric string or string w/ at most one hyphen located betweem other alphanumerics
-      .filter(t => (/^[a-z0-9]+$/g).test(t) || (/^[a-z]+(-)?[a-z]+$/g).test(t));
+      // allow alphanumeric string, string w/ at most one hyphen located between letters, or up to one consecutive underscore between alphanumerics
+      .filter(t => (/^[a-z0-9]+$/g).test(t) || (/^[a-z]+(-[a-z]+)?$/g).test(t) || (/^[a-z0-9]+(_[a-z0-9]+)+$/g).test(t));
   }
 
   _getUniqueTerms(terms) {
@@ -58,7 +58,7 @@ class CustomFilter extends Filter {
     const uniqueTerms = this._getUniqueTerms(terms);
 
     const matches = uniqueTerms.reduce((acc, word) => {
-      const isDictionaryWord = ((word.length >= minimumWordLength) && (dictionary.has(word) || customDictionaryMap[word]));
+      const isDictionaryWord = ((word.length >= minimumWordLength) && (dictionary.has(word) || (customDictionaryMap[word] === true)));
       return isDictionaryWord ? (acc + 1) : acc;
     }, 0);
 

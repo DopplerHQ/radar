@@ -9,6 +9,7 @@ test('mixed case', () => {
   expect(Filter.checkMatch("randomgarbage")).toHaveProperty("score", 1);
   expect(Filter.checkMatch("fooz barz")).toHaveProperty("score", 1);
   expect(Filter.checkMatch("test randomgarbage rndmgrbg")).toHaveProperty("score", 1);
+  expect(Filter.checkMatch("STRIPE_API_KEY=123456d781fdf0dfdf323434cvfdfgyddf")).toHaveProperty("score", 1);
 });
 
 test('camel case', () => {
@@ -20,7 +21,7 @@ test('camel case', () => {
 
 test('symbols', () => {
   expect(Filter.checkMatch("case-sensitive")).toHaveProperty("score", 0);
-  expect(Filter.checkMatch("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toHaveProperty("score", 0);
+  expect(Filter.checkMatch("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toHaveProperty("score", 1);
 });
 
 test('custom dictionary', () => {
@@ -33,4 +34,12 @@ test('custom dictionary', () => {
 test('numbers', () => {
   expect(Filter.checkMatch("404")).toHaveProperty("score", 0);
   expect(Filter.checkMatch("mp4")).toHaveProperty("score", 0);
+});
+
+test('split terms', () => {
+  expect(Filter._splitIntoTerms("testWords")).toStrictEqual(["test", "words"]);
+  expect(Filter._splitIntoTerms("testWORDS")).toStrictEqual(["test", "words"]);
+  expect(Filter._splitIntoTerms("TEST_WORDS")).toStrictEqual(["test_words"]);
+  expect(Filter._splitIntoTerms("TESTwords")).toStrictEqual(["tes", "twords"]);
+  expect(Filter._splitIntoTerms("STRIPE_API_KEY=123456d781fdf0dfdf323434cvfdfgyddf")).toStrictEqual(["stripe_api_key", "123456d781fdf0dfdf323434cvfdfgyddf"]);
 });
