@@ -69,6 +69,11 @@ class CLI {
       console.dir(results, { depth: 3 } );
     }
     else {
+      if (Object.keys(results).length === 0) {
+        console.log("No secrets detected");
+        return;
+      }
+
       const resultsArr = [];
       const maxKeyLength = 75;
       Object.keys(results).forEach((file) => {
