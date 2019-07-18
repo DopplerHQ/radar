@@ -2,8 +2,8 @@ class Config {
   constructor() {
     // default config
     this.data = {
+      secretTypes: [],
       maxFileSizeMiB: 10,
-      minMatchScore: 0.7,
       maxConcurrentFileReads: 10,
       includedFiles: [],
       includedDirectories: [],
@@ -14,20 +14,20 @@ class Config {
     };
   }
 
+  getSecretTypes() {
+    return this.data.secretTypes;
+  }
+
+  setSecretTypes(secretTypes) {
+    this.data.secretTypes = secretTypes;
+  }
+
   getMaxFileSizeMiB() {
     return this.data.maxFileSizeMiB;
   }
 
   setMaxFileSizeMiB(maxFileSizeMiB) {
     this.data.maxFileSizeMiB = maxFileSizeMiB;
-  }
-
-  getMinMatchScore() {
-    return this.data.minMatchScore;
-  }
-
-  setMinMatchScore(minMatchScore) {
-    this.data.minMatchScore = minMatchScore;
   }
 
   getMaxConcurrentFileReads() {

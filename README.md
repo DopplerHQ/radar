@@ -35,8 +35,8 @@ Options:
   -p, --path <path>           Scan the specified path
   -r, --repo <url>            Scan the specified git repo url
   -b, --branch <name>         Scan the specified git branch
+  --secret-types <list>       Secret types to scan for (e.g. "crypto_keys, auth_urls")
   --max-file-size <MiB>       Maximum size of files to scan
-  --min-match-score <number>  Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7
   --include-files <list>      File names to include, case-insensitive (overrides excluded files)
   --exclude-files <list>      File names to exclude, case-insensitive (e.g. "package.json, CHANGELOG.md")
   --include-dirs <list>       Directory names to include, case-insensitive (overrides excluded directories)
@@ -64,7 +64,7 @@ You can further configure the Node library by passing it a `Config` object.
 ``` js
 const { Radar, Config } = require("@dopplerhq/radar");
 const config = new Config();
-config.setMinMatchScore(.9);
+config.setSecretTypes(["auth_urls", "crypto_keys", "api_keys"]);
 const results = new Radar(config).scan(directory_path);
 ```
 
@@ -73,10 +73,10 @@ const results = new Radar(config).scan(directory_path);
 This is the sample output of running the CLI on a repo with a `.env` file containing two API keys. Scan results are printed in a tabular format.
 
 ```
-File  Line  Key                                               Score
-----  ----  ------------------------------------------------  -----
-.env  4     BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG          0.90
-      11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  0.95
+File  Line  Secret                                            Type
+----  ----  ------------------------------------------------  -------
+.env  4     BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG          API Key
+      11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  API Key
 ```
 
 You can instruct the CLI to output JSON by specifying the `--json` flag. This output is identical to the results returned by the Node library's `scan()` function.
@@ -91,13 +91,15 @@ You can instruct the CLI to output JSON by specifying the `--json` flag. This ou
     "keys": [
       {
         "key": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
-        "lineNumber": 4,
-        "score": 0.9
+        "type": "API Key",
+        "line": "STRIPE_API_KEY=BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
+        "lineNumber": 4
       },
       {
         "key": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
-        "lineNumber": 11,
-        "score": 0.95
+        "type": "API Key",
+        "line": "SENDGRID_API_KEY=SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
+        "lineNumber": 11
       }
     ]
   }

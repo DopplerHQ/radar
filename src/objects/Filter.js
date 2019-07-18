@@ -1,8 +1,10 @@
 class Filter {
-  constructor(name = "", weight = 0, negativeWeight = 0) {
+  constructor(name) {
+    if (name === undefined) {
+      throw new Error("Filter name must be specified");
+    }
+
     this._name = name;
-    this._weight = weight;
-    this._negativeWeight = negativeWeight;
   }
 
   checkMatch(term) {
@@ -11,13 +13,6 @@ class Filter {
 
   name() {
     return this._name;
-  }
-
-  _score(score) {
-    return {
-      score,
-      weight: (score === 0) ? this._negativeWeight : this._weight,
-    };
   }
 }
 

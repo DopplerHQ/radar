@@ -3,9 +3,8 @@ const asyncPool = require("tiny-async-pool");
 const Filesystem = require('./filesystem');
 const filetypes = require('./filetypes.json');
 const File = require('./objects/file');
-const Key = require('./objects/key');
 const ScannedFile = require('./objects/scannedfile');
-const SecretsFilter = require('./secrets_filter');
+const Scanner = require('./Scanner');
 const Config = require('./config');
 
 const OneMebibyte = 1024 * 1024;
@@ -22,6 +21,8 @@ class Radar {
     this._config = config;
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
+
+    Scanner.init(this._config.getSecretTypes());
 
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
@@ -42,7 +43,7 @@ class Radar {
       const filesToScan = await this._getDirectoryFiles(path);
       this._onFilesToScan(filesToScan.length);
       return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
-        .then(results => Radar._getResultsMap(path, results.filter(result => result.hasKeys())));
+        .then(results => Radar._getResultsMap(path, results.filter(result => result.hasSecrets())));
     }
 
     if (stats.isFile()) {
@@ -188,15 +189,8 @@ class Radar {
    * @param {Number} lineNumber
    */
   _onLineRead(scannedFile, line, lineNumber) {
-    const keys = SecretsFilter.findKeys(line, this._config.getMinMatchScore());
-    if (keys.length === 0) {
-      return;
-    }
-
-    for (const key of keys) {
-      const { term, confidence } = key;
-      scannedFile.addKey(new Key(term, line, lineNumber, confidence));
-    }
+    Scanner.findSecrets(line, scannedFile.file())
+      .forEach(({ secret, secretType }) => scannedFile.addSecret(secret, secretType, line, lineNumber));
   }
 
   /**

@@ -10,18 +10,6 @@ const Filesystem = require('./filesystem');
 const ProgressBar = require('./progressbar');
 
 class CLI {
-  onFilesToScan(num) {
-    if (program.progress) {
-      this.progressBar.init(num);
-    }
-  }
-
-  onFileScanned() {
-    if (program.progress) {
-      this.progressBar.increment();
-    }
-  }
-
   constructor() {
     this.config = new Config();
     this.progressBar = new ProgressBar();
@@ -32,8 +20,8 @@ class CLI {
       .option("-p, --path <path>", "Scan the specified path")
       .option("-r, --repo <url>", "Scan the specified git repo url")
       .option("-b, --branch <name>", "Scan the specified git branch")
+      .option("--secret-types <list>", "Secret types to scan for (e.g. \"crypto_keys, auth_urls\")")
       .option("--max-file-size <MiB>", "Maximum size of files to scan")
-      .option("--min-match-score <number>", "Minimum score for a token to be considered a match, between 0 and 1. Defaults to .7")
       .option("--include-files <list>", "File names to include, case-insensitive (overrides excluded files)")
       .option("--exclude-files <list>", "File names to exclude, case-insensitive (e.g. \"package.json, CHANGELOG.md\")")
       .option("--include-dirs <list>", "Directory names to include, case-insensitive (overrides excluded directories)")
@@ -75,18 +63,13 @@ class CLI {
       }
 
       const resultsArr = [];
-      const maxKeyLength = 75;
       Object.keys(results).forEach((file) => {
-        results[file].keys.forEach((key, i) => {
-          const object = {
-            File: (i === 0) ? file : "",
-            Line: key.lineNumber,
-            Key: (key.key.length > maxKeyLength) ? `${key.key.substring(0, maxKeyLength)}...` : key.key,
-            Score: key.score.toPrecision(2),
-          }
-
-          resultsArr.push(object);
-        });
+        results[file].keys.forEach((secret, i) => resultsArr.push({
+          File: (i === 0) ? file : "",
+          Line: secret.lineNumber,
+          Secret: secret.secret,
+          Type: secret.type,
+        }))
       });
 
       console.log(Table.print(resultsArr));
@@ -100,14 +83,14 @@ class CLI {
   }
 
   setConfig() {
-    const { maxFileSize, minMatchScore, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = program;
+    const { secretTypes, maxFileSize, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = program;
+
+    if (secretTypes) {
+      this.config.setSecretTypes(secretTypes);
+    }
 
     if (maxFileSize) {
       this.config.setMaxFileSizeMiB(maxFileSize);
-    }
-
-    if (minMatchScore) {
-      this.config.setMinMatchScore(minMatchScore);
     }
 
     if (includeFiles) {
@@ -132,6 +115,18 @@ class CLI {
 
     if (excludeFileExts) {
       this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
+    }
+  }
+
+  onFilesToScan(num) {
+    if (program.progress) {
+      this.progressBar.init(num);
+    }
+  }
+
+  onFileScanned() {
+    if (program.progress) {
+      this.progressBar.increment();
     }
   }
 }
