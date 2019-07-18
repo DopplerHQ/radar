@@ -1,13 +1,14 @@
 const Secret = require('../Secret');
+const CryptoKeyExtentions = require('../crypto_key_extensions');
 
 const name = 'Cryptographic key';
 const preFilters = [];
 const filters = ['crypto_keys'];
-// include files w/ no extension so we can support typical openssh key names (e.g. id_ed25519)
-const extensions = ['', 'asc', 'ca-bundle', 'der', 'gpg', 'key', 'opk', 'ospk', 'p10', 'p12', 'p7', 'p7a', 'p7b', 'p7c', 'p7s', 'pem', 'pfx', 'pgp', 'pk', 'pkcs', 'pkcs12', 'ppk', 'spc'];
 
 class CryptoKeys extends Secret {
   constructor() {
+    // include files w/ no extension so we can support typical openssh key names (e.g. id_ed25519)
+    const extensions = [...CryptoKeyExtentions.private_keys, ''];
     super(name, preFilters, filters, extensions);
   }
 
