@@ -2,7 +2,7 @@ const File = require('../../src/objects/file');
 const Secret = require('../../src/objects/secret');
 const ScannedFile = require('../../src/objects/scannedfile');
 
-test('toObject- no keys', () => {
+test('toObject- no secrets', () => {
   const file = new File("test.txt", "/root", 123);
   const scannedFile = new ScannedFile(file);
 
@@ -11,11 +11,11 @@ test('toObject- no keys', () => {
       fileSize: 123,
       fileExtension: "txt",
     },
-    keys: [],
+    secrets: [],
   });
 });
 
-test('toObject- with keys', () => {
+test('toObject- with secrets', () => {
   const file = new File("test.txt", "/root", 123);
   const scannedFile = new ScannedFile(file);
   scannedFile.addSecret("thisisasecret", "API Key", "text thisisasecret more text", 13);
@@ -26,7 +26,7 @@ test('toObject- with keys', () => {
       fileSize: 123,
       fileExtension: "txt",
     },
-    keys: [
+    secrets: [
       {
         secret: "thisisasecret",
         type: "API Key",

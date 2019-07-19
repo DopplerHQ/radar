@@ -14,7 +14,7 @@ class ScannedFile {
     return this._file;
   }
 
-  keys() {
+  secrets() {
     return this._secrets;
   }
 
@@ -39,7 +39,7 @@ class ScannedFile {
         fileSize: this._file.size(),
         fileExtension: this._file.extension(),
       },
-      keys: this._secrets.map(secret => ({
+      secrets: this._secrets.map(secret => ({
         secret: secret.secret(),
         type: secret.type(),
         line: secret.line(),
