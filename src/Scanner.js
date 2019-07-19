@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const Cache = require('./objects/cache');
+const MapCache = require('./objects/mapcache');
 
 let secretTypesToIdentify = [];
-const scanCache = new Cache();
+const scanCache = new MapCache();
 
 class Scanner {
   /**
