@@ -88,15 +88,15 @@ You can instruct the CLI to output JSON by specifying the `--json` flag. This ou
       "fileSize": 903,
       "fileExtension": "env"
     },
-    "keys": [
+    "secrets": [
       {
-        "key": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
+        "secret": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
         "type": "API Key",
         "line": "STRIPE_API_KEY=BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
         "lineNumber": 4
       },
       {
-        "key": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
+        "secret": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
         "type": "API Key",
         "line": "SENDGRID_API_KEY=SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
         "lineNumber": 11
