@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
+const Cache = require('./objects/cache');
+
 let secretTypesToIdentify = [];
+const scanCache = new Cache();
 
 class Scanner {
   /**
@@ -9,6 +12,8 @@ class Scanner {
    * @param {Array<String>} secretTypes
    */
   static init(secretTypes) {
+    scanCache.clear();
+
     const secretTypesPath = path.resolve(__dirname, 'secrets');
     secretTypesToIdentify = fs.readdirSync(secretTypesPath)
       .filter(file => {
@@ -17,6 +22,8 @@ class Scanner {
       })
       .map(file => (file.endsWith('.js') ? require(`${secretTypesPath}/${file}`) : null))
       .filter(file => (file !== null));
+
+    secretTypesToIdentify.forEach(type => scanCache.set(type, new Map()));
   }
 
   /**
@@ -27,7 +34,20 @@ class Scanner {
    */
   static findSecrets(line, file) {
     const secrets = [];
-    secretTypesToIdentify.filter(secretType => secretType.shouldScan(file))
+    secretTypesToIdentify.filter((secretType) => {
+      // TODO extract this logic to a separate function/class?
+      const filePath = file.fullPath();
+      const secretTypeName = secretType.name();
+      const typeCache = scanCache.get(filePath);
+
+      if (typeCache.has(secretTypeName)) {
+        return typeCache.get(secretTypeName);
+      }
+
+      const shouldScanFile = secretType.shouldScan(file);
+      typeCache.set(secretTypeName, shouldScanFile);
+      return shouldScanFile;
+    })
       .forEach((secretType) => {
         const terms = secretType.getTerms(line);
         secretType.check(terms)
