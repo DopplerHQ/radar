@@ -1,11 +1,10 @@
 class Secret {
   /**
    *
-   * @param {Array<String>} preFilters
-   * @param {Array<String>} filters
-   * @param {Array<String>} extensions
+   * @param {String} name
+   * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */
-  constructor(name, preFilters = [], filters = [], extensions = []) {
+  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [] }) {
     if (name === undefined) {
       throw new Error("Secret name must be specified");
     }
@@ -15,8 +14,10 @@ class Secret {
     this._preFilters = preFilters.map(name => require(`./filters/${name}`));
     // must match at least one filter
     this._filters = filters.map(name => require(`./filters/${name}`));
-    // extension must be in list, or blank list to support all extensions
+    // extensions to include, or blank list for all. include overrules an exclude
     this._extensions = extensions;
+    // extensions to exclude
+    this._excludedExtensions = excludedExtensions;
   }
 
   name() {

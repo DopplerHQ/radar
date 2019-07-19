@@ -6,7 +6,7 @@ const filters = ['authurl'];
 
 class AuthUrls extends Secret {
   constructor() {
-    super(name, preFilters, filters);
+    super(name, { preFilters, filters });
   }
 }
 
