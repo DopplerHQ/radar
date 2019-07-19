@@ -4,7 +4,7 @@ const CryptoKeysSecret = require('./crypto_keys');
 
 const name = 'API Key';
 // TODO exclude urls (non-auth), mime types (incl application/vnd)
-const preFilters = ['dictionary', 'email', 'awsresource', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
+const preFilters = ['mixedchars', 'dictionary', 'email', 'awsresource', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
 const filters = ['entropy'];
 
 const charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
