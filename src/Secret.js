@@ -30,10 +30,10 @@ class Secret {
    */
   check(terms) {
     return terms.filter((term) => {
-      const matchesAllPreFilters = this._preFilters.reduce((acc, preFilter) => (
-        acc && !preFilter.checkMatch(term)
-      ), true);
-      return matchesAllPreFilters;
+      const matchesAnyPreFilters = this._preFilters.reduce((acc, preFilter) => (
+        acc || preFilter.checkMatch(term)
+      ), false);
+      return !matchesAnyPreFilters;
     })
       .filter((term) => {
         const matchesAnyFilter = this._filters.reduce((acc, filter) => (
