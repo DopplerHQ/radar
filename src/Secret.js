@@ -58,7 +58,18 @@ class Secret {
    * @param {File} file
    */
   shouldScan(file) {
-    return (this._extensions.length === 0) || this._extensions.includes(file.extension())
+    const extension = file.extension();
+
+    const isWhitelisted = this._extensions.includes(extension);
+    if (isWhitelisted)
+      return true;
+
+    const isBlacklisted = this._excludedExtensions.includes(extension)
+    if (isBlacklisted)
+      return false;
+
+    const acceptAllExtensions = (this._extensions.length === 0);
+    return acceptAllExtensions;
   };
 }
 
