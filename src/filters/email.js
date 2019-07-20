@@ -1,13 +1,16 @@
-const FilterWeights = require('../objects/filterweights');
+const Filter = require('../objects/Filter');
 
-const name = 'Email';
-const weight = FilterWeights.MEDIUM;
-const negativeWeight = FilterWeights.NONE;
+const emailRegex = (/^\S+@\S+\.\S+$/);
 
-function checkMatch(term) {
-  // the simplest email regex will suffice
-  const emailRegex = (/^\S+@\S+\.\S+$/);
-  return emailRegex.test(term) ? 1 : 0;
+class Email extends Filter {
+  constructor() {
+    super('Email');
+  }
+
+  checkMatch(term) {
+    return term.includes('mailto:') || emailRegex.test(term);
+  }
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch };
+const filter = new Email();
+module.exports = filter;

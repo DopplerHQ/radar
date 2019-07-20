@@ -1,5 +1,5 @@
 const File = require('./file');
-const Key = require('./key');
+const Secret = require('./secret');
 
 class ScannedFile {
   /**
@@ -7,41 +7,45 @@ class ScannedFile {
    */
   constructor(file) {
     this._file = file;
-    this._keys = [];
+    this._secrets = [];
   }
 
   file() {
     return this._file;
   }
 
-  keys() {
-    return this._keys;
+  secrets() {
+    return this._secrets;
   }
 
-  hasKeys() {
-    return (this._keys.length !== 0);
+  hasSecrets() {
+    return (this._secrets.length !== 0);
   }
 
   /**
-   * @param {Key} key
+   *
+   * @param {String} secret
+   * @param {String} type
+   * @param {String} line
+   * @param {Number} lineNumber
    */
-  addKey(key) {
-    this._keys.push(key);
+  addSecret(secret, type, line, lineNumber) {
+    this._secrets.push(new Secret(secret, type, line, lineNumber));
   }
 
   toObject() {
-    const object = {};
-    object.metadata = {
-      fileSize: this._file.size(),
-      fileExtension: this._file.extension(),
-    };
-    object.keys = this._keys.map(key => ({
-      key: key.key(),
-      line: key.line(),
-      lineNumber: key.lineNumber(),
-      score: key.confidence(),
-    }));
-    return object;
+    return {
+      metadata: {
+        fileSize: this._file.size(),
+        fileExtension: this._file.extension(),
+      },
+      secrets: this._secrets.map(secret => ({
+        secret: secret.secret(),
+        type: secret.type(),
+        line: secret.line(),
+        lineNumber: secret.lineNumber(),
+      }))
+    }
   }
 }
 

@@ -146,14 +146,14 @@ test("results map", () => {
           fileSize: 123,
           fileExtension: "txt",
         },
-        keys: [],
+        secrets: [],
       },
       "anothertest.ext": {
         metadata: {
           fileSize: 456,
           fileExtension: "ext",
         },
-        keys: [],
+        secrets: [],
       },
     }
   );

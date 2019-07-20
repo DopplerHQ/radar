@@ -1,10 +1,10 @@
 {
   "audio": ["aif", "cda", "mid", "mp3", "mpa", "ogg", "wav", "wma", "wpl"],
-  "video": ["3g2", "3gp", "avi", "flv", "h264", "m4v", "mkv", "mov", "mp4", "mpg", "mpeg", "rm", "swf", "vob", "wmv"],
+  "video": ["3g2", "3gp", "avi", "flv", "h264", "h265", "m4v", "mkv", "mov", "mp4", "mpg", "mpeg", "rm", "swf", "vob", "wmv"],
   "image": ["ai", "bmp", "gif", "ico", "jpeg", "jpg", "png", "ps", "psd", "svg", "tif", "tiff", "icns"],
   "compressed": ["7z", "arj", "deb", "pkg", "rar", "rpm", "gz", "z", "zip", "tar.gz", "tar", "bz2"],
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
-  "binaries": ["o", "exe", "dmg", "msi", "node"],
-  "other": ["log", "sql", "map", "xml", "min.js", "min.css", "tsbuildinfo"]
+  "binaries": ["o", "exe", "dmg", "msi", "node", "bin"],
+  "other": ["log", "sql", "map", "xml", "min.js", "min.css", "min.json", "d.ts", "tsbuildinfo", "lock"]
 }

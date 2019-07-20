@@ -1,14 +1,22 @@
-const FilterWeights = require('../objects/filterweights');
+const Filter = require('../objects/Filter');
 
-const name = 'Mixed alphanumeric characters';
-const weight = FilterWeights.HIGH;
-const negativeWeight = FilterWeights.HIGH;
+class MixedChars extends Filter {
+  constructor() {
+    super('Contains letters and numbers');
+  }
 
-function checkMatch(term) {
-  const containsLetters = term.match(/[a-zA-Z]/i);
-  const containsNumbers = term.match(/[0-9]/i);
+  checkMatch(term) {
+    const containsLetters = term.match(/[a-zA-Z]/);
+    if (containsLetters === null)
+      return false;
 
-  return (containsLetters && containsNumbers) ? 1 : 0;
+    const containsNumbers = term.match(/[0-9]/);
+    if (containsNumbers === null)
+      return false;
+
+    return true;
+  }
 }
 
-module.exports = { name, weight, negativeWeight, checkMatch };
+const filter = new MixedChars();
+module.exports = filter;
