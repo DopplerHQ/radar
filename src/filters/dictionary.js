@@ -11,7 +11,7 @@ class CustomFilter extends Filter {
   constructor(name) {
     super(name);
 
-    this.minimumMatchPercentage = 0.35;
+    this.minimumMatchPercentage = 0.25;
     this.minimumWordLength = 3;
     this.customDictionaryMap = {};
 
