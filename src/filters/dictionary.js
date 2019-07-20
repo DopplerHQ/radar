@@ -1,6 +1,7 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
 const customDictionary = require('../customdictionary');
+const countryDictionary = require('../countrydictionary');
 const filetypes = require('../filetypes');
 const Filter = require('../objects/Filter');
 
@@ -15,6 +16,11 @@ class CustomFilter extends Filter {
     this.customDictionaryMap = {};
 
     customDictionary.forEach((word) => {
+      if (word.length >= this.minimumWordLength) {
+        this.customDictionaryMap[word.toLowerCase()] = true;
+      }
+    });
+    countryDictionary.forEach((word) => {
       if (word.length >= this.minimumWordLength) {
         this.customDictionaryMap[word.toLowerCase()] = true;
       }
