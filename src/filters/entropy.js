@@ -5,7 +5,7 @@ const name = 'Entropy';
 class CustomFilter extends Filter {
   constructor(name) {
     super(name);
-    this.minEntropy = 4;
+    this.minEntropy = 3.75;
   }
   checkMatch(term) {
     const entropy = this._calculateEntropy(term);
