@@ -55,25 +55,25 @@ class CLI {
   print(results) {
     if (program.json) {
       console.dir(results, { depth: 3 } );
+      return;
     }
-    else {
-      if (Object.keys(results).length === 0) {
-        console.log("No secrets detected");
-        return;
-      }
 
-      const resultsArr = [];
-      Object.keys(results).forEach((file) => {
-        results[file].keys.forEach((secret, i) => resultsArr.push({
-          File: (i === 0) ? file : "",
-          Line: secret.lineNumber,
-          Secret: secret.secret,
-          Type: secret.type,
-        }))
-      });
-
-      console.log(Table.print(resultsArr));
+    if (Object.keys(results).length === 0) {
+      console.log("No secrets detected");
+      return;
     }
+
+    const resultsArr = [];
+    Object.keys(results).forEach((file) => {
+      results[file].secrets.forEach((secret, i) => resultsArr.push({
+        File: (i === 0) ? file : "",
+        Line: secret.lineNumber,
+        Secret: secret.secret,
+        Type: secret.type,
+      }))
+    });
+
+    console.log(Table.print(resultsArr));
   }
 
   static async cloneRepo(repo, branch) {
