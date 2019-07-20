@@ -10,9 +10,9 @@ class Secret {
     }
 
     this._name = name;
-    // must match all pre-filters
+    // must not match any pre-filter
     this._preFilters = preFilters.map(name => require(`./filters/${name}`));
-    // must match at least one filter
+    // must match all filters
     this._filters = filters.map(name => require(`./filters/${name}`));
     // extensions to include, or blank list for all. include overrules an exclude
     this._extensions = extensions;
@@ -37,10 +37,10 @@ class Secret {
       return !matchesAnyPreFilters;
     })
       .filter((term) => {
-        const matchesAnyFilter = this._filters.reduce((acc, filter) => (
-          acc || filter.checkMatch(term)
-        ), false);
-        return matchesAnyFilter;
+        const matchesAllFilters = this._filters.reduce((acc, filter) => (
+          acc && filter.checkMatch(term)
+        ), true);
+        return matchesAllFilters;
       })
   }
 
