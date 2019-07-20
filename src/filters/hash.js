@@ -1,14 +1,16 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Cryptographic Hash';
-
 const hashRegex = /^(md5|sha-?(1|2|3|[0-9]{3}))(-|:)?/i;
 
-class CustomFilter extends Filter {
+class Hash extends Filter {
+  constructor() {
+    super('Cryptographic Hash');
+  }
+
   checkMatch(term) {
     return hashRegex.test(term);
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new Hash();
 module.exports = filter;

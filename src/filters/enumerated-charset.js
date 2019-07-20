@@ -1,12 +1,14 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Enumerated Charset';
+class EnumeratedCharset extends Filter {
+  constructor() {
+    super('Enumerated Charset');
+  }
 
-class CustomFilter extends Filter {
   checkMatch(term) {
     return term.includes('abcdefghijklmnopqrstuvwxyz') || term.includes('123456789');
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new EnumeratedCharset();
 module.exports = filter;

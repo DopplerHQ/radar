@@ -1,14 +1,16 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Amazon AWS resource';
-
 const uuidRegex = /[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}/;
 
-class AWSResource extends Filter {
+class UUID extends Filter {
+  constructor() {
+    super('UUID');
+  }
+
   checkMatch(term) {
     return uuidRegex.test(term);
   }
 }
 
-const filter = new AWSResource(name);
+const filter = new UUID();
 module.exports = filter;

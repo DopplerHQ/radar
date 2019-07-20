@@ -1,9 +1,11 @@
 const Filter = require('../objects/Filter');
 const mimeTypes = require('../mimetypes');
 
-const name = 'MIME Type';
+class MIMETypes extends Filter {
+  constructor() {
+    super('MIME Type');
+  }
 
-class CustomFilter extends Filter {
   checkMatch(term) {
     return mimeTypes.reduce((acc, type) => (
       acc || term.includes(type)
@@ -11,5 +13,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new MIMETypes();
 module.exports = filter;

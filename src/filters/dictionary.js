@@ -5,11 +5,9 @@ const countryDictionary = require('../countrydictionary');
 const filetypes = require('../filetypes');
 const Filter = require('../objects/Filter');
 
-const name = 'Dictionary words';
-
-class CustomFilter extends Filter {
-  constructor(name) {
-    super(name);
+class Dictionary extends Filter {
+  constructor() {
+    super('Dictionary words');
 
     this.minimumMatchPercentage = 0.25;
     this.minimumWordLength = 3;
@@ -73,5 +71,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new Dictionary();
 module.exports = filter;

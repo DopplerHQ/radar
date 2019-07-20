@@ -1,12 +1,11 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Entropy';
-
-class CustomFilter extends Filter {
-  constructor(name) {
-    super(name);
+class Entropy extends Filter {
+  constructor() {
+    super('Entropy');
     this.minEntropy = 3.75;
   }
+
   checkMatch(term) {
     const entropy = this._calculateEntropy(term);
     return entropy >= this.minEntropy;
@@ -28,5 +27,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new Entropy();
 module.exports = filter;

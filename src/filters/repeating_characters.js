@@ -1,8 +1,10 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Repeating characters';
+class RepeatingCharacters extends Filter {
+  constructor() {
+    super('Repeating characters');
+  }
 
-class CustomFilter extends Filter {
   checkMatch(term) {
     if ((term.match(/=/g) || []).length >= 3)
       return true;
@@ -36,5 +38,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new RepeatingCharacters();
 module.exports = filter;

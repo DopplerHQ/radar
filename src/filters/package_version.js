@@ -1,14 +1,16 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Auth URL';
-
 const versionRegex = /@\^?[0-9]+\.[0-9]\.[0-9]/;
 
-class CustomFilter extends Filter {
+class PackageVersion extends Filter {
+  constructor() {
+    super('Package Version');
+  }
+
   checkMatch(term) {
     return versionRegex.test(term);
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new PackageVersion();
 module.exports = filter;

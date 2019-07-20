@@ -1,8 +1,10 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Auth URL';
+class AuthURL extends Filter {
+  constructor() {
+    super('Auth URL');
+  }
 
-class CustomFilter extends Filter {
   checkMatch(term) {
     if (!term.includes('://') && !term.startsWith('//')) {
       return false;
@@ -26,5 +28,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new AuthURL();
 module.exports = filter;

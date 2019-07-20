@@ -1,12 +1,14 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Amazon AWS resource';
-
 class AWSResource extends Filter {
+  constructor() {
+    super('Amazon AWS resource');
+  }
+
   checkMatch(term) {
     return term.startsWith('arn:aws:');
   }
 }
 
-const filter = new AWSResource(name);
+const filter = new AWSResource();
 module.exports = filter;

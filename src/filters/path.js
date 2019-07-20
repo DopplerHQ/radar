@@ -1,8 +1,10 @@
 const Filter = require('../objects/Filter');
 
-const name = 'File path';
+class Path extends Filter {
+  constructor() {
+    super('File path');
+  }
 
-class CustomFilter extends Filter {
   checkMatch(term) {
     const hasPathNavigation = (term.includes('../') || term.includes('./') || term.includes('C:\\\\') || term.includes('c:\\\\'));
     const hasMultiplePathSeparators = (!term.includes('://') && ((term.match(/\//g) || []).length >= 2));
@@ -10,5 +12,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new Path();
 module.exports = filter;

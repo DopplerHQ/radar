@@ -1,8 +1,10 @@
 const Filter = require('../objects/Filter');
 
-const name = 'Contains letters and numbers';
+class MixedChars extends Filter {
+  constructor() {
+    super('Contains letters and numbers');
+  }
 
-class CustomFilter extends Filter {
   checkMatch(term) {
     const containsLetters = term.match(/[a-zA-Z]/);
     if (containsLetters === null)
@@ -16,5 +18,5 @@ class CustomFilter extends Filter {
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new MixedChars();
 module.exports = filter;

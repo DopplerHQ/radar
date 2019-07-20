@@ -1,14 +1,16 @@
 const Filter = require('../objects/Filter');
 
-const name = 'URL';
-
 const urlRegex = /([a-zA-Z]+):\/\/.+/;
 
-class CustomFilter extends Filter {
+class URL extends Filter {
+  constructor() {
+    super('URL');
+  }
+
   checkMatch(term) {
     return urlRegex.test(term);
   }
 }
 
-const filter = new CustomFilter(name);
+const filter = new URL();
 module.exports = filter;
