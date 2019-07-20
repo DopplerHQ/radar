@@ -8,6 +8,7 @@ const preFilters = ['dictionary', 'email', 'awsresource', 'uuid', 'regex', 'repe
 const filters = ['mixedchars', 'entropy'];
 
 const charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
+const variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 
 class APIKeys extends Secret {
   constructor() {
@@ -20,6 +21,8 @@ class APIKeys extends Secret {
       .map(char => ((char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126)) ? char : " ")
       .join('')
       .replace(charactersToReplace, ' ')
+      .replace(variableNameRegex, ' ')
+      .trim()
       .split(/ +/)
       .filter(term => (term !== ''));
   }
