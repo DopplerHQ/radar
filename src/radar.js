@@ -91,7 +91,7 @@ class Radar {
     const fullPath = `${path}/${name}`;
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
-    return new File(name.toLowerCase(), path.toLowerCase(), fileSize);
+    return new File(name, path, fileSize);
   }
 
   /**
@@ -100,9 +100,9 @@ class Radar {
    * @returns {Boolean}
    */
   _shouldScanFile(file) {
-    const name = file.name();
+    const name = file.name().toLowerCase();
     const size = file.size();
-    const ext = file.extension();
+    const ext = file.extension().toLowerCase();
 
     if (this._isFileExcluded(name, ext)) {
       return false;

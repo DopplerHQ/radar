@@ -58,7 +58,7 @@ class Secret {
    * @param {File} file
    */
   shouldScan(file) {
-    const extension = file.extension();
+    const extension = file.extension().toLowerCase();
 
     const isWhitelisted = this._extensions.includes(extension);
     if (isWhitelisted)
