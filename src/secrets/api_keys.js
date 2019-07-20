@@ -20,6 +20,13 @@ class APIKeys extends Secret {
   }
 
   getTerms(line) {
+    const excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead'];
+    const lineContainsExclusion = excludedTerms.reduce((acc, val) => (
+      acc || line.includes(val)
+    ), false);
+    if (lineContainsExclusion)
+      return [];
+
     return line.split('')
       .map(char => ((char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126)) ? char : " ")
       .join('')
