@@ -75,8 +75,8 @@ This is the sample output of running the CLI on a repo with a `.env` file contai
 ```
 File  Line  Secret                                            Type
 ----  ----  ------------------------------------------------  -------
-.env  4     BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG          API Key
-      11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  API Key
+.env  4     BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG          api_key
+      11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  api_key
 ```
 
 You can instruct the CLI to output JSON by specifying the `--json` flag. This output is identical to the results returned by the Node library's `scan()` function.
@@ -91,13 +91,13 @@ You can instruct the CLI to output JSON by specifying the `--json` flag. This ou
     "secrets": [
       {
         "secret": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
-        "type": "API Key",
+        "type": "api_key",
         "line": "STRIPE_API_KEY=BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
         "lineNumber": 4
       },
       {
         "secret": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
-        "type": "API Key",
+        "type": "api_key",
         "line": "SENDGRID_API_KEY=SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
         "lineNumber": 11
       }
