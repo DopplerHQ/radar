@@ -1,7 +1,6 @@
 const Filter = require('../objects/Filter');
 
 const name = 'Repeating characters';
-const name = 'Auth URL';
 
 class CustomFilter extends Filter {
   checkMatch(term) {
