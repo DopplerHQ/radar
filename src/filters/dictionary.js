@@ -46,6 +46,8 @@ class CustomFilter extends Filter {
       // separate camelCase terms
       .replace(/([a-z])([A-Z])/g, '$1 $2')
       .replace(/([A-Z]+?)([A-Z][a-z])/g, '$1 $2')
+      // separate capital letters following lowercase letters and numbers
+      .replace(/([a-z]+[0-9]+)([A-Z])/g, '$1 $2')
       .toLowerCase()
       .trim()
       .split(/ +/)
