@@ -1,7 +1,7 @@
 const Secret = require('../Secret');
 const CryptoKeyExtentions = require('../crypto_key_extensions');
 
-const name = 'Cryptographic key';
+const name = 'crypto_key';
 const filters = ['crypto_keys'];
 // include files w/ no extension so we can support typical openssh key names (e.g. id_ed25519)
 const extensions = [...CryptoKeyExtentions.private_keys, ''];

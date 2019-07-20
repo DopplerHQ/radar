@@ -1,6 +1,6 @@
 const Secret = require('../Secret');
 
-const name = 'Auth URL';
+const name = 'auth_url';
 const preFilters = ['path'];
 const filters = ['authurl'];
 
