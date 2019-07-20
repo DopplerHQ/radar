@@ -14,6 +14,9 @@ class APIKeys extends Secret {
   constructor() {
     const excludedExtensions = [...CryptoKeyExtentions.private_keys, ...CryptoKeyExtentions.public_keys];
     super(name, { preFilters, filters, excludedExtensions });
+
+    this.minTermLength = 20;
+    this.maxTermLength = 1000;
   }
 
   getTerms(line) {
@@ -24,7 +27,7 @@ class APIKeys extends Secret {
       .replace(variableNameRegex, ' ')
       .trim()
       .split(/ +/)
-      .filter(term => (term !== ''));
+      .filter(term => (term.length >= this.minTermLength) && (term.length <= this.maxTermLength));
   }
 }
 
