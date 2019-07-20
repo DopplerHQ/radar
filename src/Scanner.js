@@ -22,8 +22,6 @@ class Scanner {
       })
       .map(file => (file.endsWith('.js') ? require(`${secretTypesPath}/${file}`) : null))
       .filter(file => (file !== null));
-
-    secretTypesToIdentify.forEach(type => scanCache.set(type, new Map()));
   }
 
   /**
@@ -40,13 +38,12 @@ class Scanner {
       const secretTypeName = secretType.name();
       const typeCache = scanCache.get(filePath);
 
-      if (typeCache.has(secretTypeName)) {
-        return typeCache.get(secretTypeName);
+      if (!typeCache.has(secretTypeName)) {
+        const shouldScanFile = secretType.shouldScan(file);
+        typeCache.set(secretTypeName, shouldScanFile);
       }
 
-      const shouldScanFile = secretType.shouldScan(file);
-      typeCache.set(secretTypeName, shouldScanFile);
-      return shouldScanFile;
+      return typeCache.get(secretTypeName);
     })
       .forEach((secretType) => {
         const terms = secretType.getTerms(line);
