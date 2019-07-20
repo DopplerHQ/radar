@@ -4,12 +4,12 @@ const name = 'Contains letters and numbers';
 
 class CustomFilter extends Filter {
   checkMatch(term) {
-    const containsLetters = term.match(/[a-zA-Z]/i);
-    if (!containsLetters)
+    const containsLetters = term.match(/[a-zA-Z]/);
+    if (containsLetters === null)
       return false;
 
-    const containsNumbers = term.match(/[0-9]/i);
-    if (!containsNumbers)
+    const containsNumbers = term.match(/[0-9]/);
+    if (containsNumbers === null)
       return false;
 
     return true;
