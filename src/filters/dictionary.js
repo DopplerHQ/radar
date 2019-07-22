@@ -9,7 +9,7 @@ class Dictionary extends Filter {
   constructor() {
     super('Dictionary words');
 
-    this.minimumMatchPercentage = 0.25;
+    this.minimumMatchPercentage = 0.35;
     this.minimumWordLength = 3;
     this.customDictionaryMap = {};
 
