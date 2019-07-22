@@ -3,7 +3,7 @@ const CryptoKeyExtentions = require('../crypto_key_extensions');
 const CryptoKeysSecret = require('./crypto_keys');
 
 const name = 'api_key';
-const preFilters = ['dictionary', 'email', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
+const preFilters = ['dictionary', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
 const filters = ['mixedchars', 'entropy'];
 
 const charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
