@@ -4,7 +4,7 @@ class Secret {
    * @param {String} name
    * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */
-  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [], shouldCacheShouldScan = true }) {
+  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [], fileTags = [], excludedFileTags = [], shouldCacheShouldScan = true }) {
     if (name === undefined) {
       throw new Error("Secret name must be specified");
     }
@@ -18,6 +18,10 @@ class Secret {
     this._extensions = extensions;
     // extensions to exclude
     this._excludedExtensions = excludedExtensions;
+    // file tags to include, or blank list for all. include overrules an exclude
+    this._fileTags = fileTags;
+    // file tags to exclude
+    this._excludedFileTags = excludedFileTags;
     // whether the initial result from shouldScan should be cached
     this._shouldCacheShouldScan = shouldCacheShouldScan;
   }
@@ -73,18 +77,25 @@ class Secret {
     const file = scannedFile.file();
     const extension = file.extension().toLowerCase();
 
-    const isWhitelisted = this._extensions.includes(extension);
-    if (isWhitelisted) {
+    const hasIncludedFileTag = this._fileTags.reduce((acc, tag) => (
+      acc || scannedFile.tags().has(tag)
+    ), false);
+    const isExtensionWhitelisted = this._extensions.includes(extension);
+    if (hasIncludedFileTag || isExtensionWhitelisted) {
       return true;
     }
 
-    const isBlacklisted = this._excludedExtensions.includes(extension)
-    if (isBlacklisted) {
+    const hasExcludedFileTag = this._excludedFileTags.reduce((acc, excludedTag) => (
+      acc || scannedFile.tags().has(excludedTag)
+    ), false);
+    const isExtensionBlacklisted = this._excludedExtensions.includes(extension);
+    if (hasExcludedFileTag || isExtensionBlacklisted) {
       return false;
     }
 
+    const acceptAllTags = (this._fileTags.length === 0);
     const acceptAllExtensions = (this._extensions.length === 0);
-    return acceptAllExtensions;
+    return acceptAllTags || acceptAllExtensions;
   };
 }
 
