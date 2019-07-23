@@ -1,14 +1,15 @@
 const Filter = require('../objects/Filter');
 
-const PrivateKeyRegex = (/^.*(BEGIN ).*(PRIVATE KEY).*$/i);
-
 class CryptoKeys extends Filter {
   constructor() {
     super('Identify cryptographic keys');
+
+    this.beginPrivateKeyRegex = (/^.*(BEGIN ).*(PRIVATE KEY).*$/i);
+    this.endPrivateKeyRegex = (/^.*(END ).*(PRIVATE KEY).*$/i);
   }
 
   checkMatch(term) {
-    return PrivateKeyRegex.test(term);
+    return this.beginPrivateKeyRegex.test(term) | this.endPrivateKeyRegex.test(term);
   }
 }
 

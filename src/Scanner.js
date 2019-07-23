@@ -35,7 +35,7 @@ class Scanner {
     secretTypesToIdentify.filter(secretType => Scanner.shouldScanForSecretType(secretType, scannedFile))
       .forEach((secretType) => {
         const terms = secretType.getTerms(line);
-        secretType.check(terms)
+        secretType.check(terms, scannedFile)
           .forEach(secret => {
             secrets.push({
               secret,

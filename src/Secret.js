@@ -27,9 +27,10 @@ class Secret {
   /**
    * Checks a line against
    * @param {Array<String>} terms
+   * @param {ScannedFile} scannedFile
    * @returns {Array<String>} Detected secrets
    */
-  check(terms) {
+  check(terms, scannedFile) {
     return terms.filter((term) => {
       const matchesAnyPreFilters = this._preFilters.reduce((acc, preFilter) => (
         acc || preFilter.checkMatch(term)

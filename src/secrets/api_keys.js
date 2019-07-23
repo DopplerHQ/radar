@@ -1,6 +1,6 @@
 const Secret = require('../Secret');
 const CryptoKeyExtentions = require('../crypto_key_extensions');
-const CryptoKeysSecret = require('./crypto_keys');
+const FileTags = require('../objects/file_tags');
 
 const name = 'api_key';
 const preFilters = ['dictionary', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
@@ -35,6 +35,17 @@ class APIKeys extends Secret {
       .split(/ +/)
       .filter(term => (term.length >= this.minTermLength) && (term.length <= this.maxTermLength));
   }
+
+  shouldScan(scannedFile) {
+    if (scannedFile.tags().has(FileTags.CRYPTO_FILE)) {
+      return {
+        shouldScan: false,
+        cache: false,
+      };
+    }
+
+    return Object.assign({}, super.shouldScan(scannedFile), { shouldCache: false });
+  };
 }
 
 const apiKeys = new APIKeys();
