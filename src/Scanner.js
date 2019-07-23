@@ -36,7 +36,7 @@ class Scanner {
     this.secretTypesToIdentify.filter(secretType => this.shouldScanForSecretType(secretType, scannedFile))
       .map((secretType) => {
         const terms = secretType.getTerms(line);
-        return secretType.check(terms, scannedFile)
+        return secretType.check(terms, scannedFile.tags())
           .map(secret => ({
             secret,
             secretType: secretType.name(),

@@ -13,16 +13,16 @@ class CryptoKeys extends Secret {
     super(name, { filters, extensions });
   }
 
-  check(terms, scannedFile) {
+  check(terms, tags) {
     const results = super.check(terms);
     const foundKey = (results.length > 0);
     if (foundKey && terms[0].includes("END ")) {
-        scannedFile.tags().delete(FileTags.CRYPTO_FILE);
+        tags.delete(FileTags.CRYPTO_FILE);
         return [];
       }
 
     if (foundKey) {
-      scannedFile.tags().add(FileTags.CRYPTO_FILE);
+      tags.add(FileTags.CRYPTO_FILE);
     }
 
     return results;
