@@ -1,19 +1,19 @@
+const FileTags = require('../objects/file_tags');
 const Secret = require('../Secret');
 const CryptoKeyExtentions = require('../crypto_key_extensions');
-const FileTags = require('../objects/file_tags');
-
-const name = 'api_key';
-const preFilters = ['dictionary', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
-const filters = ['mixedchars', 'entropy'];
-
-const charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
-const variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 
 class APIKeys extends Secret {
   constructor() {
+    const name = 'api_key';
+    const preFilters = ['dictionary', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
+    const filters = ['mixedchars', 'entropy'];
     const excludedExtensions = [...CryptoKeyExtentions.private_keys, ...CryptoKeyExtentions.public_keys];
+    const excludedFileTags = [FileTags.CRYPTO_FILE];
     const shouldCacheShouldScan = false;
-    super(name, { preFilters, filters, excludedExtensions, shouldCacheShouldScan });
+    super(name, { preFilters, filters, excludedExtensions, excludedFileTags, shouldCacheShouldScan });
+
+    this.charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
+    this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 
     this.minTermLength = 20;
     this.maxTermLength = 1000;
@@ -30,8 +30,8 @@ class APIKeys extends Secret {
     return line.split('')
       .map(char => ((char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126)) ? char : " ")
       .join('')
-      .replace(charactersToReplace, ' ')
-      .replace(variableNameRegex, ' ')
+      .replace(this.charactersToReplace, ' ')
+      .replace(this.variableNameRegex, ' ')
       .trim()
       .split(/ +/)
       .filter(term => (term.length >= this.minTermLength) && (term.length <= this.maxTermLength));
