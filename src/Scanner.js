@@ -38,10 +38,10 @@ class Scanner {
         const terms = secretType.getTerms(line);
         return secretType.check(terms, scannedFile)
           .map(secret => ({
-              secret,
-              secretType: secretType.name(),
+            secret,
+            secretType: secretType.name(),
           }))
-          })
+      })
       .forEach(s => secrets.push(...s));
     return secrets;
   }
@@ -56,18 +56,20 @@ class Scanner {
     const file = scannedFile.file();
     const filePath = file.fullPath();
     const secretTypeName = secretType.name();
-    const typeCache = scanCache.get(filePath);
+    const shouldCacheShouldScan = secretType.shouldCacheShouldScan();
 
-    if (typeCache.has(secretTypeName)) {
-      return typeCache.get(secretTypeName);
-    }
+    if (shouldCacheShouldScan) {
+      const typeCache = this.scanCache.get(filePath);
+      if (typeCache.has(secretTypeName)) {
+        return typeCache.get(secretTypeName);
+      }
 
-    const { shouldScan, shouldCache } = secretType.shouldScan(scannedFile);
-    if (shouldCache){
+      const shouldScan = secretType.shouldScan(scannedFile);
       typeCache.set(secretTypeName, shouldScan);
+      return shouldScan;
     }
 
-    return shouldScan;
+    return secretType.shouldScan(scannedFile);
   }
 };
 

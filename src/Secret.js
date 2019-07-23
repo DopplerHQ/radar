@@ -4,7 +4,7 @@ class Secret {
    * @param {String} name
    * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */
-  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [] }) {
+  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [], shouldCacheShouldScan = true }) {
     if (name === undefined) {
       throw new Error("Secret name must be specified");
     }
@@ -18,6 +18,8 @@ class Secret {
     this._extensions = extensions;
     // extensions to exclude
     this._excludedExtensions = excludedExtensions;
+    // whether the initial result from shouldScan should be cached
+    this._shouldCacheShouldScan = shouldCacheShouldScan;
   }
 
   name() {
@@ -55,9 +57,17 @@ class Secret {
   };
 
   /**
+   * Whether the call to shouldScan should be cached
+   * @returns {boolean}
+   */
+  shouldCacheShouldScan() {
+    return this._shouldCacheShouldScan;
+  }
+
+  /**
    *
    * @param {ScannedFile} scannedFile
-   * @returns {{ shouldScan: boolean, shouldCache: boolean}} whether the file should be scanned by the current secret, and whether that decision should be cached
+   * @returns {boolean} whether the file should be scanned by the current secret
    */
   shouldScan(scannedFile) {
     const file = scannedFile.file();
@@ -65,25 +75,16 @@ class Secret {
 
     const isWhitelisted = this._extensions.includes(extension);
     if (isWhitelisted) {
-      return {
-        shouldScan: true,
-        shouldCache: true,
-      };
+      return true;
     }
 
     const isBlacklisted = this._excludedExtensions.includes(extension)
     if (isBlacklisted) {
-      return {
-        shouldScan: false,
-        shouldCache: true,
-      };
+      return false;
     }
 
     const acceptAllExtensions = (this._extensions.length === 0);
-    return {
-      shouldScan: acceptAllExtensions,
-      shouldCache: true,
-    };
+    return acceptAllExtensions;
   };
 }
 

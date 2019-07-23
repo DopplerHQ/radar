@@ -12,7 +12,8 @@ const variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 class APIKeys extends Secret {
   constructor() {
     const excludedExtensions = [...CryptoKeyExtentions.private_keys, ...CryptoKeyExtentions.public_keys];
-    super(name, { preFilters, filters, excludedExtensions });
+    const shouldCacheShouldScan = false;
+    super(name, { preFilters, filters, excludedExtensions, shouldCacheShouldScan });
 
     this.minTermLength = 20;
     this.maxTermLength = 1000;
