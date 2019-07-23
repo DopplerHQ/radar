@@ -9,7 +9,7 @@ class CryptoKeys extends Filter {
   }
 
   checkMatch(term) {
-    return this.beginPrivateKeyRegex.test(term) | this.endPrivateKeyRegex.test(term);
+    return this.beginPrivateKeyRegex.test(term) || this.endPrivateKeyRegex.test(term);
   }
 }
 
