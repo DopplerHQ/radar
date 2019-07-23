@@ -3,19 +3,20 @@ const path = require('path');
 
 const MapCache = require('./objects/mapcache');
 
-let secretTypesToIdentify = [];
-const scanCache = new MapCache();
-
 class Scanner {
+  constructor() {
+    this.secretTypesToIdentify = [];
+    this.scanCache = new MapCache();
+  }
   /**
    *
    * @param {Array<String>} secretTypes
    */
-  static init(secretTypes) {
-    scanCache.clear();
+  init(secretTypes) {
+    this.scanCache.clear();
 
     const secretTypesPath = path.resolve(__dirname, 'secrets');
-    secretTypesToIdentify = fs.readdirSync(secretTypesPath)
+    this.secretTypesToIdentify = fs.readdirSync(secretTypesPath)
       .filter(file => {
         const fileName = file.substring(0, file.indexOf('.'));
         return ((secretTypes.length === 0) || secretTypes.includes(fileName))
@@ -30,19 +31,18 @@ class Scanner {
    * @param {ScannedFile} scannedFile
    * @returns {Array<{ secret: String, secretType: String}}>}
    */
-  static findSecrets(line, scannedFile) {
+  findSecrets(line, scannedFile) {
     const secrets = [];
-    secretTypesToIdentify.filter(secretType => Scanner.shouldScanForSecretType(secretType, scannedFile))
-      .forEach((secretType) => {
+    this.secretTypesToIdentify.filter(secretType => this.shouldScanForSecretType(secretType, scannedFile))
+      .map((secretType) => {
         const terms = secretType.getTerms(line);
-        secretType.check(terms, scannedFile)
-          .forEach(secret => {
-            secrets.push({
+        return secretType.check(terms, scannedFile)
+          .map(secret => ({
               secret,
               secretType: secretType.name(),
-            });
+          }))
           })
-    });
+      .forEach(s => secrets.push(...s));
     return secrets;
   }
 
@@ -52,7 +52,7 @@ class Scanner {
    * @param {ScannedFile} scannedFile
    * @returns {boolean}
    */
-  static shouldScanForSecretType(secretType, scannedFile) {
+  shouldScanForSecretType(secretType, scannedFile) {
     const file = scannedFile.file();
     const filePath = file.fullPath();
     const secretTypeName = secretType.name();

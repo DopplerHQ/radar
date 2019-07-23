@@ -22,7 +22,8 @@ class Radar {
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
-    Scanner.init(this._config.getSecretTypes());
+    this._scanner = new Scanner();
+    this._scanner.init(this._config.getSecretTypes());
 
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
@@ -189,7 +190,7 @@ class Radar {
    * @param {Number} lineNumber
    */
   _onLineRead(scannedFile, line, lineNumber) {
-    Scanner.findSecrets(line, scannedFile)
+    this._scanner.findSecrets(line, scannedFile)
       .forEach(({ secret, secretType }) => scannedFile.addSecret(secret, secretType, line, lineNumber));
   }
 
