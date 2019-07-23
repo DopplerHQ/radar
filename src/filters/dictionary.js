@@ -1,7 +1,7 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
-const customDictionary = require('../customdictionary');
-const countryDictionary = require('../countrydictionary');
+const customDictionary = require('../dictionaries/custom');
+const countryDictionary = require('../dictionaries/country');
 const filetypes = require('../filetypes');
 const Filter = require('../objects/Filter');
 
