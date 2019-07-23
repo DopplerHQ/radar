@@ -7,10 +7,8 @@ class APIKeys extends Secret {
     const name = 'api_key';
     const preFilters = ['dictionary', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
     const filters = ['mixedchars', 'entropy'];
-    const excludedExtensions = [...CryptoKeyExtentions.private_keys, ...CryptoKeyExtentions.public_keys];
-    const excludedFileTags = [FileTags.CRYPTO_FILE];
-    const shouldCacheShouldScan = false;
-    super(name, { preFilters, filters, excludedExtensions, excludedFileTags, shouldCacheShouldScan });
+    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
+    super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);

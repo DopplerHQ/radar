@@ -4,7 +4,7 @@ class Secret {
    * @param {String} name
    * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */
-  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [], fileTags = [], excludedFileTags = [], shouldCacheShouldScan = true }) {
+  constructor(name, { preFilters = [], filters = [], fileTags = [], excludedFileTags = [] }) {
     if (name === undefined) {
       throw new Error("Secret name must be specified");
     }
@@ -14,16 +14,10 @@ class Secret {
     this._preFilters = preFilters.map(name => require(`./filters/${name}`));
     // must match all filters
     this._filters = filters.map(name => require(`./filters/${name}`));
-    // extensions to include, or blank list for all. include overrules an exclude
-    this._extensions = extensions;
-    // extensions to exclude
-    this._excludedExtensions = excludedExtensions;
     // file tags to include, or blank list for all. include overrules an exclude
     this._fileTags = fileTags;
     // file tags to exclude
     this._excludedFileTags = excludedFileTags;
-    // whether the initial result from shouldScan should be cached
-    this._shouldCacheShouldScan = shouldCacheShouldScan;
   }
 
   name() {
@@ -65,41 +59,27 @@ class Secret {
   };
 
   /**
-   * Whether the call to shouldScan should be cached
-   * @returns {boolean}
-   */
-  shouldCacheShouldScan() {
-    return this._shouldCacheShouldScan;
-  }
-
-  /**
    *
-   * @param {ScannedFile} scannedFile
+   * @param {Set<FileTags>} tags
    * @returns {boolean} whether the file should be scanned by the current secret
    */
-  shouldScan(scannedFile) {
-    const file = scannedFile.file();
-    const extension = file.extension().toLowerCase();
-
+  shouldScan(tags) {
     const hasIncludedFileTag = this._fileTags.reduce((acc, tag) => (
-      acc || scannedFile.tags().has(tag)
+      acc || tags.has(tag)
     ), false);
-    const isExtensionWhitelisted = this._extensions.includes(extension);
-    if (hasIncludedFileTag || isExtensionWhitelisted) {
+    if (hasIncludedFileTag) {
       return true;
     }
 
     const hasExcludedFileTag = this._excludedFileTags.reduce((acc, excludedTag) => (
-      acc || scannedFile.tags().has(excludedTag)
+      acc || tags.has(excludedTag)
     ), false);
-    const isExtensionBlacklisted = this._excludedExtensions.includes(extension);
-    if (hasExcludedFileTag || isExtensionBlacklisted) {
+    if (hasExcludedFileTag) {
       return false;
     }
 
     const acceptAllTags = (this._fileTags.length === 0);
-    const acceptAllExtensions = (this._extensions.length === 0);
-    return acceptAllTags || acceptAllExtensions;
+    return acceptAllTags;
   };
 }
 

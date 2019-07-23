@@ -6,6 +6,7 @@ const File = require('./objects/file');
 const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./Scanner');
 const Config = require('./config');
+const FileClassifier = require('./file_classifier');
 
 const OneMebibyte = 1024 * 1024;
 
@@ -178,6 +179,8 @@ class Radar {
    */
   async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
+    FileClassifier.classify(file)
+      .forEach(tag => scannedFile.addTag(tag));
     await Filesystem.readFile(scannedFile, this._onLineRead)
       .catch(() => {});
     this._onFileScanned();

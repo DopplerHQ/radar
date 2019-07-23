@@ -1,20 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-const MapCache = require('./objects/mapcache');
-
 class Scanner {
   constructor() {
     this.secretTypesToIdentify = [];
-    this.scanCache = new MapCache();
   }
   /**
    *
    * @param {Array<String>} secretTypes
    */
   init(secretTypes) {
-    this.scanCache.clear();
-
     const secretTypesPath = path.resolve(__dirname, 'secrets');
     this.secretTypesToIdentify = fs.readdirSync(secretTypesPath)
       .filter(file => {
@@ -70,23 +65,7 @@ class Scanner {
    * @returns {boolean}
    */
   shouldScanForSecretType(secretType, scannedFile) {
-    const file = scannedFile.file();
-    const filePath = file.fullPath();
-    const secretTypeName = secretType.name();
-    const shouldCacheShouldScan = secretType.shouldCacheShouldScan();
-
-    if (shouldCacheShouldScan) {
-      const typeCache = this.scanCache.get(filePath);
-      if (typeCache.has(secretTypeName)) {
-        return typeCache.get(secretTypeName);
-      }
-
-      const shouldScan = secretType.shouldScan(scannedFile);
-      typeCache.set(secretTypeName, shouldScan);
-      return shouldScan;
-    }
-
-    return secretType.shouldScan(scannedFile);
+    return secretType.shouldScan(scannedFile.tags());
   }
 };
 
