@@ -13,19 +13,24 @@ class CryptoKeys extends Secret {
     super(name, { filters, extensions });
   }
 
-  check(terms, tags) {
-    const results = super.check(terms);
-    const foundKey = (results.length > 0);
+  check(terms) {
+    const { secrets } = super.check(terms);
+    const foundKey = (secrets.length > 0);
     if (foundKey && terms[0].includes("END ")) {
-        tags.delete(FileTags.CRYPTO_FILE);
-        return [];
+        return {
+          secrets: [],
+          tags: {
+            [FileTags.CRYPTO_FILE]: false,
+          }
+        };
       }
 
-    if (foundKey) {
-      tags.add(FileTags.CRYPTO_FILE);
+    return {
+      secrets,
+      tags: {
+        [FileTags.CRYPTO_FILE]: (foundKey ? true : null),
+      },
     }
-
-    return results;
   }
 
   /**

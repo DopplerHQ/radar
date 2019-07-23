@@ -33,11 +33,10 @@ class Secret {
   /**
    * Checks a list of terms against the secret's filters
    * @param {Array<String>} terms
-   * @param {Array<>} tags Tags that apply to the current file being scanned
-   * @returns {Array<String>} Detected secrets
+   * @returns {Array<Object>} Detected secrets and tags to add/remove from the file
    */
-  check(terms, tags) {
-    return terms.filter((term) => {
+  check(terms) {
+    const secrets = terms.filter((term) => {
       const matchesAnyPreFilters = this._preFilters.reduce((acc, preFilter) => (
         acc || preFilter.checkMatch(term)
       ), false);
@@ -48,7 +47,12 @@ class Secret {
           acc && filter.checkMatch(term)
         ), true);
         return matchesAllFilters;
-      })
+      });
+
+    return {
+      secrets,
+      tags: [],
+    }
   }
 
   /**

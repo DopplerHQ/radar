@@ -32,18 +32,35 @@ class Scanner {
    * @returns {Array<{ secret: String, secretType: String}}>}
    */
   findSecrets(line, scannedFile) {
-    const secrets = [];
+    const allSecrets = [];
     this.secretTypesToIdentify.filter(secretType => this.shouldScanForSecretType(secretType, scannedFile))
       .map((secretType) => {
         const terms = secretType.getTerms(line);
-        return secretType.check(terms, scannedFile.tags())
-          .map(secret => ({
-            secret,
-            secretType: secretType.name(),
-          }))
+        const { secrets, tags } = secretType.check(terms);
+
+        if ((tags !== undefined) && (Object.keys(tags).length > 0)) {
+          this.handleTags(tags, scannedFile);
+        }
+
+        return secrets.map(secret => ({
+          secret,
+          secretType: secretType.name(),
+        }))
       })
-      .forEach(s => secrets.push(...s));
-    return secrets;
+      .forEach(s => allSecrets.push(...s));
+    return allSecrets;
+  }
+
+  handleTags(tags, scannedFile) {
+    Object.keys(tags).forEach((tag) => {
+      const value = tags[tag];
+      if (value === true) {
+        scannedFile.tags().add(tag);
+      }
+      else if (value === false) {
+        scannedFile.tags().delete(tag);
+      }
+    })
   }
 
   /**
