@@ -36,17 +36,6 @@ class APIKeys extends Secret {
       .split(/ +/)
       .filter(term => (term.length >= this.minTermLength) && (term.length <= this.maxTermLength));
   }
-
-  shouldScan(scannedFile) {
-    if (scannedFile.tags().has(FileTags.CRYPTO_FILE)) {
-      return {
-        shouldScan: false,
-        cache: false,
-      };
-    }
-
-    return Object.assign({}, super.shouldScan(scannedFile), { shouldCache: false });
-  };
 }
 
 const apiKeys = new APIKeys();
