@@ -4,7 +4,7 @@ const regexCharacterSet1 = /\[((a-z){2}|a-z0-9|0-9a-z)/i;
 const regexCharacterSet2 = /((a-z){2}|a-z0-9|0-9a-z)\]/i;
 const regexCharacterSet3 = /\[(a-fA-F|A-Fa-f|a-f0-9|0-9a-f)/i;
 const regexCharacterSet4 = /((a-f){2}|a-f0-9|0-9a-f)\]/i;
-const regexNumRepetitions = /\{[0-9]+,[0-9]*\}/;
+const regexNumRepetitions = /\{[0-9]+,([0-9]*|\*?)\}/;
 
 class Regex extends Filter {
   constructor() {

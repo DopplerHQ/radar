@@ -7,6 +7,7 @@ test('valid email', () => {
   expect(Filter.isMatch("test.test@test.test.test")).toBe(true);
   expect(Filter.isMatch("test+test@test.test.test")).toBe(true);
   expect(Filter.isMatch("test.test+test@test.test.test")).toBe(true);
+  expect(Filter.isMatch("mailto:emailaddress")).toBe(true);
 });
 
 test('invalid email', () => {

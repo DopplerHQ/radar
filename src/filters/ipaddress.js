@@ -1,6 +1,6 @@
 const Filter = require('../objects/Filter');
 
-const basicIPV6Regex = /([a-f0-9]{4}:){7}([a-f0-9]{4})/;
+const basicIPV6Regex = /([a-f0-9]{4}:){7}([a-f0-9]{4})/i;
 
 class IPAddress extends Filter {
   constructor() {

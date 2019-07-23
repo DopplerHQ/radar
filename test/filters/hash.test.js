@@ -7,3 +7,10 @@ test('hash', () => {
   expect(Filter.isMatch('sha512-OfC2uemaknXr87bdLUkWog7nYuliM9Ij5HUcajsVcMCpQrcLmtxRbVFTIqmcSkSeYRBFBRxs2FiUqFJDLdiebA==')).toBe(true);
   expect(Filter.isMatch('sha256-OfC2uemaknXr87bdLUkWog7nYuliM9Ij5HUcajsVcMCpQrcLmtxRbVFTIqmcSkSeYRBFBRxs2FiUqFJDLdiebA==')).toBe(true);
 });
+
+test('not hash', () => {
+  expect(Filter.isMatch('md5')).toBe(false);
+  expect(Filter.isMatch('test-md5')).toBe(false);
+  expect(Filter.isMatch('sha512')).toBe(false);
+  expect(Filter.isMatch('test-sha512')).toBe(false);
+});
