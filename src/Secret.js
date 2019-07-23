@@ -55,21 +55,34 @@ class Secret {
 
   /**
    *
-   * @param {File} file
+   * @param {ScannedFile} scannedFile
+   * @returns {{ shouldScan: boolean, shouldCache: boolean}} whether the file should be scanned by the current secret, and whether that decision should be cached
    */
-  shouldScan(file) {
+  shouldScan(scannedFile) {
+    const file = scannedFile.file();
     const extension = file.extension().toLowerCase();
 
     const isWhitelisted = this._extensions.includes(extension);
-    if (isWhitelisted)
-      return true;
+    if (isWhitelisted) {
+      return {
+        shouldScan: true,
+        shouldCache: true,
+      };
+    }
 
     const isBlacklisted = this._excludedExtensions.includes(extension)
-    if (isBlacklisted)
-      return false;
+    if (isBlacklisted) {
+      return {
+        shouldScan: false,
+        shouldCache: true,
+      };
+    }
 
     const acceptAllExtensions = (this._extensions.length === 0);
-    return acceptAllExtensions;
+    return {
+      shouldScan: acceptAllExtensions,
+      shouldCache: true,
+    };
   };
 }
 

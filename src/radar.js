@@ -189,7 +189,7 @@ class Radar {
    * @param {Number} lineNumber
    */
   _onLineRead(scannedFile, line, lineNumber) {
-    Scanner.findSecrets(line, scannedFile.file())
+    Scanner.findSecrets(line, scannedFile)
       .forEach(({ secret, secretType }) => scannedFile.addSecret(secret, secretType, line, lineNumber));
   }
 

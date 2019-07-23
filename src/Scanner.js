@@ -27,24 +27,12 @@ class Scanner {
   /**
    *
    * @param {String} line
-   * @param {File} file
+   * @param {ScannedFile} scannedFile
    * @returns {Array<{ secret: String, secretType: String}}>}
    */
-  static findSecrets(line, file) {
+  static findSecrets(line, scannedFile) {
     const secrets = [];
-    secretTypesToIdentify.filter((secretType) => {
-      // TODO extract this logic to a separate function/class?
-      const filePath = file.fullPath();
-      const secretTypeName = secretType.name();
-      const typeCache = scanCache.get(filePath);
-
-      if (!typeCache.has(secretTypeName)) {
-        const shouldScanFile = secretType.shouldScan(file);
-        typeCache.set(secretTypeName, shouldScanFile);
-      }
-
-      return typeCache.get(secretTypeName);
-    })
+    secretTypesToIdentify.filter(secretType => Scanner.shouldScanForSecretType(secretType, scannedFile))
       .forEach((secretType) => {
         const terms = secretType.getTerms(line);
         secretType.check(terms)
@@ -56,6 +44,30 @@ class Scanner {
           })
     });
     return secrets;
+  }
+
+  /**
+   *
+   * @param {Secret} secretType
+   * @param {ScannedFile} scannedFile
+   * @returns {boolean}
+   */
+  static shouldScanForSecretType(secretType, scannedFile) {
+    const file = scannedFile.file();
+    const filePath = file.fullPath();
+    const secretTypeName = secretType.name();
+    const typeCache = scanCache.get(filePath);
+
+    if (typeCache.has(secretTypeName)) {
+      return typeCache.get(secretTypeName);
+    }
+
+    const { shouldScan, shouldCache } = secretType.shouldScan(scannedFile);
+    if (shouldCache){
+      typeCache.set(secretTypeName, shouldScan);
+    }
+
+    return shouldScan;
   }
 };
 
