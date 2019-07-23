@@ -7,7 +7,7 @@ class UUID extends Filter {
     super('UUID');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return uuidRegex.test(term);
   }
 }

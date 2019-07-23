@@ -7,7 +7,7 @@ class URL extends Filter {
     super('URL');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return urlRegex.test(term);
   }
 }

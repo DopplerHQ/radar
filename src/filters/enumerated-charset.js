@@ -5,7 +5,7 @@ class EnumeratedCharset extends Filter {
     super('Enumerated Charset');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return term.includes('abcdefghijklmnopqrstuvwxyz') || term.includes('123456789');
   }
 }

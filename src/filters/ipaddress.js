@@ -7,7 +7,7 @@ class IPAddress extends Filter {
     super('IP Address');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return basicIPV6Regex.test(term);
   }
 }

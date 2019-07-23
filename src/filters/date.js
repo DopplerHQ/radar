@@ -5,7 +5,7 @@ class DateFilter extends Filter {
     super('Date');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     try {
       const date = new Date(term);
       return date.toISOString() === term;

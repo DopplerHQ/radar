@@ -7,7 +7,7 @@ class Hash extends Filter {
     super('Cryptographic Hash');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return hashRegex.test(term);
   }
 }

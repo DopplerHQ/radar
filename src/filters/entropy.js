@@ -6,7 +6,7 @@ class Entropy extends Filter {
     this.minEntropy = 3.75;
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     const entropy = this._calculateEntropy(term);
     return entropy >= this.minEntropy;
   }

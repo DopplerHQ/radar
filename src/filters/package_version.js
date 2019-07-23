@@ -7,7 +7,7 @@ class PackageVersion extends Filter {
     super('Package Version');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return versionRegex.test(term);
   }
 }

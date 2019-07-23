@@ -7,7 +7,7 @@ class Email extends Filter {
     super('Email');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return term.includes('mailto:') || emailRegex.test(term);
   }
 }

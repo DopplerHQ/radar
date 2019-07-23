@@ -5,7 +5,7 @@ class MixedChars extends Filter {
     super('Contains letters and numbers');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     const containsLetters = term.match(/[a-zA-Z]/);
     if (containsLetters === null)
       return false;

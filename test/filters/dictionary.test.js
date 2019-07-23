@@ -2,46 +2,46 @@ const Filter = require('../../src/filters/dictionary');
 
 // TODO configure minimumMatchPercentage to 1 so that these tests are more deterministic
 test('mixed case', () => {
-  expect(Filter.checkMatch("test Hello")).toBe(true);
-  expect(Filter.checkMatch("hey There Hello")).toBe(true);
-  expect(Filter.checkMatch("test test test")).toBe(true);
-  expect(Filter.checkMatch("test lsdjfoasdfosdhf")).toBe(true);
-  expect(Filter.checkMatch("STRIPE_API_KEY=123456d781fdf0dfdf323434cvfdfgyddf")).toBe(true);
-  expect(Filter.checkMatch("test randomgarbage rndmgrbg")).toBe(true);
+  expect(Filter.isMatch("test Hello")).toBe(true);
+  expect(Filter.isMatch("hey There Hello")).toBe(true);
+  expect(Filter.isMatch("test test test")).toBe(true);
+  expect(Filter.isMatch("test lsdjfoasdfosdhf")).toBe(true);
+  expect(Filter.isMatch("STRIPE_API_KEY=123456d781fdf0dfdf323434cvfdfgyddf")).toBe(true);
+  expect(Filter.isMatch("test randomgarbage rndmgrbg")).toBe(true);
 
-  expect(Filter.checkMatch("randomgarbage")).toBe(false);
-  expect(Filter.checkMatch("fooz barz")).toBe(false);
-  expect(Filter.checkMatch("te1st randomgarbage rndmgrbg")).toBe(false);
+  expect(Filter.isMatch("randomgarbage")).toBe(false);
+  expect(Filter.isMatch("fooz barz")).toBe(false);
+  expect(Filter.isMatch("te1st randomgarbage rndmgrbg")).toBe(false);
 });
 
 test('camel case', () => {
-  expect(Filter.checkMatch("randomGarbage")).toBe(true);
-  expect(Filter.checkMatch("wordNotword")).toBe(true);
-  expect(Filter.checkMatch("thisIsForTestingPurposes")).toBe(true);
-  expect(Filter.checkMatch("notwordAlsonotword")).toBe(false);
+  expect(Filter.isMatch("randomGarbage")).toBe(true);
+  expect(Filter.isMatch("wordNotword")).toBe(true);
+  expect(Filter.isMatch("thisIsForTestingPurposes")).toBe(true);
+  expect(Filter.isMatch("notwordAlsonotword")).toBe(false);
 });
 
 test('symbols', () => {
-  expect(Filter.checkMatch("case-sensitive")).toBe(true);
-  expect(Filter.checkMatch("to-retrieve-a-list-of-the-handshakes-sent-to-an-account-1472510214747")).toBe(true);
-  expect(Filter.checkMatch("January February March April May June July August September October November December")).toBe(true);
-  expect(Filter.checkMatch("January_February_March_April_May_June_July_August_September_October_November_December")).toBe(true);
-  expect(Filter.checkMatch("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toBe(true);
-  expect(Filter.checkMatch("!__webpack_require__(225).ABV,")).toBe(true);
-  expect(Filter.checkMatch("(!base64Chars[buf[i]])")).toBe(true);
-  expect(Filter.checkMatch("!inline.isBase64Path(")).toBe(true);
+  expect(Filter.isMatch("case-sensitive")).toBe(true);
+  expect(Filter.isMatch("to-retrieve-a-list-of-the-handshakes-sent-to-an-account-1472510214747")).toBe(true);
+  expect(Filter.isMatch("January February March April May June July August September October November December")).toBe(true);
+  expect(Filter.isMatch("January_February_March_April_May_June_July_August_September_October_November_December")).toBe(true);
+  expect(Filter.isMatch("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toBe(true);
+  expect(Filter.isMatch("!__webpack_require__(225).ABV,")).toBe(true);
+  expect(Filter.isMatch("(!base64Chars[buf[i]])")).toBe(true);
+  expect(Filter.isMatch("!inline.isBase64Path(")).toBe(true);
 });
 
 test('custom dictionary', () => {
-  expect(Filter.checkMatch("polyfill")).toBe(true);
-  expect(Filter.checkMatch("Polyfill")).toBe(true);
-  expect(Filter.checkMatch("AWS")).toBe(true);
-  expect(Filter.checkMatch("PolyfillAWS")).toBe(true);
+  expect(Filter.isMatch("polyfill")).toBe(true);
+  expect(Filter.isMatch("Polyfill")).toBe(true);
+  expect(Filter.isMatch("AWS")).toBe(true);
+  expect(Filter.isMatch("PolyfillAWS")).toBe(true);
 });
 
 test('numbers', () => {
-  expect(Filter.checkMatch("404")).toBe(true);
-  expect(Filter.checkMatch("mp4")).toBe(true);
+  expect(Filter.isMatch("404")).toBe(true);
+  expect(Filter.isMatch("mp4")).toBe(true);
 });
 
 test('split terms', () => {

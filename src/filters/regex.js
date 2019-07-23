@@ -11,7 +11,7 @@ class Regex extends Filter {
     super('Regex');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return regexCharacterSet1.test(term)
           || regexCharacterSet2.test(term)
           || regexCharacterSet3.test(term)

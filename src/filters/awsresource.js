@@ -5,7 +5,7 @@ class AWSResource extends Filter {
     super('Amazon AWS resource');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return term.startsWith('arn:aws:');
   }
 }

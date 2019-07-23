@@ -32,7 +32,7 @@ class Dictionary extends Filter {
     });
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     const percentMatches = this._checkDictionary(term);
     return percentMatches >= this.minimumMatchPercentage;
   }

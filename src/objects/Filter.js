@@ -7,7 +7,7 @@ class Filter {
     this._name = name;
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     throw new Error("This function must be implemented");
   }
 

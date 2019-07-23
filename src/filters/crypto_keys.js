@@ -8,7 +8,7 @@ class CryptoKeys extends Filter {
     this.endPrivateKeyRegex = (/^.*(END ).*(PRIVATE KEY).*$/i);
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return this.beginPrivateKeyRegex.test(term) || this.endPrivateKeyRegex.test(term);
   }
 }

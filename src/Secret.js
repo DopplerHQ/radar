@@ -38,13 +38,13 @@ class Secret {
   check(terms) {
     const secrets = terms.filter((term) => {
       const matchesAnyPreFilters = this._preFilters.reduce((acc, preFilter) => (
-        acc || preFilter.checkMatch(term)
+        acc || preFilter.isMatch(term)
       ), false);
       return !matchesAnyPreFilters;
     })
       .filter((term) => {
         const matchesAllFilters = this._filters.reduce((acc, filter) => (
-          acc && filter.checkMatch(term)
+          acc && filter.isMatch(term)
         ), true);
         return matchesAllFilters;
       });
