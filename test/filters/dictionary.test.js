@@ -1,6 +1,9 @@
 const Filter = require('../../src/filters/dictionary');
 
-// TODO configure minimumMatchPercentage to 1 so that these tests are more deterministic
+beforeAll(() => {
+  Filter.minimumMatchPercentage = ".33";
+});
+
 test('mixed case', () => {
   expect(Filter.isMatch("test Hello")).toBe(true);
   expect(Filter.isMatch("hey There Hello")).toBe(true);
@@ -30,6 +33,7 @@ test('symbols', () => {
   expect(Filter.isMatch("!__webpack_require__(225).ABV,")).toBe(true);
   expect(Filter.isMatch("(!base64Chars[buf[i]])")).toBe(true);
   expect(Filter.isMatch("!inline.isBase64Path(")).toBe(true);
+  expect(Filter.isMatch("0}),e)c._$tooltip.css(")).toBe(true);
 });
 
 test('custom dictionary', () => {
@@ -56,4 +60,5 @@ test('split terms', () => {
   expect(Filter._splitIntoTerms("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toStrictEqual(["another", "test"]);
   expect(Filter._splitIntoTerms("(!base64Chars[buf[i]])")).toStrictEqual(["base64", "chars", "buf"]);
   expect(Filter._splitIntoTerms("!inline.isBase64Path(")).toStrictEqual(["inline", "base64", "path"]);
+  expect(Filter._splitIntoTerms("0}),e)c._$tooltip.css(")).toStrictEqual(["tooltip", "css"]);
 });
