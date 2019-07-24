@@ -1,6 +1,7 @@
 const FileTags = require('../objects/file_tags');
 const Secret = require('../Secret');
-const CryptoKeyExtentions = require('../crypto_key_extensions');
+const TimeZones = require('../dictionaries/timezones');
+const Countries = require('../dictionaries/countries');
 
 class APIKeys extends Secret {
   constructor() {
@@ -15,11 +16,14 @@ class APIKeys extends Secret {
 
     this.minTermLength = 20;
     this.maxTermLength = 1000;
+
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead'];
+    TimeZones.forEach(tz => this.excludedTerms.push(tz));
+    Countries.forEach(country => this.excludedTerms.push(country));
   }
 
   getTerms(line) {
-    const excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead'];
-    const lineContainsExclusion = excludedTerms.reduce((acc, val) => (
+    const lineContainsExclusion = this.excludedTerms.reduce((acc, val) => (
       acc || line.includes(val)
     ), false);
     if (lineContainsExclusion)
