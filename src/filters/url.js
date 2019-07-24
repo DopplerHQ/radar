@@ -10,7 +10,6 @@ class URL extends Filter {
   }
 
   isMatch(term) {
-    return urlRegex.test(term) || markdownLinkRegex.test(term);
     return urlRegex.test(term) || urnRegex.test(term) || markdownLinkRegex.test(term);
   }
 }
