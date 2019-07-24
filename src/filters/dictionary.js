@@ -17,11 +17,6 @@ class Dictionary extends Filter {
         this.customDictionaryMap[word.toLowerCase()] = true;
       }
     });
-    countryDictionary.forEach((word) => {
-      if (word.length >= this.minimumWordLength) {
-        this.customDictionaryMap[word.toLowerCase()] = true;
-      }
-    });
     Object.keys(filetypes).forEach((type) => {
       filetypes[type].forEach((filetype) => {
         if ((filetype.length >= this.minimumWordLength) && ((/^[a-zA-Z0-9]+$/g).test(filetype))) {

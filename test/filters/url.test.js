@@ -19,3 +19,11 @@ test('is not url', () => {
   expect(Filter.isMatch("DOPPLER_API_KEY")).toBe(false);
   expect(Filter.isMatch("/root/test/directory")).toBe(false);
 });
+
+test('is markdown link', () => {
+  expect(Filter.isMatch("[extglob](index.js#L36)")).toBe(true);
+  expect(Filter.isMatch("[plugins](#plugins)")).toBe(true);
+  expect(Filter.isMatch("[Changelog](CHANGELOG.md)")).toBe(true);
+  expect(Filter.isMatch("[dist](dist/nimn.js)")).toBe(true);
+  expect(Filter.isMatch("[Graylog2](#graylog2-transport)")).toBe(true);
+});

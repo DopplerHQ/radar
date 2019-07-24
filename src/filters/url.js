@@ -1,6 +1,7 @@
 const Filter = require('../objects/Filter');
 
 const urlRegex = /([a-zA-Z]+):\/\/.+/;
+const markdownLinkRegex = /\[[\w#-:\\/\.]+\]\([\w#-:\\/\.]+\)/;
 
 class URL extends Filter {
   constructor() {
@@ -8,7 +9,7 @@ class URL extends Filter {
   }
 
   isMatch(term) {
-    return urlRegex.test(term);
+    return urlRegex.test(term) || markdownLinkRegex.test(term);
   }
 }
 
