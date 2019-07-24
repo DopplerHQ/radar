@@ -27,3 +27,7 @@ test('is markdown link', () => {
   expect(Filter.isMatch("[dist](dist/nimn.js)")).toBe(true);
   expect(Filter.isMatch("[Graylog2](#graylog2-transport)")).toBe(true);
 });
+
+test('is urn', () => {
+  expect(Filter.isMatch("urn:ogc:def:crs:EPSG::4326")).toBe(true);
+});
