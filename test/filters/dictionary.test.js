@@ -41,6 +41,7 @@ test('custom dictionary', () => {
   expect(Filter.isMatch("Polyfill")).toBe(true);
   expect(Filter.isMatch("AWS")).toBe(true);
   expect(Filter.isMatch("PolyfillAWS")).toBe(true);
+  expect(Filter.isMatch("forge.test1.pkcs12.toPkcs12Asn1(")).toBe(true);
 });
 
 test('numbers', () => {
@@ -61,4 +62,6 @@ test('split terms', () => {
   expect(Filter._splitIntoTerms("(!base64Chars[buf[i]])")).toStrictEqual(["base64", "chars", "buf"]);
   expect(Filter._splitIntoTerms("!inline.isBase64Path(")).toStrictEqual(["inline", "base64", "path"]);
   expect(Filter._splitIntoTerms("0}),e)c._$tooltip.css(")).toStrictEqual(["tooltip", "css"]);
+  expect(Filter._splitIntoTerms("completeHybiUpgrade1")).toStrictEqual(["complete", "hybi", "upgrade1"]);
+  expect(Filter._splitIntoTerms("forge.test1.pkcs12.toPkcs12Asn1(")).toStrictEqual(["forge", "test1", "pkcs12", "pkcs12", "asn1"]);
 });
