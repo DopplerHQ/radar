@@ -2,23 +2,7 @@ const { Radar, Config } = require('../src/radar');
 const File = require('../src/objects/file');
 const ScannedFile = require('../src/objects/scannedfile');
 
-test("relative path - no trailing slash", () => {
-  const path = "/root/dir";
-
-  expect(Radar._getRelativePath(path, `${path}/test.txt`)).toStrictEqual("test.txt");
-  expect(Radar._getRelativePath(path, `${path}/dir2/test.txt`)).toStrictEqual("dir2/test.txt");
-  expect(Radar._getRelativePath(path, `${path}/dir3/dir4/test.txt`)).toStrictEqual("dir3/dir4/test.txt");
-});
-
-test("relative path - trailing slash(es)", () => {
-  const path = "/root/dir////";
-
-  expect(Radar._getRelativePath(path, `${path}/test.txt`)).toStrictEqual("test.txt");
-  expect(Radar._getRelativePath(path, `${path}/dir2/test.txt`)).toStrictEqual("dir2/test.txt");
-  expect(Radar._getRelativePath(path, `${path}/dir3/dir4/test.txt`)).toStrictEqual("dir3/dir4/test.txt");
-});
-
-test("file name exclusion", () => {
+test("file exclusion- all possible states", () => {
   // no white/blacklist
   let config = new Config();
   let radar = new Radar(config);
@@ -91,8 +75,18 @@ test("file name exclusion", () => {
   expect(radar._isFileExcluded("badfile", "badext")).toBe(true);
 });
 
+test("file exclusion- relative paths", () => {
+  let config = new Config();
+  let radar = new Radar(config);
+  radar.basePath = "/root";
+  config.setExcludedFiles(["nested/directory/test.txt"]);
+  expect(radar._isFileExcluded("test", "txt", "nested/directory/test.txt")).toBe(true);
 
-test("directory name exclusion", () => {
+  expect(radar._isFileExcluded("test", "txt", "fake/nested/directory")).toBe(false);
+  expect(radar._isFileExcluded("test", "txt", "")).toBe(false);
+});
+
+test("directory exclusion - all possible states", () => {
   // no white/blacklist
   let config = new Config();
   let radar = new Radar(config);
@@ -116,6 +110,19 @@ test("directory name exclusion", () => {
   config.setExcludedDirectories(["baddir"]);
   radar = new Radar(config);
   expect(radar._isDirectoryExcluded("baddir")).toBe(false);
+});
+
+test("directory exclusion- relative paths", () => {
+  let config = new Config();
+  let radar = new Radar(config);
+  radar.basePath = "/root";
+  config.setExcludedDirectories(["nested/directory"]);
+  expect(radar._isDirectoryExcluded("test", "nested/directory/test")).toBe(true);
+  expect(radar._isDirectoryExcluded("test", "nested/directory/test1/test2/test")).toBe(true);
+
+  expect(radar._isDirectoryExcluded("test", "nested/differentdirectory/test")).toBe(false);
+  expect(radar._isDirectoryExcluded("test", "")).toBe(false);
+  expect(radar._isDirectoryExcluded("test", "/")).toBe(false);
 });
 
 test("file size exclusion", () => {

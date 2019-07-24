@@ -42,6 +42,7 @@ class Radar {
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
     if (stats.isDirectory()) {
+      this.basePath = path;
       const filesToScan = await this._getDirectoryFiles(path);
       this._onFilesToScan(filesToScan.length);
       return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
@@ -68,7 +69,8 @@ class Radar {
     for (const entry of dirEntries) {
       const entryPath = `${path}/${entry.name}`;
 
-      if (entry.isDirectory() && !this._isDirectoryExcluded(entry.name)) {
+      const relativePath = Filesystem.getRelativePath(entryPath, this.basePath);
+      if (entry.isDirectory() && !this._isDirectoryExcluded(entry.name, relativePath)) {
         await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
@@ -105,8 +107,10 @@ class Radar {
     const name = file.name().toLowerCase();
     const size = file.size();
     const ext = file.extension().toLowerCase();
+    const path = file.fullPath();
 
-    if (this._isFileExcluded(name, ext)) {
+    const relativePath = Filesystem.getRelativePath(path, this.basePath);
+    if (this._isFileExcluded(name, ext, relativePath)) {
       return false;
     }
 
@@ -123,12 +127,15 @@ class Radar {
    * @param {String} ext
    * @returns {Boolean}
    */
-  _isFileExcluded(name, ext) {
-    const isNameWhitelisted = this._config.getIncludedFiles().includes(name);
+  _isFileExcluded(name, ext, relativePath) {
+    const includedFiles = this._config.getIncludedFiles();
+    const isNameWhitelisted = includedFiles.includes(name) || includedFiles.includes(relativePath);
     if (isNameWhitelisted) {
       return false;
     }
-    const isNameBlacklisted = this._config.getExcludedFiles().includes(name);
+
+    const excludedFiles = this._config.getExcludedFiles();
+    const isNameBlacklisted = excludedFiles.includes(name) || excludedFiles.includes(relativePath);
     if (isNameBlacklisted) {
       return true;
     }
@@ -148,15 +155,23 @@ class Radar {
   /**
    * Checks if a directory has been marked as excluded
    * @param {String} name
+   * @param {String} relativePath Relative path to the directory using a root of the specified scan directory
    * @returns {Boolean}
    */
-  _isDirectoryExcluded(name) {
+  _isDirectoryExcluded(name, relativePath) {
     const isNameWhitelisted = this._config.getIncludedDirectories().includes(name);
     if (isNameWhitelisted) {
       return false;
     }
-    const isNameBlacklisted = this._config.getExcludedDirectories().includes(name);
+
+    const excludedDirectories = this._config.getExcludedDirectories();
+    const isNameBlacklisted = excludedDirectories.includes(name) || excludedDirectories.includes(relativePath);
     if (isNameBlacklisted) {
+      return true;
+    }
+
+    const isParentDirBlacklisted = excludedDirectories.reduce((acc, dir) => (acc || `${relativePath}/`.startsWith(`${dir}/`)), false);
+    if (isParentDirBlacklisted) {
       return true;
     }
 
@@ -205,21 +220,10 @@ class Radar {
   static _getResultsMap(path, scanResults) {
     const results = {};
     scanResults.forEach((scannedFile) => {
-      const relativePath = Radar._getRelativePath(path, scannedFile.file().fullPath());
+      const relativePath = Filesystem.getRelativePath(scannedFile.file().fullPath(), path);
       results[relativePath] = scannedFile.toObject();
     });
     return results;
-  }
-
-  /**
-   *
-   * @param {String} basePath file path without the file name
-   * @param {String} fullPath file path with the file name
-   * @returns {String}
-   */
-  static _getRelativePath(basePath, fullPath) {
-    const relativePath = fullPath.substring(basePath.length);
-    return relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
   }
 }
 
