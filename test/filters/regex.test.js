@@ -8,8 +8,8 @@ test('is regex', () => {
   expect(Filter.isMatch("([a-zA-Z]+)")).toBe(true);
   expect(Filter.isMatch("([A-Za-z]+)")).toBe(true);
   expect(Filter.isMatch("([a-zA-Z0-9]+)")).toBe(true);
-  expect(Filter.isMatch("a{2,*}")).toBe(true);
-  expect(Filter.isMatch("(a){2,*}")).toBe(true);
+  expect(Filter.isMatch("a{2,}")).toBe(true);
+  expect(Filter.isMatch("(a){2,}")).toBe(true);
   expect(Filter.isMatch("a{2,4}")).toBe(true);
 
   expect(Filter.isMatch(`/^[-+]0x[0-9a-f]+$/i`)).toBe(true);

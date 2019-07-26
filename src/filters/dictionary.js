@@ -13,6 +13,8 @@ class Dictionary extends Filter {
     this.minimumWordLength = 3;
     this.customDictionaryMap = {};
 
+    this.alphaNumericRegex = /^[a-z0-9]+$/ig;
+
     customDictionary.forEach((word) => {
       if (word.length >= this.minimumWordLength) {
         this.customDictionaryMap[word.toLowerCase()] = true;
@@ -20,14 +22,14 @@ class Dictionary extends Filter {
     });
     Object.keys(filetypes).forEach((type) => {
       filetypes[type].forEach((filetype) => {
-        if ((filetype.length >= this.minimumWordLength) && ((/^[a-zA-Z0-9]+$/g).test(filetype))) {
+        if ((filetype.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(filetype))) {
           this.customDictionaryMap[filetype.toLowerCase()] = true;
         }
       });
     });
     Object.keys(CryptoKeyExtensions).forEach((type) => {
       CryptoKeyExtensions[type].forEach((filetype) => {
-        if ((filetype.length >= this.minimumWordLength) && ((/^[a-zA-Z0-9]+$/g).test(filetype))) {
+        if ((filetype.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(filetype))) {
           this.customDictionaryMap[filetype.toLowerCase()] = true;
         }
       });

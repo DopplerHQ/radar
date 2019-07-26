@@ -7,23 +7,10 @@ test('equals sign', () => {
   expect(Filter.isMatch("1 == 1")).toBe(false);
 });
 
-test('hyphens', () => {
-  expect(Filter.isMatch("--test--")).toBe(true);
-  expect(Filter.isMatch("test----")).toBe(true);
-
-  expect(Filter.isMatch("test---")).toBe(false);
-});
-
 test('backslash', () => {
   expect(Filter.isMatch("\\test\\test\\test\\test")).toBe(true);
 
   expect(Filter.isMatch("\\test\\test\\test")).toBe(false);
-});
-
-test('forward flash', () => {
-  expect(Filter.isMatch("/test/test/test/test")).toBe(true);
-
-  expect(Filter.isMatch("/test/test/test")).toBe(false);
 });
 
 test('pipe', () => {

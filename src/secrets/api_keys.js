@@ -6,18 +6,18 @@ const Countries = require('../dictionaries/countries');
 class APIKeys extends Secret {
   constructor() {
     const name = 'api_key';
-    const preFilters = ['dictionary', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
+    const preFilters = ['dictionary', 'common_patterns', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
     const filters = ['mixedchars', 'entropy'];
     const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
     super(name, { preFilters, filters, excludedFileTags });
 
-    this.charactersToReplace = /("|'|;|\(\)|{}|(->))+/g;
+    this.charactersToReplace = /("|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 
     this.minTermLength = 20;
     this.maxTermLength = 1000;
 
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }

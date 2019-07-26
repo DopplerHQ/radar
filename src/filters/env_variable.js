@@ -9,10 +9,6 @@ class EnvVariable extends Filter {
   isMatch(term) {
     return this.envVariableRegex.test(term);
   }
-
-  getTerms(line) {
-    return [line];
-  }
 }
 
 const filter = new EnvVariable();

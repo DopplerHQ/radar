@@ -9,6 +9,10 @@ class EnvVariable extends Secret {
 
     super(name, { filters, fileTags });
   }
+
+  getTerms(line) {
+    return [line];
+  }
 }
 
 const envVariable = new EnvVariable();

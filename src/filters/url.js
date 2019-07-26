@@ -1,7 +1,10 @@
 const Filter = require('../objects/Filter');
 
+// match protocol://
 const urlRegex = /([a-zA-Z]+):\/\/.+/;
+// match urn: links
 const urnRegex = /^urn:/;
+// match [text](text)
 const markdownLinkRegex = /\[[\w#-:\\/\.]+\]\([\w#-:\\/\.]+\)/;
 
 class URL extends Filter {
