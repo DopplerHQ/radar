@@ -6,7 +6,7 @@ class MIMETypes extends Filter {
     super('MIME Type');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     return mimeTypes.reduce((acc, type) => (
       acc || term.includes(type)
     ), false);

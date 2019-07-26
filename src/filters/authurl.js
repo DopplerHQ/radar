@@ -5,7 +5,7 @@ class AuthURL extends Filter {
     super('Auth URL');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     if (!term.includes('://') && !term.startsWith('//')) {
       return false;
     }

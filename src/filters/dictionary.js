@@ -1,38 +1,42 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
-const customDictionary = require('../customdictionary');
-const countryDictionary = require('../countrydictionary');
+const customDictionary = require('../dictionaries/custom');
 const filetypes = require('../filetypes');
+const CryptoKeyExtensions = require('../crypto_key_extensions');
 const Filter = require('../objects/Filter');
 
 class Dictionary extends Filter {
   constructor() {
     super('Dictionary words');
 
-    this.minimumMatchPercentage = 0.25;
+    this.minimumMatchPercentage = 0.35;
     this.minimumWordLength = 3;
     this.customDictionaryMap = {};
+
+    this.alphaNumericRegex = /^[a-z0-9]+$/ig;
 
     customDictionary.forEach((word) => {
       if (word.length >= this.minimumWordLength) {
         this.customDictionaryMap[word.toLowerCase()] = true;
       }
     });
-    countryDictionary.forEach((word) => {
-      if (word.length >= this.minimumWordLength) {
-        this.customDictionaryMap[word.toLowerCase()] = true;
-      }
-    });
     Object.keys(filetypes).forEach((type) => {
       filetypes[type].forEach((filetype) => {
-        if ((filetype.length >= this.minimumWordLength) && ((/^[a-zA-Z0-9]+$/g).test(filetype))) {
+        if ((filetype.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(filetype))) {
+          this.customDictionaryMap[filetype.toLowerCase()] = true;
+        }
+      });
+    });
+    Object.keys(CryptoKeyExtensions).forEach((type) => {
+      CryptoKeyExtensions[type].forEach((filetype) => {
+        if ((filetype.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(filetype))) {
           this.customDictionaryMap[filetype.toLowerCase()] = true;
         }
       });
     });
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     const percentMatches = this._checkDictionary(term);
     return percentMatches >= this.minimumMatchPercentage;
   }

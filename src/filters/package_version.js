@@ -1,14 +1,15 @@
 const Filter = require('../objects/Filter');
 
-const versionRegex = /@\^?[0-9]+\.[0-9]\.[0-9]/;
-
 class PackageVersion extends Filter {
   constructor() {
     super('Package Version');
+
+    // look for npm version format w/ major/minor/revision (e.g. @2.0.1, @^2.0.1)
+    this.versionRegex = /@\^?[0-9]+\.[0-9]+\.[0-9]+/;
   }
 
-  checkMatch(term) {
-    return versionRegex.test(term);
+  isMatch(term) {
+    return this.versionRegex.test(term);
   }
 }
 

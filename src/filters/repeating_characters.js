@@ -5,18 +5,14 @@ class RepeatingCharacters extends Filter {
     super('Repeating characters');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     if ((term.match(/=/g) || []).length >= 3)
       return true;
 
-    if ((term.match(/-/g) || []).length >= 4)
-      return true;
 
     if ((term.match(/\\/g) || []).length >= 4)
       return true;
 
-    if ((term.match(/\//g) || []).length >= 4)
-      return true;
 
     if ((term.match(/\|/g) || []).length >= 4)
       return true;

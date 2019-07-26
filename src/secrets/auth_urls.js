@@ -1,11 +1,11 @@
 const Secret = require('../Secret');
 
-const name = 'auth_url';
-const preFilters = ['path'];
-const filters = ['authurl'];
-
 class AuthUrls extends Secret {
   constructor() {
+    const name = 'auth_url';
+    const preFilters = ['path'];
+    const filters = ['authurl'];
+
     super(name, { preFilters, filters });
   }
 }

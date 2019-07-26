@@ -1,19 +1,15 @@
 const Filter = require('../../src/filters/path');
 
 test('path', () => {
-  expect(Filter.checkMatch("/root/test/path")).toBe(true);
-  expect(Filter.checkMatch("/root/test/path/")).toBe(true);
-  expect(Filter.checkMatch("/root/test.txt")).toBe(true);
-  expect(Filter.checkMatch("./test")).toBe(true);
-  expect(Filter.checkMatch("../test")).toBe(true);
-  expect(Filter.checkMatch("////root")).toBe(true);
-  expect(Filter.checkMatch("C:\\\\Windows\\System32\\virus.exe")).toBe(true);
+  expect(Filter.isMatch("./test")).toBe(true);
+  expect(Filter.isMatch("../test")).toBe(true);
+  expect(Filter.isMatch("C:\\\\Windows\\System32\\virus.exe")).toBe(true);
 });
 
 test('not paths', () => {
-  expect(Filter.checkMatch("test")).toBe(false);
-  expect(Filter.checkMatch("test.txt")).toBe(false);
-  expect(Filter.checkMatch(".test.txt")).toBe(false);
-  expect(Filter.checkMatch("test/test")).toBe(false);
-  expect(Filter.checkMatch("https://doppler.com")).toBe(false);
+  expect(Filter.isMatch("test")).toBe(false);
+  expect(Filter.isMatch("test.txt")).toBe(false);
+  expect(Filter.isMatch(".test.txt")).toBe(false);
+  expect(Filter.isMatch("test/test")).toBe(false);
+  expect(Filter.isMatch("https://doppler.com")).toBe(false);
 });

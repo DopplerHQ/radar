@@ -4,7 +4,7 @@ class Secret {
    * @param {String} name
    * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */
-  constructor(name, { preFilters = [], filters = [], extensions = [], excludedExtensions = [] }) {
+  constructor(name, { preFilters = [], filters = [], fileTags = [], excludedFileTags = [] }) {
     if (name === undefined) {
       throw new Error("Secret name must be specified");
     }
@@ -14,10 +14,10 @@ class Secret {
     this._preFilters = preFilters.map(name => require(`./filters/${name}`));
     // must match all filters
     this._filters = filters.map(name => require(`./filters/${name}`));
-    // extensions to include, or blank list for all. include overrules an exclude
-    this._extensions = extensions;
-    // extensions to exclude
-    this._excludedExtensions = excludedExtensions;
+    // file tags to include, or blank list for all. include overrules an exclude
+    this._fileTags = fileTags;
+    // file tags to exclude
+    this._excludedFileTags = excludedFileTags;
   }
 
   name() {
@@ -25,23 +25,28 @@ class Secret {
   }
 
   /**
-   * Checks a line against
+   * Checks a list of terms against the secret's filters
    * @param {Array<String>} terms
-   * @returns {Array<String>} Detected secrets
+   * @returns {Array<Object>} Detected secrets and tags to add/remove from the file
    */
   check(terms) {
-    return terms.filter((term) => {
+    const secrets = terms.filter((term) => {
       const matchesAnyPreFilters = this._preFilters.reduce((acc, preFilter) => (
-        acc || preFilter.checkMatch(term)
+        acc || preFilter.isMatch(term)
       ), false);
       return !matchesAnyPreFilters;
     })
       .filter((term) => {
         const matchesAllFilters = this._filters.reduce((acc, filter) => (
-          acc && filter.checkMatch(term)
+          acc && filter.isMatch(term)
         ), true);
         return matchesAllFilters;
-      })
+      });
+
+    return {
+      secrets,
+      tags: [],
+    }
   }
 
   /**
@@ -55,21 +60,26 @@ class Secret {
 
   /**
    *
-   * @param {File} file
+   * @param {Set<FileTags>} tags
+   * @returns {boolean} whether the file should be scanned by the current secret
    */
-  shouldScan(file) {
-    const extension = file.extension().toLowerCase();
-
-    const isWhitelisted = this._extensions.includes(extension);
-    if (isWhitelisted)
+  shouldScan(tags) {
+    const hasIncludedFileTag = this._fileTags.reduce((acc, tag) => (
+      acc || tags.has(tag)
+    ), false);
+    if (hasIncludedFileTag) {
       return true;
+    }
 
-    const isBlacklisted = this._excludedExtensions.includes(extension)
-    if (isBlacklisted)
+    const hasExcludedFileTag = this._excludedFileTags.reduce((acc, excludedTag) => (
+      acc || tags.has(excludedTag)
+    ), false);
+    if (hasExcludedFileTag) {
       return false;
+    }
 
-    const acceptAllExtensions = (this._extensions.length === 0);
-    return acceptAllExtensions;
+    const acceptAllTags = (this._fileTags.length === 0);
+    return acceptAllTags;
   };
 }
 

@@ -1,14 +1,15 @@
 const Filter = require('../objects/Filter');
 
-const emailRegex = (/^\S+@\S+\.\S+$/);
-
 class Email extends Filter {
   constructor() {
     super('Email');
+
+    // simplest email regex (i.e. *@*.*)
+    this.emailRegex = /^\S+@\S+\.\S+$/;
   }
 
-  checkMatch(term) {
-    return term.includes('mailto:') || emailRegex.test(term);
+  isMatch(term) {
+    return term.includes('mailto:') || this.emailRegex.test(term);
   }
 }
 

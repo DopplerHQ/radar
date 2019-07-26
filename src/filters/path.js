@@ -5,10 +5,9 @@ class Path extends Filter {
     super('File path');
   }
 
-  checkMatch(term) {
+  isMatch(term) {
     const hasPathNavigation = (term.includes('../') || term.includes('./') || term.includes('C:\\\\') || term.includes('c:\\\\'));
-    const hasMultiplePathSeparators = (!term.includes('://') && ((term.match(/\//g) || []).length >= 2));
-    return (hasPathNavigation || hasMultiplePathSeparators);
+    return hasPathNavigation;
   }
 }
 

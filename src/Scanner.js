@@ -1,21 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
-const MapCache = require('./objects/mapcache');
-
-let secretTypesToIdentify = [];
-const scanCache = new MapCache();
-
 class Scanner {
+  constructor() {
+    this.secretTypesToIdentify = [];
+  }
   /**
    *
    * @param {Array<String>} secretTypes
    */
-  static init(secretTypes) {
-    scanCache.clear();
-
+  init(secretTypes) {
     const secretTypesPath = path.resolve(__dirname, 'secrets');
-    secretTypesToIdentify = fs.readdirSync(secretTypesPath)
+    this.secretTypesToIdentify = fs.readdirSync(secretTypesPath)
       .filter(file => {
         const fileName = file.substring(0, file.indexOf('.'));
         return ((secretTypes.length === 0) || secretTypes.includes(fileName))
@@ -27,35 +23,49 @@ class Scanner {
   /**
    *
    * @param {String} line
-   * @param {File} file
+   * @param {ScannedFile} scannedFile
    * @returns {Array<{ secret: String, secretType: String}}>}
    */
-  static findSecrets(line, file) {
-    const secrets = [];
-    secretTypesToIdentify.filter((secretType) => {
-      // TODO extract this logic to a separate function/class?
-      const filePath = file.fullPath();
-      const secretTypeName = secretType.name();
-      const typeCache = scanCache.get(filePath);
-
-      if (!typeCache.has(secretTypeName)) {
-        const shouldScanFile = secretType.shouldScan(file);
-        typeCache.set(secretTypeName, shouldScanFile);
-      }
-
-      return typeCache.get(secretTypeName);
-    })
-      .forEach((secretType) => {
+  findSecrets(line, scannedFile) {
+    const allSecrets = [];
+    this.secretTypesToIdentify.filter(secretType => this.shouldScanForSecretType(secretType, scannedFile))
+      .map((secretType) => {
         const terms = secretType.getTerms(line);
-        secretType.check(terms)
-          .forEach(secret => {
-            secrets.push({
-              secret,
-              secretType: secretType.name(),
-            });
-          })
-    });
-    return secrets;
+        const { secrets, tags } = secretType.check(terms);
+
+        if ((tags !== undefined) && (Object.keys(tags).length > 0)) {
+          this.handleTags(tags, scannedFile);
+        }
+
+        return secrets.map(secret => ({
+          secret,
+          secretType: secretType.name(),
+        }))
+      })
+      .forEach(s => allSecrets.push(...s));
+    return allSecrets;
+  }
+
+  handleTags(tags, scannedFile) {
+    Object.keys(tags).forEach((tag) => {
+      const value = tags[tag];
+      if (value === true) {
+        scannedFile.tags().add(tag);
+      }
+      else if (value === false) {
+        scannedFile.tags().delete(tag);
+      }
+    })
+  }
+
+  /**
+   *
+   * @param {Secret} secretType
+   * @param {ScannedFile} scannedFile
+   * @returns {boolean}
+   */
+  shouldScanForSecretType(secretType, scannedFile) {
+    return secretType.shouldScan(scannedFile.tags());
   }
 };
 

@@ -8,6 +8,7 @@ class ScannedFile {
   constructor(file) {
     this._file = file;
     this._secrets = [];
+    this._tags = new Set();
   }
 
   file() {
@@ -16,6 +17,10 @@ class ScannedFile {
 
   secrets() {
     return this._secrets;
+  }
+
+  tags() {
+    return this._tags;
   }
 
   hasSecrets() {
@@ -31,6 +36,14 @@ class ScannedFile {
    */
   addSecret(secret, type, line, lineNumber) {
     this._secrets.push(new Secret(secret, type, line, lineNumber));
+  }
+
+  /**
+   *
+   * @param {String} value
+   */
+  addTag(value) {
+    this._tags.add(value);
   }
 
   toObject() {

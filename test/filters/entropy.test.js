@@ -13,12 +13,12 @@ test('entropy calculation', () => {
 });
 
 test('entropy above minimum', () => {
-  expect(Filter.checkMatch("1223334444")).toBe(false);
-  expect(Filter.checkMatch("0123")).toBe(false);
-  expect(Filter.checkMatch("0123456789abc")).toBe(false);
-  expect(Filter.checkMatch("0123456789abcdef")).toBe(true);
-  expect(Filter.checkMatch("0123456789abcdefghijklmnopqrst")).toBe(true);
-  expect(Filter.checkMatch("0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=")).toBe(true);
+  expect(Filter.isMatch("1223334444")).toBe(false);
+  expect(Filter.isMatch("0123")).toBe(false);
+  expect(Filter.isMatch("0123456789abc")).toBe(false);
+  expect(Filter.isMatch("0123456789abcdef")).toBe(true);
+  expect(Filter.isMatch("0123456789abcdefghijklmnopqrst")).toBe(true);
+  expect(Filter.isMatch("0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=")).toBe(true);
 
   // TODO add a bunch of api keys with a range of entropy scores as a good test
   // use findings from radar-tester-big

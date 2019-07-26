@@ -23,7 +23,7 @@ class CLI {
       .option("--secret-types <list>", "Secret types to scan for (e.g. \"crypto_keys, auth_urls\")")
       .option("--max-file-size <MiB>", "Maximum size of files to scan")
       .option("--include-files <list>", "File names to include, case-insensitive (overrides excluded files)")
-      .option("--exclude-files <list>", "File names to exclude, case-insensitive (e.g. \"package.json, CHANGELOG.md\")")
+      .option("--exclude-files <list>", "File names to exclude, case-insensitive (e.g. \"package.json, CHANGELOG.md, src/test.js\")")
       .option("--include-dirs <list>", "Directory names to include, case-insensitive (overrides excluded directories)")
       .option("--exclude-dirs <list>", "Directory names to exclude, case-insensitive (e.g. \"test, e2e\")")
       .option("--include-file-exts <list>", "File extensions to include, case-insensitive (overrides excluded file extensions)")
