@@ -1,5 +1,3 @@
-const compoundExtensions = ["tar", "min"];
-
 class File {
   /**
    * @param {String} name
@@ -28,19 +26,12 @@ class File {
   extension() {
     if (this._extension == null) {
       this._extension = (() => {
-        const lastPeriod = this._name.lastIndexOf('.');
-        const secondLastPeriod = this._name.lastIndexOf('.', lastPeriod - 1);
-        if (secondLastPeriod !== lastPeriod) {
-          const compoundExt = this._name.substring(secondLastPeriod + 1, lastPeriod);
-          if (compoundExtensions.includes(compoundExt)) {
-            return this._name.substring(secondLastPeriod + 1);
-          }
-        }
-        if (lastPeriod === -1) {
+        const firstPeriod = this._name.indexOf('.');
+        if (firstPeriod === -1) {
           return '';
         }
 
-        return this._name.substring(lastPeriod + 1);
+        return this._name.substring(firstPeriod + 1);
       })();
     }
 
