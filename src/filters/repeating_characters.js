@@ -6,6 +6,9 @@ class RepeatingCharacters extends Filter {
   }
 
   isMatch(term) {
+    if (term.includes("..."))
+      return true;
+
     if ((term.match(/=/g) || []).length >= 3)
       return true;
 
