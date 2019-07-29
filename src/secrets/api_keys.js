@@ -6,7 +6,25 @@ const Countries = require('../dictionaries/countries');
 class APIKeys extends Secret {
   constructor() {
     const name = 'api_key';
-    const preFilters = ['dictionary', 'common_patterns', 'email', 'date', 'mimetypes', 'awsresource', 'ipaddress', 'uuid', 'regex', 'repeating_characters', 'enumerated-charset', 'path', 'url', 'package_version', 'hash'];
+    // pre-filters and filters will be tested in the order they're specified
+    const preFilters = [
+      'dictionary',
+      'common_patterns',
+      'xml',
+      'email',
+      'date',
+      'mimetypes',
+      'awsresource',
+      'ipaddress',
+      'uuid',
+      'regex',
+      'repeating_characters',
+      'enumerated-charset',
+      'path',
+      'url',
+      'package_version',
+      'hash',
+    ];
     const filters = ['mixedchars', 'entropy'];
     const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
     super(name, { preFilters, filters, excludedFileTags });
