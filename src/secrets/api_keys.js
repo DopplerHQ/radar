@@ -17,14 +17,15 @@ class APIKeys extends Secret {
     this.minTermLength = 20;
     this.maxTermLength = 1000;
 
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function', 'example'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }
 
   getTerms(line) {
+    const lineLowerCase = line.toLowerCase();
     const lineContainsExclusion = this.excludedTerms.reduce((acc, val) => (
-      acc || line.includes(val)
+      acc || lineLowerCase.includes(val)
     ), false);
     if (lineContainsExclusion)
       return [];
