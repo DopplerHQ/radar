@@ -12,6 +12,7 @@ test('is regex', () => {
   expect(Filter.isMatch("(a){2,}")).toBe(true);
   expect(Filter.isMatch("a{2,4}")).toBe(true);
 
+  expect(Filter.isMatch("\\t\\n=]*)([^a-zA-Z0-9+\\/")).toBe(true);
   expect(Filter.isMatch(`/^[-+]0x[0-9a-f]+$/i`)).toBe(true);
   expect(Filter.isMatch(`^[a-zA-Z0-9+\\-_:\\/@]+$`)).toBe(true);
   expect(Filter.isMatch(`/(?!\d{1,4}\/\d{1,4}\s*-\s*\d{1,4}\/)(\d{1,4})\/(\d{1,4})\s*-\s*(\d{1,4})/g`)).toBe(true);

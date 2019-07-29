@@ -12,6 +12,12 @@ test('extension', () => {
 
   const file4 = new File("master.tar.gz");
   expect(file4.extension()).toStrictEqual("tar.gz");
+
+  const file5 = new File("test.crt.json");
+  expect(file5.extension()).toStrictEqual("crt.json");
+
+  const file6 = new File("test.test1.test2.test3");
+  expect(file6.extension()).toStrictEqual("test1.test2.test3");
 });
 
 test('no extension', () => {
