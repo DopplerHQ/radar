@@ -31,13 +31,21 @@ class APIKeys extends Secret {
       return [];
 
     return line.split('')
-      .map(char => ((char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126)) ? char : " ")
+      .map(char => APIKeys.isValidCharacter(char) ? char : ' ')
       .join('')
       .replace(this.charactersToReplace, ' ')
       .replace(this.variableNameRegex, ' ')
       .trim()
       .split(/ +/)
-      .filter(term => (term.length >= this.minTermLength) && (term.length <= this.maxTermLength));
+      .filter(term => this.isValidLineLength(term))
+  }
+
+  static isValidCharacter(char) {
+    return (char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126);
+  }
+
+  isValidLineLength(term) {
+    return (term.length >= this.minTermLength) && (term.length <= this.maxTermLength);
   }
 }
 
