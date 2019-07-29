@@ -8,21 +8,21 @@ class APIKeys extends Secret {
     const name = 'api_key';
     // pre-filters and filters will be tested in the order they're specified
     const preFilters = [
-      'dictionary',
-      'common_patterns',
       'xml',
+      'common_patterns',
       'date',
       'mimetypes',
       'awsresource',
       'ipaddress',
       'uuid',
-      'regex',
       'repeating_characters',
       'enumerated-charset',
       'path',
       'url',
       'package_version',
       'hash',
+      'regex',
+      'dictionary',
     ];
     const filters = ['mixedchars', 'entropy'];
     const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
