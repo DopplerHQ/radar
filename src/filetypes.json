@@ -6,5 +6,6 @@
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
   "binaries": ["o", "exe", "dmg", "msi", "node", "bin"],
-  "other": ["log", "sql", "map", "xml", "min.js", "min.css", "min.json", "d.ts", "tsbuildinfo", "lock"]
+  "other": ["log", "sql", "map", "xml", "lock"],
+  "code": ["min.js", "css", "min.css", "min.json", "d.ts", "tsbuildinfo"]
 }
