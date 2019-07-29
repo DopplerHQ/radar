@@ -38,6 +38,7 @@ class APIKeys extends Secret {
       .trim()
       .split(/ +/)
       .filter(term => this.isValidLineLength(term))
+      .filter(term => !term.endsWith('.com'));
   }
 
   static isValidCharacter(char) {
