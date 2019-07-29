@@ -14,7 +14,8 @@ class APIKeys extends Secret {
     this.charactersToReplace = /("|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 
-    this.minTermLength = 20;
+    this.minAlphaNumericTermLength = 24;
+    this.minTermLength = 40;
     this.maxTermLength = 1000;
 
     this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function', 'example'];
@@ -47,6 +48,15 @@ class APIKeys extends Secret {
 
   isValidLineLength(term) {
     return (term.length >= this.minTermLength) && (term.length <= this.maxTermLength);
+  }
+
+  isValidLineLength(term) {
+    if (term.length > this.maxTermLength)
+      return false;
+
+    const isAlphaNumeric = /^[a-z0-9]+$/i.test(term);
+    return (term.length >= this.minTermLength)
+      || (isAlphaNumeric && (term.length >= this.minAlphaNumericTermLength) && (term.length % 4 === 0));
   }
 }
 
