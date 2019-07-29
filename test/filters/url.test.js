@@ -25,7 +25,8 @@ test('is markdown link', () => {
   expect(Filter.isMatch("[plugins](#plugins)")).toBe(true);
   expect(Filter.isMatch("[Changelog](CHANGELOG.md)")).toBe(true);
   expect(Filter.isMatch("[dist](dist/nimn.js)")).toBe(true);
-  expect(Filter.isMatch("[Graylog2](#graylog2-transport)")).toBe(true);
+  expect(Filter.isMatch("[Graylog_2](#graylog2-transport)")).toBe(true);
+  expect(Filter.isMatch("[`xpath.select`](xpath%20methods.md)")).toBe(true);
 });
 
 test('is urn', () => {
