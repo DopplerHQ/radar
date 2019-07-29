@@ -3,6 +3,8 @@ const Filter = require('../objects/Filter');
 class EnvVariable extends Filter {
   constructor() {
     super('Environment variable');
+
+    // match NAME=VALUE, NAME="VALUE", and NAME='VALUE'
     this.envVariableRegex = /^[\w]+=('|")?[\w]+('|")?$/;
   }
 
