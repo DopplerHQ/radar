@@ -33,7 +33,7 @@ class APIKeys extends Secret {
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
 
     this.minAlphaNumericTermLength = 24;
-    this.minTermLength = 40;
+    this.minTermLength = 36;
     this.maxTermLength = 1000;
 
     this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function', 'example'];
