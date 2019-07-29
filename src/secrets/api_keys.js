@@ -11,7 +11,6 @@ class APIKeys extends Secret {
       'dictionary',
       'common_patterns',
       'xml',
-      'email',
       'date',
       'mimetypes',
       'awsresource',
