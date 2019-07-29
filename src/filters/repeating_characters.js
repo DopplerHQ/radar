@@ -26,6 +26,12 @@ class RepeatingCharacters extends Filter {
     if (((term.match(/\(/g) || []).length >= 2) && ((term.match(/\)/g) || []).length >= 2))
       return true;
 
+    if ((term.match(/\(/g) || []).length >= 4)
+      return true;
+
+    if ((term.match(/\)/g) || []).length >= 4)
+      return true;
+
     if (/__[a-z]+/.test(term)) {
       return true;
     }
