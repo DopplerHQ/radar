@@ -124,33 +124,47 @@ class Radar {
    * @returns {Boolean} true if the file is ok, false if it's blacklisted
    */
   _checkFileName(name, ext, relativePath) {
-    const includedFiles = this._config.getIncludedFiles();
-    const isNameWhitelisted = includedFiles.includes(name) || includedFiles.includes(relativePath);
-    if (isNameWhitelisted) {
+    if (this._isNameWhitelisted(name, relativePath)) {
       return true;
     }
 
-    const excludedFiles = this._config.getExcludedFiles();
-    const isNameBlacklisted = excludedFiles.includes(name) || excludedFiles.includes(relativePath);
-    if (isNameBlacklisted) {
+    if (this._isNameBlacklisted(name, relativePath)) {
       return false;
     }
 
-    const isExtensionWhitelisted = this._config.getIncludedFileExts().reduce((acc, extension) => (
-      acc || ext === extension || ext.endsWith(`.${extension}`)
-    ), false)
-    if (isExtensionWhitelisted) {
+    if (this._isExtensionWhitelisted(ext)) {
       return true;
     }
 
-    const isExtensionBlacklisted = this._config.getExcludedFileExts().reduce((acc, extension) => (
-      acc || ext === extension || ext.endsWith(`.${extension}`)
-    ), false)
-    if (isExtensionBlacklisted) {
+    if (this._isExtensionBlacklisted(ext)) {
       return false;
     }
 
     return true;
+  }
+
+
+  // TODO unit test these individual functions
+  _isNameWhitelisted(name, relativePath) {
+    const includedFiles = this._config.getIncludedFiles();
+    return includedFiles.includes(name) || includedFiles.includes(relativePath);
+  }
+
+  _isNameBlacklisted(name, relativePath) {
+    const excludedFiles = this._config.getExcludedFiles();
+    return excludedFiles.includes(name) || excludedFiles.includes(relativePath);
+  }
+
+  _isExtensionWhitelisted(extension) {
+    return this._config.getIncludedFileExts().reduce((acc, ext) => (
+      acc || extension === ext || extension.endsWith(`.${ext}`)
+    ), false)
+  }
+
+  _isExtensionBlacklisted(extension) {
+    return this._config.getExcludedFileExts().reduce((acc, ext) => (
+      acc || extension === ext || extension.endsWith(`.${ext}`)
+    ), false)
   }
 
   /**
