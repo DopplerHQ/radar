@@ -73,13 +73,13 @@ class ScannedFile {
         size: this._file.size(),
         extension: this._file.extension(),
       },
-      findings: Object.keys(this._secrets).map((key) => {
+      results: Object.keys(this._secrets).map((key) => {
         const value = this._secrets[key];
         return {
           line: value.line,
           lineNumber: parseInt(key),
-          secrets: value.secrets.map(secret => ({
-            secret: secret.secret(),
+          findings: value.secrets.map(secret => ({
+            text: secret.secret(),
             type: secret.type(),
           })),
         };
