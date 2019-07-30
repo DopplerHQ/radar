@@ -61,12 +61,14 @@ class APIKeys extends Secret {
       .filter(term => !term.endsWith('.com'))
       .filter((term) => {
         const containsLetters = term.match(this.lettersRegex);
-        if (containsLetters === null)
+        if (containsLetters === null) {
           return false;
+        }
 
         const containsNumbers = term.match(this.numbersRegex);
-        if (containsNumbers === null)
+        if (containsNumbers === null) {
           return false;
+        }
 
         return true;
       });
@@ -81,8 +83,9 @@ class APIKeys extends Secret {
   }
 
   isValidLineLength(term) {
-    if (term.length > this.maxTermLength)
+    if (term.length > this.maxTermLength) {
       return false;
+    }
 
     const isAlphaNumeric = /^[a-z0-9]+$/i.test(term);
     return (term.length >= this.minTermLength)
