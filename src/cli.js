@@ -69,7 +69,7 @@ class CLI {
         line.findings.forEach((finding) => resultsArr.push({
           File: (i === 0) ? file : "",
           Line: line.lineNumber,
-          Secret: finding.secret,
+          Secret: finding.text,
           Type: finding.type,
         }))
       })
