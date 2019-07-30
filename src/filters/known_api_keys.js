@@ -8,7 +8,7 @@ class KnownAPIKey extends Filter {
     this.dopplerRegex = /(^|\W)dplr_[a-zA-Z0-9]{40}/;
 
     // AWS access keys and STS keys (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-unique-ids)
-    this.awsRegex = /(^|\W)A(K|S)IA[A-Z0-9]+/;
+    this.awsRegex = /(^|\W)A(K|S)IA[A-Z0-9]{8,}/;
     this.mailgunRegex = /(^|\W)key-[a-z0-9]{32}/;
     this.sendgridRegex = /(^|\W)SG\.[a-zA-Z0-9\.-_]{32,}/;
     // https://api.slack.com/docs/token-types

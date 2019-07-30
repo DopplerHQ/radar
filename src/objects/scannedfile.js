@@ -7,7 +7,7 @@ class ScannedFile {
    */
   constructor(file) {
     this._file = file;
-    this._secrets = [];
+    this._results = {};
     // used for tags identified by the static file classifier. these tags cannot be removed
     this._fileTags = new Set();
     // used for tags identified during run time. these tags can be removed
@@ -18,16 +18,12 @@ class ScannedFile {
     return this._file;
   }
 
-  secrets() {
-    return this._secrets;
-  }
-
   tags() {
     return new Set([...this._fileTags, ...this._runtimeTags]);
   }
 
   hasSecrets() {
-    return (this._secrets.length !== 0);
+    return (Object.keys(this._results).length !== 0);
   }
 
   /**
@@ -38,7 +34,15 @@ class ScannedFile {
    * @param {Number} lineNumber
    */
   addSecret(secret, type, line, lineNumber) {
-    this._secrets.push(new Secret(secret, type, line, lineNumber));
+    if (this._results[lineNumber] === undefined) {
+      this._results[lineNumber] = {
+        line,
+        findings: [],
+      };
+    }
+
+    const secretsOnLine = this._results[lineNumber];
+    secretsOnLine.findings.push(new Secret(secret, type));
   }
 
    /**
@@ -66,15 +70,20 @@ class ScannedFile {
   toObject() {
     return {
       metadata: {
-        fileSize: this._file.size(),
-        fileExtension: this._file.extension(),
+        size: this._file.size(),
+        extension: this._file.extension(),
       },
-      secrets: this._secrets.map(secret => ({
-        secret: secret.secret(),
-        type: secret.type(),
-        line: secret.line(),
-        lineNumber: secret.lineNumber(),
-      }))
+      results: Object.keys(this._results).map((key) => {
+        const value = this._results[key];
+        return {
+          line: value.line,
+          lineNumber: parseInt(key),
+          findings: value.findings.map(secret => ({
+            text: secret.secret(),
+            type: secret.type(),
+          })),
+        };
+      })
     }
   }
 }

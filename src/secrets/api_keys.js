@@ -16,7 +16,7 @@ class APIKeys extends Secret {
       'ipaddress',
       'uuid',
       'repeating_characters',
-      'enumerated-charset',
+      'enumerated_charset',
       'path',
       'url',
       'package_version',
@@ -25,7 +25,7 @@ class APIKeys extends Secret {
       'dictionary',
     ];
     const filters = ['entropy'];
-    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
+    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG];
     super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /("|'|;|\\|\(\)|{}|(->))+/g;
@@ -37,7 +37,7 @@ class APIKeys extends Secret {
     this.minTermLength = 36;
     this.maxTermLength = 1000;
 
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function', 'example'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }
@@ -76,10 +76,6 @@ class APIKeys extends Secret {
 
   static isValidCharacter(char) {
     return (char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126);
-  }
-
-  isValidLineLength(term) {
-    return (term.length >= this.minTermLength) && (term.length <= this.maxTermLength);
   }
 
   isValidLineLength(term) {
