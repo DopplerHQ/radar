@@ -16,7 +16,7 @@ class APIKeys extends Secret {
       'ipaddress',
       'uuid',
       'repeating_characters',
-      'enumerated-charset',
+      'enumerated_charset',
       'path',
       'url',
       'package_version',
