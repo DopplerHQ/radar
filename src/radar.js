@@ -136,11 +136,16 @@ class Radar {
       return false;
     }
 
-    const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(ext);
+    const isExtensionWhitelisted = this._config.getIncludedFileExts().reduce((acc, extension) => (
+      acc || ext === extension || ext.endsWith(`.${extension}`)
+    ), false)
     if (isExtensionWhitelisted) {
       return true;
     }
-    const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
+
+    const isExtensionBlacklisted = this._config.getExcludedFileExts().reduce((acc, extension) => (
+      acc || ext === extension || ext.endsWith(`.${extension}`)
+    ), false)
     if (isExtensionBlacklisted) {
       return false;
     }

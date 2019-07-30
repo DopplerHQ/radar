@@ -20,7 +20,9 @@ class Classifier {
   }
 
   isMatch(extension) {
-    return this._extensions.includes(extension);
+    return this._extensions.reduce((acc, ext) => (
+      acc || ext === extension || ext.endsWith(`.${extension}`)
+    ), false)
   }
 }
 
