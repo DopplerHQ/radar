@@ -37,7 +37,7 @@ class APIKeys extends Secret {
     this.minTermLength = 36;
     this.maxTermLength = 1000;
 
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'data:image/png;base64', 'gitHead', 'function', 'example'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }
