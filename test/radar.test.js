@@ -152,14 +152,14 @@ test("results map", () => {
           size: 123,
           extension: "txt",
         },
-        results: [],
+        lines: [],
       },
       "anothertest.ext": {
         metadata: {
           size: 456,
           extension: "ext",
         },
-        results: [],
+        lines: [],
       },
     }
   );

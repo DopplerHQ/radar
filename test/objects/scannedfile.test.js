@@ -11,7 +11,7 @@ test('toObject- no secrets', () => {
       size: 123,
       extension: "txt",
     },
-    results: [],
+    lines: [],
   });
 });
 
@@ -26,7 +26,7 @@ test('toObject- with secrets', () => {
       size: 123,
       extension: "txt",
     },
-    results: [
+    lines: [
       {
         line: "text thisisasecret more text",
         lineNumber: 13,

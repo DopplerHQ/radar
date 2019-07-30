@@ -73,7 +73,7 @@ class ScannedFile {
         size: this._file.size(),
         extension: this._file.extension(),
       },
-      results: Object.keys(this._results).map((key) => {
+      lines: Object.keys(this._results).map((key) => {
         const value = this._results[key];
         return {
           line: value.line,
