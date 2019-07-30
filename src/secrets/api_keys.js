@@ -79,10 +79,6 @@ class APIKeys extends Secret {
   }
 
   isValidLineLength(term) {
-    return (term.length >= this.minTermLength) && (term.length <= this.maxTermLength);
-  }
-
-  isValidLineLength(term) {
     if (term.length > this.maxTermLength) {
       return false;
     }
