@@ -70,7 +70,7 @@ class Radar {
       const entryPath = `${path}/${entry.name}`;
 
       const relativePath = Filesystem.getRelativePath(entryPath, this.basePath);
-      if (entry.isDirectory() && !this._isDirectoryExcluded(entry.name, relativePath)) {
+      if (entry.isDirectory() && this._checkDirectory(entry.name, relativePath)) {
         await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
@@ -110,11 +110,38 @@ class Radar {
     const path = file.fullPath();
 
     const relativePath = Filesystem.getRelativePath(path, this.basePath);
-    if (this._isFileExcluded(name, ext, relativePath)) {
+    if (this._checkFileName(name, ext, relativePath) && this._checkFileSize(size)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Check that the file name isn't blacklisted. Name white/blacklisting takes precedence over extension white/blacklisting
+   * @param {String} name
+   * @param {String} ext
+   * @returns {Boolean} true if the file is ok, false if it's blacklisted
+   */
+  _checkFileName(name, ext, relativePath) {
+    const includedFiles = this._config.getIncludedFiles();
+    const isNameWhitelisted = includedFiles.includes(name) || includedFiles.includes(relativePath);
+    if (isNameWhitelisted) {
+      return true;
+    }
+
+    const excludedFiles = this._config.getExcludedFiles();
+    const isNameBlacklisted = excludedFiles.includes(name) || excludedFiles.includes(relativePath);
+    if (isNameBlacklisted) {
       return false;
     }
 
-    if (this._isFileTooLarge(size)) {
+    const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(ext);
+    if (isExtensionWhitelisted) {
+      return true;
+    }
+    const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
+    if (isExtensionBlacklisted) {
       return false;
     }
 
@@ -122,70 +149,41 @@ class Radar {
   }
 
   /**
-   * Checks if a file has been marked as excluded. Name white/blacklisting takes precedence over extension white/blacklisting
+   * Check that the directory isn't blacklisted
    * @param {String} name
-   * @param {String} ext
+   * @param {String} relativePath Relative path to the directory from the original scan directory
    * @returns {Boolean}
    */
-  _isFileExcluded(name, ext, relativePath) {
-    const includedFiles = this._config.getIncludedFiles();
-    const isNameWhitelisted = includedFiles.includes(name) || includedFiles.includes(relativePath);
-    if (isNameWhitelisted) {
-      return false;
-    }
-
-    const excludedFiles = this._config.getExcludedFiles();
-    const isNameBlacklisted = excludedFiles.includes(name) || excludedFiles.includes(relativePath);
-    if (isNameBlacklisted) {
-      return true;
-    }
-
-    const isExtensionWhitelisted = this._config.getIncludedFileExts().includes(ext);
-    if (isExtensionWhitelisted) {
-      return false;
-    }
-    const isExtensionBlacklisted = this._config.getExcludedFileExts().includes(ext);
-    if (isExtensionBlacklisted) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Checks if a directory has been marked as excluded
-   * @param {String} name
-   * @param {String} relativePath Relative path to the directory using a root of the specified scan directory
-   * @returns {Boolean}
-   */
-  _isDirectoryExcluded(name, relativePath) {
+  _checkDirectory(name, relativePath) {
     const isNameWhitelisted = this._config.getIncludedDirectories().includes(name);
     if (isNameWhitelisted) {
-      return false;
+      return true;
     }
 
     const excludedDirectories = this._config.getExcludedDirectories();
     const isNameBlacklisted = excludedDirectories.includes(name) || excludedDirectories.includes(relativePath);
     if (isNameBlacklisted) {
-      return true;
+      return false;
     }
 
-    const isParentDirBlacklisted = excludedDirectories.reduce((acc, dir) => (acc || `${relativePath}/`.startsWith(`${dir}/`)), false);
-    if (isParentDirBlacklisted) {
-      return true;
+    const isRelativePathBlacklisted = excludedDirectories.reduce((acc, excludedDir) => (
+      acc || `${relativePath}/`.startsWith(`${excludedDir}/`)
+    ), false);
+    if (isRelativePathBlacklisted) {
+      return false;
     }
 
-    return false;
+    return true;
   }
 
   /**
-   *
+   * Check that the file size doesn't exceed the max
    * @param {Number} bytes
    * @return {Boolean}
    */
-  _isFileTooLarge(bytes) {
-    const sizeMiB = (bytes / OneMebibyte);
-    return sizeMiB > this._config.getMaxFileSizeMiB()
+  _checkFileSize(bytes) {
+    const mebibytes = (bytes / OneMebibyte);
+    return mebibytes <= this._config.getMaxFileSizeMiB()
   }
 
   /**

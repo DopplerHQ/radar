@@ -6,73 +6,73 @@ test("file exclusion- all possible states", () => {
   // no white/blacklist
   let config = new Config();
   let radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "goodext")).toBe(false);
+  expect(radar._checkFileName("goodfile", "goodext")).toBe(true);
 
   // whitelisted name
   config = new Config();
   config.setIncludedFiles(["badfile"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("badfile", "goodext")).toBe(false);
+  expect(radar._checkFileName("badfile", "goodext")).toBe(true);
 
   // blacklisted name
   config = new Config();
   config.setExcludedFiles(["badfile"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("badfile", "goodext")).toBe(true);
+  expect(radar._checkFileName("badfile", "goodext")).toBe(false);
 
   // whitelisted ext
   config = new Config();
   config.setIncludedFileExts(["badext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "badext")).toBe(false);
+  expect(radar._checkFileName("goodfile", "badext")).toBe(true);
 
   // blacklisted ext
   config = new Config();
   config.setExcludedFileExts(["badext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "badext")).toBe(true);
+  expect(radar._checkFileName("goodfile", "badext")).toBe(false);
 
   // whitelisted name, blacklisted ext
   config = new Config();
   config.setIncludedFiles(["goodfile"]);
   config.setExcludedFileExts(["badext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "badext")).toBe(false);
+  expect(radar._checkFileName("goodfile", "badext")).toBe(true);
 
   // blacklisted name, whitelisted ext
   config = new Config();
   config.setExcludedFiles(["badfile"]);
   config.setIncludedFileExts(["badext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("badfile", "badext")).toBe(true);
+  expect(radar._checkFileName("badfile", "badext")).toBe(false);
 
   // whitelisted name, whitelisted ext
   config = new Config();
   config.setIncludedFiles(["goodfile"]);
   config.setIncludedFileExts(["goodext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "goodext")).toBe(false);
+  expect(radar._checkFileName("goodfile", "goodext")).toBe(true);
 
   // whitelisted name, blacklisted name
   config = new Config();
   config.setIncludedFiles(["goodfile"]);
   config.setExcludedFiles(["goodfile"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "badext")).toBe(false);
+  expect(radar._checkFileName("goodfile", "badext")).toBe(true);
 
   // whitelisted ext, blacklisted ext
   config = new Config();
   config.setIncludedFileExts(["goodext"]);
   config.setExcludedFileExts(["goodext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("goodfile", "goodext")).toBe(false);
+  expect(radar._checkFileName("goodfile", "goodext")).toBe(true);
 
   // blacklisted name, blacklisted ext
   config = new Config();
   config.setExcludedFiles(["badfile"]);
   config.setExcludedFileExts(["badext"]);
   radar = new Radar(config);
-  expect(radar._isFileExcluded("badfile", "badext")).toBe(true);
+  expect(radar._checkFileName("badfile", "badext")).toBe(false);
 });
 
 test("file exclusion- relative paths", () => {
@@ -80,36 +80,36 @@ test("file exclusion- relative paths", () => {
   let radar = new Radar(config);
   radar.basePath = "/root";
   config.setExcludedFiles(["nested/directory/test.txt"]);
-  expect(radar._isFileExcluded("test", "txt", "nested/directory/test.txt")).toBe(true);
+  expect(radar._checkFileName("test", "txt", "nested/directory/test.txt")).toBe(false);
 
-  expect(radar._isFileExcluded("test", "txt", "fake/nested/directory")).toBe(false);
-  expect(radar._isFileExcluded("test", "txt", "")).toBe(false);
+  expect(radar._checkFileName("test", "txt", "fake/nested/directory")).toBe(true);
+  expect(radar._checkFileName("test", "txt", "")).toBe(true);
 });
 
 test("directory exclusion - all possible states", () => {
   // no white/blacklist
   let config = new Config();
   let radar = new Radar(config);
-  expect(radar._isDirectoryExcluded("gooddir")).toBe(false);
+  expect(radar._checkDirectory("gooddir")).toBe(true);
 
   // whitelisted
   config = new Config();
   config.setIncludedDirectories(["baddir"]);
   radar = new Radar(config);
-  expect(radar._isDirectoryExcluded("baddir")).toBe(false);
+  expect(radar._checkDirectory("baddir")).toBe(true);
 
   // blacklisted
   config = new Config();
   config.setExcludedDirectories(["baddir"]);
   radar = new Radar(config);
-  expect(radar._isDirectoryExcluded("baddir")).toBe(true);
+  expect(radar._checkDirectory("baddir")).toBe(false);
 
   // whitelisted and blacklisted
   config = new Config();
   config.setIncludedDirectories(["baddir"]);
   config.setExcludedDirectories(["baddir"]);
   radar = new Radar(config);
-  expect(radar._isDirectoryExcluded("baddir")).toBe(false);
+  expect(radar._checkDirectory("baddir")).toBe(true);
 });
 
 test("directory exclusion- relative paths", () => {
@@ -117,12 +117,12 @@ test("directory exclusion- relative paths", () => {
   let radar = new Radar(config);
   radar.basePath = "/root";
   config.setExcludedDirectories(["nested/directory"]);
-  expect(radar._isDirectoryExcluded("test", "nested/directory/test")).toBe(true);
-  expect(radar._isDirectoryExcluded("test", "nested/directory/test1/test2/test")).toBe(true);
+  expect(radar._checkDirectory("test", "nested/directory/test")).toBe(false);
+  expect(radar._checkDirectory("test", "nested/directory/test1/test2/test")).toBe(false);
 
-  expect(radar._isDirectoryExcluded("test", "nested/differentdirectory/test")).toBe(false);
-  expect(radar._isDirectoryExcluded("test", "")).toBe(false);
-  expect(radar._isDirectoryExcluded("test", "/")).toBe(false);
+  expect(radar._checkDirectory("test", "nested/differentdirectory/test")).toBe(true);
+  expect(radar._checkDirectory("test", "")).toBe(true);
+  expect(radar._checkDirectory("test", "/")).toBe(true);
 });
 
 test("file size exclusion", () => {
@@ -130,14 +130,14 @@ test("file size exclusion", () => {
   let config = new Config();
   config.setMaxFileSizeMiB(1);
   const radar1 = new Radar(config);
-  expect(radar1._isFileTooLarge(1048575)).toBe(false);
-  expect(radar1._isFileTooLarge(1048576)).toBe(false);
-  expect(radar1._isFileTooLarge(1048577)).toBe(true);
+  expect(radar1._checkFileSize(1048575)).toBe(true);
+  expect(radar1._checkFileSize(1048576)).toBe(true);
+  expect(radar1._checkFileSize(1048577)).toBe(false);
 
   const radar2 = new Radar();
-  expect(radar2._isFileTooLarge(10485759)).toBe(false);
-  expect(radar2._isFileTooLarge(10485760)).toBe(false);
-  expect(radar2._isFileTooLarge(10485761)).toBe(true);
+  expect(radar2._checkFileSize(10485759)).toBe(true);
+  expect(radar2._checkFileSize(10485760)).toBe(true);
+  expect(radar2._checkFileSize(10485761)).toBe(false);
 });
 
 test("results map", () => {
