@@ -21,16 +21,16 @@ class Dictionary extends Filter {
       }
     });
     Object.keys(filetypes).forEach((type) => {
-      filetypes[type].forEach((filetype) => {
-        if ((filetype.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(filetype))) {
-          this.customDictionaryMap[filetype.toLowerCase()] = true;
+      filetypes[type].forEach((fileExt) => {
+        if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
+          this.customDictionaryMap[fileExt.toLowerCase()] = true;
         }
       });
     });
     Object.keys(CryptoKeyExtensions).forEach((type) => {
-      CryptoKeyExtensions[type].forEach((filetype) => {
-        if ((filetype.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(filetype))) {
-          this.customDictionaryMap[filetype.toLowerCase()] = true;
+      CryptoKeyExtensions[type].forEach((fileExt) => {
+        if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
+          this.customDictionaryMap[fileExt.toLowerCase()] = true;
         }
       });
     });
