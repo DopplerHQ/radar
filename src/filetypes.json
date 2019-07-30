@@ -6,7 +6,7 @@
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf"],
   "binaries": ["o", "exe", "dmg", "msi", "node", "bin", "s"],
-  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example"],
+  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi"],
   "translations": ["po", "pot", "qm"],
   "email": ["eml", "msg"],
   "code": ["min.js", "css", "scss", "less", "min.css", "min.json", "d.ts", "tsbuildinfo", "pb.cc", "pb.h"]
