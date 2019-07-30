@@ -5,11 +5,9 @@ class Secret {
    * @param {String} line
    * @param {Number} lineNumber
    */
-  constructor(secret, type, line, lineNumber) {
+  constructor(secret, type) {
     this._secret = secret;
     this._type = type;
-    this._line = line;
-    this._lineNumber = lineNumber;
   }
 
   secret() {
@@ -18,14 +16,6 @@ class Secret {
 
   type() {
     return this._type;
-  }
-
-  line() {
-    return this._line;
-  }
-
-  lineNumber() {
-    return this._lineNumber;
   }
 }
 

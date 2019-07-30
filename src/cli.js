@@ -54,7 +54,7 @@ class CLI {
 
   print(results) {
     if (program.json) {
-      console.dir(results, { depth: 3 } );
+      console.dir(results, { depth: 5 } );
       return;
     }
 
@@ -65,12 +65,14 @@ class CLI {
 
     const resultsArr = [];
     Object.keys(results).forEach((file) => {
-      results[file].secrets.forEach((secret, i) => resultsArr.push({
-        File: (i === 0) ? file : "",
-        Line: secret.lineNumber,
-        Secret: secret.secret,
-        Type: secret.type,
-      }))
+      results[file].findings.forEach((line, i) => {
+        line.secrets.forEach((secret) => resultsArr.push({
+          File: (i === 0) ? file : "",
+          Line: line.lineNumber,
+          Secret: secret.secret,
+          Type: secret.type,
+        }))
+      })
     });
 
     console.log(Table.print(resultsArr));

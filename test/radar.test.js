@@ -150,17 +150,17 @@ test("results map", () => {
     {
       "test.txt": {
         metadata: {
-          fileSize: 123,
-          fileExtension: "txt",
+          size: 123,
+          extension: "txt",
         },
-        secrets: [],
+        findings: [],
       },
       "anothertest.ext": {
         metadata: {
-          fileSize: 456,
-          fileExtension: "ext",
+          size: 456,
+          extension: "ext",
         },
-        secrets: [],
+        findings: [],
       },
     }
   );
