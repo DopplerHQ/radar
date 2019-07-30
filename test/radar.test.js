@@ -79,11 +79,10 @@ test("file exclusion- relative paths", () => {
   let config = new Config();
   let radar = new Radar(config);
   radar.basePath = "/root";
-  config.setExcludedFiles(["nested/directory/test.txt"]);
-  expect(radar._checkFileName("test", "txt", "nested/directory/test.txt")).toBe(false);
-
-  expect(radar._checkFileName("test", "txt", "fake/nested/directory")).toBe(true);
-  expect(radar._checkFileName("test", "txt", "")).toBe(true);
+  config.setExcludedFiles(["nested/directory/testname.testext"]);
+  expect(radar._checkFileName("testname", "testext", "nested/directory/testname.testext")).toBe(false);
+  expect(radar._checkFileName("testname", "testext", "fake/nested/directory")).toBe(true);
+  expect(radar._checkFileName("testname", "testext", "")).toBe(true);
 });
 
 test("directory exclusion - all possible states", () => {
