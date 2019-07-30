@@ -24,12 +24,14 @@ class APIKeys extends Secret {
       'regex',
       'dictionary',
     ];
-    const filters = ['mixedchars', 'entropy'];
+    const filters = ['entropy'];
     const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
     super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /("|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
+    this.lettersRegex = /[a-z]/i;
+    this.numbersRegex = /[0-9]/;
 
     this.minAlphaNumericTermLength = 24;
     this.minTermLength = 36;
@@ -56,7 +58,20 @@ class APIKeys extends Secret {
       .trim()
       .split(/ +/)
       .filter(term => this.isValidLineLength(term))
-      .filter(term => !term.endsWith('.com'));
+      .filter(term => !term.endsWith('.com'))
+      .filter((term) => {
+        const containsLetters = term.match(this.lettersRegex);
+        if (containsLetters === null) {
+          return false;
+        }
+
+        const containsNumbers = term.match(this.numbersRegex);
+        if (containsNumbers === null) {
+          return false;
+        }
+
+        return true;
+      });
   }
 
   static isValidCharacter(char) {
@@ -68,8 +83,9 @@ class APIKeys extends Secret {
   }
 
   isValidLineLength(term) {
-    if (term.length > this.maxTermLength)
+    if (term.length > this.maxTermLength) {
       return false;
+    }
 
     const isAlphaNumeric = /^[a-z0-9]+$/i.test(term);
     return (term.length >= this.minTermLength)

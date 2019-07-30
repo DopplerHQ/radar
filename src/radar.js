@@ -195,7 +195,7 @@ class Radar {
   async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
     FileClassifier.classify(file)
-      .forEach(tag => scannedFile.addTag(tag));
+      .forEach(tag => scannedFile.addTag(tag, true));
     await Filesystem.readFile(scannedFile, this._onLineRead)
       .catch(() => {});
     this._onFileScanned();

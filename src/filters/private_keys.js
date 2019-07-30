@@ -1,8 +1,8 @@
 const Filter = require('../objects/Filter');
 
-class CryptoKeys extends Filter {
+class PrivateKeys extends Filter {
   constructor() {
-    super('Identify cryptographic keys');
+    super('Identify cryptographic private keys');
 
     this.beginPrivateKeyRegex = (/^.*BEGIN .*PRIVATE KEY.*$/i);
     this.endPrivateKeyRegex = (/^.*END .*PRIVATE KEY.*$/i);
@@ -13,5 +13,5 @@ class CryptoKeys extends Filter {
   }
 }
 
-const filter = new CryptoKeys();
+const filter = new PrivateKeys();
 module.exports = filter;

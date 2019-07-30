@@ -12,7 +12,7 @@ class Secret {
     this._name = name;
     // must not match any pre-filter
     this._preFilters = preFilters.map(name => require(`./filters/${name}`));
-    // must match all filters
+    // must match any filter
     this._filters = filters.map(name => require(`./filters/${name}`));
     // file tags to include, or blank list for all. include overrules an exclude
     this._fileTags = fileTags;
@@ -37,10 +37,10 @@ class Secret {
       return !matchesAnyPreFilters;
     })
       .filter((term) => {
-        const matchesAllFilters = this._filters.reduce((acc, filter) => (
-          acc && filter.isMatch(term)
-        ), true);
-        return matchesAllFilters;
+        const matchesAnyFilters = this._filters.reduce((acc, filter) => (
+          acc || filter.isMatch(term)
+        ), false);
+        return matchesAnyFilters;
       });
 
     return {

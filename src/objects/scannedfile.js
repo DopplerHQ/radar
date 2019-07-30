@@ -8,7 +8,10 @@ class ScannedFile {
   constructor(file) {
     this._file = file;
     this._secrets = [];
-    this._tags = new Set();
+    // used for tags identified by the static file classifier. these tags cannot be removed
+    this._fileTags = new Set();
+    // used for tags identified during run time. these tags can be removed
+    this._runtimeTags = new Set();
   }
 
   file() {
@@ -20,7 +23,7 @@ class ScannedFile {
   }
 
   tags() {
-    return this._tags;
+    return new Set([...this._fileTags, ...this._runtimeTags]);
   }
 
   hasSecrets() {
@@ -38,12 +41,26 @@ class ScannedFile {
     this._secrets.push(new Secret(secret, type, line, lineNumber));
   }
 
+   /**
+    *
+    * @param {FileTags} tag
+    * @param {boolean} isFileTag File tags cannot be removed; runtime tags can be removed
+    */
+  addTag(tag, isFileTag = false) {
+    if (isFileTag) {
+      this._fileTags.add(tag);
+    }
+    else {
+      this._runtimeTags.add(tag);
+    }
+  }
+
   /**
    *
-   * @param {String} value
+   * @param {FileTags} tag
    */
-  addTag(value) {
-    this._tags.add(value);
+  deleteTag(tag) {
+    this._runtimeTags.delete(tag);
   }
 
   toObject() {
