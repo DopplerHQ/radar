@@ -50,10 +50,10 @@ class Scanner {
     Object.keys(tags).forEach((tag) => {
       const value = tags[tag];
       if (value === true) {
-        scannedFile.tags().add(tag);
+        scannedFile.addTag(tag);
       }
       else if (value === false) {
-        scannedFile.tags().delete(tag);
+        scannedFile.deleteTag(tag);
       }
     })
   }
