@@ -25,7 +25,7 @@ class APIKeys extends Secret {
       'dictionary',
     ];
     const filters = ['entropy'];
-    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE];
+    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG];
     super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /("|'|;|\\|\(\)|{}|(->))+/g;
