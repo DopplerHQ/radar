@@ -4,33 +4,32 @@ const FileTags = require('../objects/file_tags');
 class CryptoKeys extends Secret {
   constructor() {
     const name = 'crypto_key';
-    const filters = ['crypto_keys'];
-    const fileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.NO_EXTENSION];
+    const filters = ['private_keys', 'public_keys'];
+    const fileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.NO_EXTENSION];
 
     super(name, { filters, fileTags });
   }
 
   check(terms) {
     const { secrets } = super.check(terms);
-    const foundKey = (secrets.length > 0);
-    if (foundKey && terms[0].includes("END ")) {
+    if (secrets.length === 0) {
       return {
-        secrets: [],
-        tags: {
-          [FileTags.CRYPTO_PRIVATE_KEY]: false,
-        }
+        secrets,
+        tags: {},
       };
     }
 
-    const tags = {};
-    if (foundKey) {
-      tags[FileTags.CRYPTO_PRIVATE_KEY] = true;
-    };
+    const term = terms[0];
+    const isBeginBlock = term.includes("BEGIN ");
+    const isPrivateKey = term.includes("PRIVATE KEY");
+    const tag = isPrivateKey ? FileTags.CRYPTO_PRIVATE_KEY : FileTags.CRYPTO_PUBLIC_KEY;
 
     return {
-      secrets,
-      tags,
-    }
+      secrets: (isPrivateKey && isBeginBlock) ? secrets : [],
+      tags: {
+        [tag]: isBeginBlock,
+      },
+    };
   }
 
   /**
