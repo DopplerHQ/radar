@@ -16,6 +16,7 @@ class APIKeys extends Secret {
       'uuid',
       'repeating_characters',
       'enumerated_charset',
+      'filename',
       'path',
       'url',
       'email', // place this after url filter
