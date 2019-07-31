@@ -24,4 +24,5 @@ test('is not auth url', () => {
   expect(Filter.isMatch("https://user@google.com")).toBe(false);
   expect(Filter.isMatch("user:pass@google.com")).toBe(false);
   expect(Filter.isMatch("random text")).toBe(false);
+  expect(Filter.isMatch("https://example.com/.well-known/webfinger?resource=acct:alice@example.com")).toBe(false);
 });
