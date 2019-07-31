@@ -1,7 +1,7 @@
 const asyncPool = require("tiny-async-pool");
 
 const Filesystem = require('./filesystem');
-const filetypes = require('./filetypes.json');
+const ExcludedFiletypes = require('./excluded_filetypes');
 const File = require('./objects/file');
 const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./Scanner');
@@ -18,7 +18,8 @@ class Radar {
    * @param {function} onFileScanned called whenever a file is scanned
    */
   constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
-    Object.keys(filetypes).forEach(filetype => config.setExcludedFileExts(filetypes[filetype].map(f => f.toLowerCase())));
+    Object.keys(ExcludedFiletypes).forEach(filetype => config.setExcludedFileExts(ExcludedFiletypes[filetype].map(f => f.toLowerCase())));
+
     this._config = config;
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;

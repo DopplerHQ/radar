@@ -5,9 +5,11 @@
   "compressed": ["7z", "arj", "deb", "pkg", "rar", "rpm", "gz", "z", "zip", "tar.gz", "tar", "bz2"],
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf"],
-  "binaries": ["o", "exe", "dmg", "msi", "node", "bin", "s"],
-  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp"],
-  "translations": ["po", "pot", "qm"],
+  "binary": ["o", "exe", "dmg", "msi", "node", "bin", "s"],
+  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp", "terminal"],
+  "translation": ["po", "pot", "qm"],
   "email": ["eml", "msg"],
-  "code": ["min.js", "css", "scss", "less", "min.css", "min.json", "d.ts", "tsbuildinfo", "pb.cc", "pb.h"]
+  "minified-code": ["min.js", "min.css", "min.json"],
+  "stylesheet": ["css", "scss", "less"],
+  "build": ["d.ts", "tsbuildinfo", "pb.cc", "pb.h"]
 }
