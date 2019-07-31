@@ -1,6 +1,6 @@
 class Secret {
   /**
-   *
+   * Pre-filters and filters will be tested in the order they're specified
    * @param {String} name
    * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */

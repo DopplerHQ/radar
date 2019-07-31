@@ -6,7 +6,6 @@ const Countries = require('../dictionaries/countries');
 class APIKeys extends Secret {
   constructor() {
     const name = 'api_key';
-    // pre-filters and filters will be tested in the order they're specified
     const preFilters = [
       'xml',
       'common_patterns',
@@ -29,7 +28,7 @@ class APIKeys extends Secret {
     const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG];
     super(name, { preFilters, filters, excludedFileTags });
 
-    this.charactersToReplace = /("|'|;|\\|\(\)|{}|(->))+/g;
+    this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
     this.lettersRegex = /[a-z]/i;
     this.numbersRegex = /[0-9]/;
