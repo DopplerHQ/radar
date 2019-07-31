@@ -19,6 +19,7 @@ class APIKeys extends Secret {
       'enumerated_charset',
       'path',
       'url',
+      'email', // place this after url filter
       'package_version',
       'hash',
       'regex',
