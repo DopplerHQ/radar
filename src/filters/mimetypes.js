@@ -1,5 +1,5 @@
 const Filter = require('../objects/Filter');
-const mimeTypes = require('../mimetypes');
+const mimeTypes = require('../../config/mimetypes');
 
 class MIMETypes extends Filter {
   constructor() {

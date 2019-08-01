@@ -1,0 +1,103 @@
+{
+  "private_keys": [
+    "asc",
+    "ca-bundle",
+    "der",
+    "gpg",
+    "key",
+    "opk",
+    "ospk",
+    "p10",
+    "p12",
+    "p7",
+    "p7a",
+    "p7b",
+    "p7c",
+    "p7s",
+    "pem",
+    "pfx",
+    "pgp",
+    "pk",
+    "pkcs",
+    "pkcs12",
+    "ppk",
+    "spc"
+  ],
+  "public_keys": [
+    "cert",
+    "crt",
+    "cer",
+    "csr",
+    "pub"
+  ],
+  "c": [
+    "c",
+    "h",
+    "cpp",
+    "hpp",
+    "m"
+  ],
+  "javascript": [
+    "js",
+    "ts",
+    "coffee",
+    "es",
+    "mjs",
+    "gs",
+    "xsjs",
+    "xsjslib",
+    "frag"
+  ],
+  "java": [
+    "java",
+    "jsp",
+    "jspx"
+  ],
+  "shell": [
+    "sh"
+  ],
+  "go": [
+    "go"
+  ],
+  "html": [
+    "html",
+    "xhtml",
+    "htm"
+  ],
+  "perl": [
+    "pl",
+    "pm"
+  ],
+  "ruby": [
+    "rb",
+    "erb",
+    "rhtml",
+    "rjs"
+  ],
+  "php": [
+    "php"
+  ],
+  "python": [
+    "py",
+    "py3"
+  ],
+  "rust": [
+    "rs"
+  ],
+  "haskell": [
+    "hs"
+  ],
+  "hack": [
+    "hh"
+  ],
+  "markdown": [
+    "md",
+    "mdown",
+    "mdx",
+    "workbook"
+  ],
+  "ocaml": [
+    "ml",
+    "eliom"
+  ]
+}

@@ -16,6 +16,7 @@ class APIKeys extends Secret {
       'uuid',
       'repeating_characters',
       'enumerated_charset',
+      'filename',
       'path',
       'url',
       'email', // place this after url filter
@@ -35,7 +36,8 @@ class APIKeys extends Secret {
 
     this.minAlphaNumericTermLength = 24;
     this.minTermLength = 36;
-    this.maxTermLength = 1000;
+    this.maxTermLength = 256;
+    this.maxLineLength = 512;
 
     this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
@@ -47,8 +49,13 @@ class APIKeys extends Secret {
     const lineContainsExclusion = this.excludedTerms.reduce((acc, val) => (
       acc || lineLowerCase.includes(val)
     ), false);
-    if (lineContainsExclusion)
+    if (lineContainsExclusion) {
       return [];
+    }
+
+    if (!this.isValidLineLength(line)) {
+      return [];
+    }
 
     return line.split('')
       .map(char => APIKeys.isValidCharacter(char) ? char : ' ')
@@ -57,7 +64,7 @@ class APIKeys extends Secret {
       .replace(this.variableNameRegex, ' ')
       .trim()
       .split(/ +/)
-      .filter(term => this.isValidLineLength(term))
+      .filter(term => this.isValidTermLength(term))
       .filter(term => !term.endsWith('.com'))
       .filter((term) => {
         const containsLetters = term.match(this.lettersRegex);
@@ -78,7 +85,11 @@ class APIKeys extends Secret {
     return (char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126);
   }
 
-  isValidLineLength(term) {
+  isValidLineLength(line) {
+    return line.length <= this.maxLineLength;
+  }
+
+  isValidTermLength(term) {
     if (term.length > this.maxTermLength) {
       return false;
     }

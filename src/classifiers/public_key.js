@@ -1,6 +1,6 @@
 const Classifier = require('../objects/classifier');
 const FileTags = require('../objects/file_tags');
-const { public_keys } = require('../crypto_key_extensions');
+const { public_keys } = require('../../config/included_filetypes');
 
 class PublicKey extends Classifier {
   constructor() {

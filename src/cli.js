@@ -65,9 +65,9 @@ class CLI {
 
     const resultsArr = [];
     Object.keys(results).forEach((file) => {
-      results[file].lines.forEach((line, i) => {
-        line.findings.forEach((finding) => resultsArr.push({
-          File: (i === 0) ? file : "",
+      results[file].lines.forEach((line, lineNumber) => {
+        line.findings.forEach((finding, findingNumber) => resultsArr.push({
+          File: (lineNumber === 0 && findingNumber === 0) ? file : "",
           Line: line.lineNumber,
           Secret: finding.text,
           Type: finding.type,
