@@ -6,6 +6,8 @@ class FileName extends Filter {
   constructor() {
     super('File name');
 
+    // match alphanumerics + periods at end of string, with up to one trailing non-alphanumeric character
+    this.fileExtensionRegex = /([a-z0-9\.]+)\W?$/i;
 
     const fileExtensions = new Set();
     const minFileExtensionLength = 2;
@@ -32,9 +34,18 @@ class FileName extends Filter {
       return false;
     }
 
-    const termLowerCase = term.toLowerCase();
+    const endsWithExtension = term.match(this.fileExtensionRegex);
+    if (endsWithExtension === null) {
+      return false;
+    }
+
+    const possibleFileExtension = endsWithExtension[1].toLowerCase();
+    if (!possibleFileExtension.includes('.')) {
+      return false;
+    }
+
     const termEndsWithFileExtension = this.fileExtensions.reduce((acc, extension) => (
-      acc || termLowerCase.endsWith(`.${extension}`)
+      acc || possibleFileExtension.endsWith(`.${extension}`)
     ), false);
     return termEndsWithFileExtension;
   }
