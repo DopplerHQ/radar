@@ -156,15 +156,15 @@ class Radar {
     return excludedFiles.includes(name) || excludedFiles.includes(relativePath);
   }
 
-  _isExtensionWhitelisted(extension) {
-    return this._config.getIncludedFileExts().reduce((acc, ext) => (
-      acc || extension === ext || extension.endsWith(`.${ext}`)
+  _isExtensionWhitelisted(fileExt) {
+    return this._config.getIncludedFileExts().reduce((acc, extension) => (
+      acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
     ), false)
   }
 
-  _isExtensionBlacklisted(extension) {
-    return this._config.getExcludedFileExts().reduce((acc, ext) => (
-      acc || extension === ext || extension.endsWith(`.${ext}`)
+  _isExtensionBlacklisted(fileExt) {
+    return this._config.getExcludedFileExts().reduce((acc, extension) => (
+      acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
     ), false)
   }
 
