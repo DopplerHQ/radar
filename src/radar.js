@@ -1,7 +1,7 @@
 const asyncPool = require("tiny-async-pool");
 
 const Filesystem = require('./filesystem');
-const ExcludedFiletypes = require('./excluded_filetypes');
+const ExcludedFiletypes = require('../config/excluded_filetypes');
 const File = require('./objects/file');
 const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./Scanner');

@@ -1,6 +1,6 @@
 const Filter = require('../objects/Filter');
-const ExcludedFiletypes = require('../excluded_filetypes');
-const IncludedFiletypes = require('../included_filetypes');
+const ExcludedFiletypes = require('../../config/excluded_filetypes');
+const IncludedFiletypes = require('../../config/included_filetypes');
 
 class FileName extends Filter {
   constructor() {

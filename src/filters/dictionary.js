@@ -1,8 +1,8 @@
 const dictionary = new Set(require('an-array-of-english-words'));
 
 const customDictionary = require('../dictionaries/custom');
-const ExcludedFiletypes = require('../excluded_filetypes');
-const IncludedFiletypes = require('../included_filetypes');
+const ExcludedFiletypes = require('../../config/excluded_filetypes');
+const IncludedFiletypes = require('../../config/included_filetypes');
 const Filter = require('../objects/Filter');
 
 class Dictionary extends Filter {
