@@ -2,7 +2,7 @@ const dictionary = new Set(require('an-array-of-english-words'));
 
 const customDictionary = require('../dictionaries/custom');
 const ExcludedFiletypes = require('../excluded_filetypes');
-const CryptoKeyExtensions = require('../crypto_key_extensions');
+const IncludedFiletypes = require('../included_filetypes');
 const Filter = require('../objects/Filter');
 
 class Dictionary extends Filter {
@@ -27,8 +27,8 @@ class Dictionary extends Filter {
         }
       });
     });
-    Object.keys(CryptoKeyExtensions).forEach((type) => {
-      CryptoKeyExtensions[type].forEach((fileExt) => {
+    Object.keys(IncludedFiletypes).forEach((type) => {
+      IncludedFiletypes[type].forEach((fileExt) => {
         if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
           this.customDictionaryMap[fileExt.toLowerCase()] = true;
         }

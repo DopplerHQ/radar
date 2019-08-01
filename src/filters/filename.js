@@ -1,6 +1,6 @@
 const Filter = require('../objects/Filter');
 const ExcludedFiletypes = require('../excluded_filetypes');
-const CryptoKeyExtensions = require('../crypto_key_extensions');
+const IncludedFiletypes = require('../included_filetypes');
 
 class FileName extends Filter {
   constructor() {
@@ -16,8 +16,8 @@ class FileName extends Filter {
         }
       });
     });
-    Object.keys(CryptoKeyExtensions).forEach((type) => {
-      CryptoKeyExtensions[type].forEach((fileExt) => {
+    Object.keys(IncludedFiletypes).forEach((type) => {
+      IncludedFiletypes[type].forEach((fileExt) => {
         if (fileExt.length >= minFileExtensionLength) {
           fileExtensions.add(fileExt.toLowerCase());
         }
