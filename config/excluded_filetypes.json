@@ -4,12 +4,15 @@
   "image": ["ai", "bmp", "gif", "ico", "jpeg", "jpg", "png", "ps", "psd", "svg", "tif", "tiff", "icns"],
   "compressed": ["7z", "arj", "deb", "pkg", "rar", "rpm", "gz", "z", "zip", "tar.gz", "tar", "bz2"],
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
-  "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf"],
-  "binary": ["o", "exe", "dmg", "msi", "node", "bin", "s"],
-  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp", "terminal"],
+  "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "asciidoc"],
+  "binary": ["o", "exe", "dmg", "msi", "node", "bin", "s", "so", "so.0", "jar", "war"],
+  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp", "terminal", "patch", "license", "pbxproj"],
   "translation": ["po", "pot", "qm"],
   "email": ["eml", "msg"],
   "minified-code": ["min.js", "min.css", "min.json"],
   "stylesheet": ["css", "scss", "less"],
-  "build": ["d.ts", "tsbuildinfo", "pb.cc", "pb.h"]
+  "build": ["pb.cc", "pb.h", "build", "makefile", "make", "cmake", "nmake", "ll"],
+  "crypto": ["sha1"],
+  "ocaml": ["dot"],
+  "typescript": ["d.ts", "tsbuildinfo"]
 }
