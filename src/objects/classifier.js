@@ -21,7 +21,7 @@ class Classifier {
 
   isMatch(extension) {
     return this._extensions.reduce((acc, ext) => (
-      acc || ext === extension || ext.endsWith(`.${extension}`)
+      acc || ext === extension || extension.endsWith(`.${ext}`)
     ), false)
   }
 }
