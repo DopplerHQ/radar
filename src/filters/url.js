@@ -10,10 +10,28 @@ const markdownLinkRegex = /\[[\w#-_:`\\/\.]+\]\([\w#-_:`\\/\.]+\)/;
 class URL extends Filter {
   constructor() {
     super('URL');
+
+    this.commonTLDs = Array.from(new Set([
+      'com',
+      'org',
+      'net',
+      'gov',
+      'edu',
+      'co.uk',
+      'ru',
+    ]));
   }
 
   isMatch(term) {
-    return urlRegex.test(term) || urnRegex.test(term) || markdownLinkRegex.test(term);
+    if (urlRegex.test(term) || urnRegex.test(term) || markdownLinkRegex.test(term)) {
+      return true;
+    }
+
+    const termLowerCase = term.toLowerCase();
+    const termEndsWithCommonTLD = this.commonTLDs.reduce((acc, tld) => (
+      acc || termLowerCase.endsWith(`.${tld}`)
+    ), false);
+    return termEndsWithCommonTLD;
   }
 }
 
