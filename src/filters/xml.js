@@ -4,7 +4,7 @@ class XMLTag extends Filter {
   constructor() {
     super('XML/HTML Tag');
 
-    this.xmlTagRegex = /(?:^|\s)<.*>.*<\/.*>/;
+    this.xmlTagRegex = /<.*>.*<\/.*>/;
   }
 
   isMatch(term) {
