@@ -36,6 +36,7 @@
     "cc",
     "cpp",
     "hpp",
+    "cxx",
     "m"
   ],
   "javascript": [

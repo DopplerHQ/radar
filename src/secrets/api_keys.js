@@ -39,7 +39,7 @@ class APIKeys extends Secret {
     this.maxTermLength = 256;
     this.maxLineLength = 512;
 
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example', 'return'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }
