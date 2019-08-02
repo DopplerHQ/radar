@@ -33,8 +33,10 @@
   "c": [
     "c",
     "h",
+    "cc",
     "cpp",
     "hpp",
+    "cxx",
     "m"
   ],
   "javascript": [
@@ -51,7 +53,8 @@
   "java": [
     "java",
     "jsp",
-    "jspx"
+    "jspx",
+    "scala"
   ],
   "shell": [
     "sh"

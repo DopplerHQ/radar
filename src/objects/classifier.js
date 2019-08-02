@@ -19,9 +19,9 @@ class Classifier {
     return this._tag;
   }
 
-  isMatch(extension) {
-    return this._extensions.reduce((acc, ext) => (
-      acc || ext === extension || ext.endsWith(`.${extension}`)
+  isMatch(fileExt) {
+    return this._extensions.reduce((acc, extension) => (
+      acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
     ), false)
   }
 }
