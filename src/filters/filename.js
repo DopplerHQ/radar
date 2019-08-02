@@ -7,7 +7,8 @@ class FileName extends Filter {
     super('File name');
 
     // match alphanumerics + periods at end of string, with up to one trailing non-alphanumeric character
-    this.fileExtensionRegex = /([a-z0-9\.]+)\W?$/i;
+    // also allow for line number/character number specifications in the format `file.ext:1:2`
+    this.fileExtensionWithLineNumberRegex = /([a-z0-9\.]+)(?::[0-9]+)*\W?$/i;
 
     const fileExtensions = new Set();
     const minFileExtensionLength = 2;
@@ -34,7 +35,7 @@ class FileName extends Filter {
       return false;
     }
 
-    const endsWithExtension = term.match(this.fileExtensionRegex);
+    const endsWithExtension = term.match(this.fileExtensionWithLineNumberRegex);
     if (endsWithExtension === null) {
       return false;
     }
