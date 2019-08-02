@@ -8,10 +8,14 @@ class CommonPatterns extends Filter {
     this.chainedVariables = /^([a-zA-Z0-9]+\.){2,}[a-zA-Z0-9]+$/;
     // TODO write unit tests (--disable=PLUGIN1,PLUGIN2)
     this.featureFlag = /^--[a-zA-Z0-9]+=('|")?[a-zA-Z0-9 ,]+('|")?$/;
+    // find variables (${})
+    this.variableCurlyBraces = /\${.*}/;
   }
 
   isMatch(term) {
-    return this.chainedVariables.test(term) || this.featureFlag.test(term);
+    return this.chainedVariables.test(term)
+        || this.featureFlag.test(term)
+        || this.variableCurlyBraces.test(term);
   }
 }
 
