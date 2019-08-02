@@ -13,7 +13,7 @@ class AuthURL extends Filter {
       return false;
     }
 
-    return this.authUrlRegex.test(term);
+    return term.includes("otpauth://") || this.authUrlRegex.test(term);
   }
 }
 
