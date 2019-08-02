@@ -17,7 +17,13 @@ class URL extends Filter {
       'net',
       'gov',
       'edu',
+      'biz',
+      'io',
+      'info',
+      'mil',
+      'us',
       'co.uk',
+      'de',
       'ru',
     ]));
   }
