@@ -4,8 +4,8 @@ class CommonPatterns extends Filter {
   constructor() {
     super('Common programming patterns');
 
-    // find chained variables (e.g. foo.bar.method)
-    this.chainedVariables = /^(?:[\w]+\.){2,}[\w]+$/;
+    // find chained variables (e.g. foo.bar.method, foo::bar::method)
+    this.chainedVariables = /^(?:[\w]+(?:\.|\:\:)){2,}[\w]+$/;
     // TODO write unit tests (--disable=PLUGIN1,PLUGIN2)
     this.featureFlag = /^--[a-zA-Z0-9]+=(?:'|")?[a-zA-Z0-9 ,]+(?:'|")?$/;
     // find variables (${})
