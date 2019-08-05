@@ -26,7 +26,7 @@ class APIKeys extends Secret {
       'dictionary',
     ];
     const filters = ['entropy'];
-    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG];
+    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG, FileTags.NO_EXTENSION];
     super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
@@ -43,6 +43,15 @@ class APIKeys extends Secret {
     this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example', 'return'];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
+  }
+
+  shouldScan(tags) {
+    // always allow readmes, even if they don't have an extension
+    if (tags.has(FileTags.README)) {
+      return true;
+    }
+
+    return super.shouldScan(tags);
   }
 
   getTerms(line) {
