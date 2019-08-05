@@ -9,13 +9,14 @@ class RepeatingCharacters extends Filter {
     if (term.includes("..."))
       return true;
 
+    if (term.includes("!!!"))
+      return true;
+
     if ((term.match(/=/g) || []).length >= 3)
       return true;
 
-
     if ((term.match(/\\/g) || []).length >= 4)
       return true;
-
 
     if ((term.match(/\|/g) || []).length >= 4)
       return true;
