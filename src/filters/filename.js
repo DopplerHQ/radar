@@ -11,7 +11,7 @@ class FileName extends Filter {
     this.fileExtensionWithLineNumberRegex = /([a-z0-9\.]+)(?::[0-9]+)*\W?$/i;
 
     const fileExtensions = new Set();
-    const minFileExtensionLength = 2;
+    const minFileExtensionLength = 1;
     Object.keys(ExcludedFiletypes).forEach((type) => {
       ExcludedFiletypes[type].forEach((fileExt) => {
         if (fileExt.length >= minFileExtensionLength) {
