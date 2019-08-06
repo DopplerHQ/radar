@@ -174,7 +174,7 @@ class Radar {
    * @param {String} relativePath Relative path to the directory from the original scan directory
    * @returns {Boolean}
    */
-  _checkDirectory(name, relativePath) {
+  _checkDirectory(name, relativePath = "") {
     const nameLower = name.toLowerCase();
     const relativePathLower = relativePath.toLowerCase();
 
