@@ -12,7 +12,7 @@ class RepeatingCharacters extends Filter {
     if (term.includes("!!!"))
       return true;
 
-    if ((term.match(/=/g) || []).length >= 3)
+    if (((term.match(/=/g) || []).length >= 3) && (!term.includes("==")))
       return true;
 
     if ((term.match(/\\/g) || []).length >= 4)
