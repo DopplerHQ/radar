@@ -54,6 +54,7 @@
   ],
   "javascript": [
     "js",
+    "json",
     "ts",
     "coffee",
     "cjsx",

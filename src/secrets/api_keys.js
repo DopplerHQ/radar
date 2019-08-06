@@ -40,7 +40,7 @@ class APIKeys extends Secret {
     this.maxLineLength = 512;
 
     // exclude reserved terms that can appear without being separated by a space
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example', 'return', 'assert'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8"];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }
