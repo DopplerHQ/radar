@@ -27,4 +27,5 @@ test('file name ends with special character', () => {
 
 test('file name with line number', () => {
   expect(Filter.isMatch("wineh-statenumbering-cleanups.ll:13:1:")).toBe(true);
+  expect(Filter.isMatch("wineh-statenumbering-cleanups.ll(13)")).toBe(true);
 })
