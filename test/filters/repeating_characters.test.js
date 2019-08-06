@@ -2,8 +2,8 @@ const Filter = require('../../src/filters/repeating_characters');
 
 test('equals sign', () => {
   expect(Filter.isMatch("=test=test=")).toBe(true);
-  expect(Filter.isMatch("=testtest==")).toBe(true);
 
+  expect(Filter.isMatch("=testtest==")).toBe(false);
   expect(Filter.isMatch("1 === 1")).toBe(false);
   expect(Filter.isMatch("1 == 1")).toBe(false);
 });
