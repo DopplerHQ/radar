@@ -26,7 +26,7 @@ class APIKeys extends Secret {
       'dictionary',
     ];
     const filters = ['entropy'];
-    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG, FileTags.NO_EXTENSION];
+    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.NO_EXTENSION];
     super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
@@ -40,7 +40,7 @@ class APIKeys extends Secret {
     this.maxLineLength = 512;
 
     // exclude reserved terms that can appear without being separated by a space
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8"];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8", "struct<", "<T>", "tarsum"];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
   }
