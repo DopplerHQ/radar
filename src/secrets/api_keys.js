@@ -78,7 +78,8 @@ class APIKeys extends Secret {
       .filter(term => !term.endsWith('.com'))
       .filter((term) => {
         const containsLetters = term.match(this.lettersRegex);
-        if (containsLetters === null) {
+        // require 2 or more letters numbers to help reduce false positives
+        if ((containsLetters === null) || (new Set(containsLetters).size < 2)) {
           return false;
         }
 
