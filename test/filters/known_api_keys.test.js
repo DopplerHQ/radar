@@ -16,6 +16,7 @@ test('mailgun api key', () => {
 
 test('sendgrid api key', () => {
   expect(Filter.isMatch("SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA")).toBe(true);
+  expect(Filter.isMatch("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")).toBe(true);
 });
 
 test('slack api key', () => {
