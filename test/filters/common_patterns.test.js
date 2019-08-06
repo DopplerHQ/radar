@@ -6,10 +6,22 @@ test("chained variables", () => {
   expect(Filter.isMatch("foo1.bar1.method1")).toBe(true);
   expect(Filter.isMatch("foo1::bar1::method1")).toBe(true);
 
-  expect(Filter.isMatch("foo_bar_method")).toBe(true);
-  expect(Filter.isMatch("foo-bar-method")).toBe(true);
-  expect(Filter.isMatch("foo1_bar1_method1")).toBe(true);
-  expect(Filter.isMatch("foo1-bar1-method1")).toBe(true);
+  expect(Filter.isMatch("foo_bar_method")).toBe(false);
+  expect(Filter.isMatch("foo-bar-method")).toBe(false);
+  expect(Filter.isMatch("foo1_bar1_method1")).toBe(false);
+  expect(Filter.isMatch("foo1-bar1-method1")).toBe(false);
+
+  expect(Filter.isMatch("foo.bar")).toBe(false);
+  expect(Filter.isMatch("foo::bar")).toBe(false);
+});
+
+test("chained variables w/ function call", () => {
+  expect(Filter.isMatch("mshadow::Copy(recv_buf.aux_data(kIdx).FlatTo1D<cpu,")).toBe(true);
+  expect(Filter.isMatch("mxnet::kvstore::Postprocess(&result1,")).toBe(true);
+  expect(Filter.isMatch("mxnet::op::mxnet_op::Kernel<dequantize_2bit,w")).toBe(true);
+  expect(Filter.isMatch("mxnet::op::batchnorm::BNTensor3<DType>")).toBe(true);
+  expect(Filter.isMatch("nd.aux_data(rowsparse::kIdx).FlatTo1D<cpu,mx.initializer.Xavier(magnitude=2.57)")).toBe(true);
+  expect(Filter.isMatch(`zookeeper::URL::parse("zk://jake:1@host1:port1,host2:port2/path/to/znode");`)).toBe(true);
 });
 
 test("feature flag", () => {
@@ -25,6 +37,10 @@ test("variable curly braces", () => {
   expect(Filter.isMatch("test${variable}test")).toBe(true);
   expect(Filter.isMatch("test#{variable}test")).toBe(true);
   expect(Filter.isMatch("test%{variable}test")).toBe(true);
+});
+
+test("variable parentheses", () => {
+  expect(Filter.isMatch("$(variable)")).toBe(true);
 });
 
 test('variable with version', () => {
