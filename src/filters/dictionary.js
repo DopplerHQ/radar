@@ -65,12 +65,11 @@ class Dictionary extends Filter {
     const terms = this._splitIntoTerms(term);
     const uniqueTerms = this._getUniqueTerms(terms);
 
-    const matches = uniqueTerms.reduce((acc, word) => {
-      const isDictionaryWord = (dictionary.has(word) || (this.customDictionaryMap[word] === true));
-      return acc + (isDictionaryWord ? 1 : 0);
-    }, 0);
+    const matches = uniqueTerms.filter((word) => (
+      dictionary.has(word) || (this.customDictionaryMap[word] === true)
+    ));
 
-    const matchPercentage = (matches / uniqueTerms.length);
+    const matchPercentage = (matches.length / uniqueTerms.length);
     return matchPercentage;
   }
 }
