@@ -4,11 +4,14 @@ class XMLTag extends Filter {
   constructor() {
     super('XML/HTML Tag');
 
-    this.xmlTagRegex = /<.*>.*<\/.*>/;
+    // find open tag with preceding closing bracket (e.g. ><title>)
+    this.xmlOpeningTagRegex = /><.*>/;
+    // find closing tag (e.g. </title>)
+    this.xmlClosingTagRegex = /<\/.*>/;
   }
 
   isMatch(term) {
-    return this.xmlTagRegex.test(term);
+    return this.xmlOpeningTagRegex.test(term) || this.xmlClosingTagRegex.test(term);
   }
 }
 
