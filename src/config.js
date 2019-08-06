@@ -59,7 +59,15 @@ class Config {
   }
 
   setIncludedDirectories(includedDirectories) {
-    this.data.includedDirectories.push(...includedDirectories);
+    const normalizedDirectories = includedDirectories.map((dir) => {
+      let normalizedDir = dir;
+      // remove trailing slash, if any
+      while (normalizedDir.endsWith('/')) {
+        normalizedDir = normalizedDir.slice(0, -1);
+      }
+      return normalizedDir;
+    })
+    this.data.includedDirectories.push(...normalizedDirectories);
   }
 
   getExcludedFileExts() {
@@ -83,7 +91,15 @@ class Config {
   }
 
   setExcludedDirectories(excludedDirectories) {
-    this.data.excludedDirectories.push(...excludedDirectories);
+    const normalizedDirectories = excludedDirectories.map((dir) => {
+      let normalizedDir = dir;
+      // remove trailing slash, if any
+      while (normalizedDir.endsWith('/')) {
+        normalizedDir = normalizedDir.slice(0, -1);
+      }
+      return normalizedDir;
+    })
+    this.data.excludedDirectories.push(...normalizedDirectories);
   }
 }
 
