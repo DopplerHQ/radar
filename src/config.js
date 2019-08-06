@@ -42,25 +42,37 @@ class Config {
     return this.data.includedFileExts;
   }
 
+  /**
+   *
+   * @param {Array<String>} includedFileExts case-insensitive
+   */
   setIncludedFileExts(includedFileExts) {
-    this.data.includedFileExts.push(...includedFileExts);
+    this.data.includedFileExts.push(...includedFileExts.map(ext => ext.toLowerCase()));
   }
 
   getIncludedFiles() {
     return this.data.includedFiles;
   }
 
+  /**
+   *
+   * @param {Array<String>} includedFiles case-insensitive
+   */
   setIncludedFiles(includedFiles) {
-    this.data.includedFiles.push(...includedFiles);
+    this.data.includedFiles.push(...includedFiles.map(f => f.toLowerCase()));
   }
 
   getIncludedDirectories() {
     return this.data.includedDirectories;
   }
 
+  /**
+   *
+   * @param {Array<String>} includedDirectories case-insensitive
+   */
   setIncludedDirectories(includedDirectories) {
     const normalizedDirectories = includedDirectories.map((dir) => {
-      let normalizedDir = dir;
+      let normalizedDir = dir.toLowerCase();
       // remove trailing slash, if any
       while (normalizedDir.endsWith('/')) {
         normalizedDir = normalizedDir.slice(0, -1);
@@ -74,25 +86,37 @@ class Config {
     return this.data.excludedFileExts;
   }
 
+  /**
+   *
+   * @param {Array<String>} excludedFileExts case-insensitive
+   */
   setExcludedFileExts(excludedFileExts) {
-    this.data.excludedFileExts.push(...excludedFileExts);
+    this.data.excludedFileExts.push(...excludedFileExts.map(ext => ext.toLowerCase()));
   }
 
   getExcludedFiles() {
     return this.data.excludedFiles;
   }
 
+  /**
+   *
+   * @param {Array<String>} excludedFiles case-insensitive
+   */
   setExcludedFiles(excludedFiles) {
-    this.data.excludedFiles.push(...excludedFiles);
+    this.data.excludedFiles.push(...excludedFiles.map(f => f.toLowerCase()));
   }
 
   getExcludedDirectories() {
     return this.data.excludedDirectories;
   }
 
+  /**
+   *
+   * @param {Array<String>} excludedDirectories case-insensitive
+   */
   setExcludedDirectories(excludedDirectories) {
     const normalizedDirectories = excludedDirectories.map((dir) => {
-      let normalizedDir = dir;
+      let normalizedDir = dir.toLowerCase();
       // remove trailing slash, if any
       while (normalizedDir.endsWith('/')) {
         normalizedDir = normalizedDir.slice(0, -1);

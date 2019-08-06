@@ -96,27 +96,27 @@ class CLI {
     }
 
     if (includeFiles) {
-      this.config.setIncludedFiles(includeFiles.split(",").map(name => name.trim().toLowerCase()));
+      this.config.setIncludedFiles(includeFiles.split(",").map(name => name.trim()));
     }
 
     if (excludeFiles) {
-      this.config.setExcludedFiles(excludeFiles.split(",").map(name => name.trim().toLowerCase()));
+      this.config.setExcludedFiles(excludeFiles.split(",").map(name => name.trim()));
     }
 
     if (includeDirs) {
-      this.config.setIncludedDirectories(includeDirs.split(",").map(name => name.trim().toLowerCase()));
+      this.config.setIncludedDirectories(includeDirs.split(",").map(name => name.trim()));
     }
 
     if (excludeDirs) {
-      this.config.setExcludedDirectories(excludeDirs.split(",").map(name => name.trim().toLowerCase()));
+      this.config.setExcludedDirectories(excludeDirs.split(",").map(name => name.trim()));
     }
 
     if (includeFileExts) {
-      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
+      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
     }
 
     if (excludeFileExts) {
-      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim().toLowerCase()));
+      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
     }
   }
 
