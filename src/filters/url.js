@@ -1,15 +1,11 @@
 const Filter = require('../objects/Filter');
 
-// match protocol://
-const urlRegex = /([a-z]+):\/\/.+/i;
-// match urn: links
-const urnRegex = /^urn:/;
-// match [text](text)
-const markdownLinkRegex = /\[[\w#-_:`\\/\.]+\]\([\w#-_:`\\/\.]+\)/;
-
 class URL extends Filter {
   constructor() {
     super('URL');
+
+    // match `PROTOCOL://`
+    this.urlRegex = /([a-z]+):\/\/.+/i;
 
     this.commonTLDs = Array.from(new Set([
       'com',
@@ -29,7 +25,9 @@ class URL extends Filter {
   }
 
   isMatch(term) {
-    if (urlRegex.test(term) || urnRegex.test(term) || markdownLinkRegex.test(term)) {
+    const isMarkdownLink = term.includes("](");
+    const isUrn = term.startsWith("urn:");
+    if (isMarkdownLink || isUrn || this.urlRegex.test(term)) {
       return true;
     }
 
