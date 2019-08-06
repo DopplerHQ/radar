@@ -78,14 +78,14 @@ class APIKeys extends Secret {
       .filter(term => !term.endsWith('.com'))
       .filter((term) => {
         const containsLetters = term.match(this.lettersRegex);
-        // require 2 or more letters numbers to help reduce false positives
-        if ((containsLetters === null) || (new Set(containsLetters).size < 2)) {
+        // require 3 or more letters numbers to help reduce false positives
+        if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
           return false;
         }
 
         const containsNumbers = term.match(this.numbersRegex);
-        // require 2 or more distinct numbers to help reduce false positives
-        if ((containsNumbers === null) || (new Set(containsNumbers).size < 2)) {
+        // require 3 or more distinct numbers to help reduce false positives
+        if ((containsNumbers === null) || (new Set(containsNumbers).size < 3)) {
           return false;
         }
 
