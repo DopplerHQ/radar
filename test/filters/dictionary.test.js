@@ -1,52 +1,63 @@
 const Filter = require('../../src/filters/dictionary');
 
-beforeAll(() => {
+test('isMatch', () => {
   Filter.minimumMatchPercentage = ".33";
+  expect(Filter.isMatch("word Notword Notword2")).toBe(true);
+  expect(Filter.isMatch("word test Notword")).toBe(true);
+
+  expect(Filter.isMatch("Notword Notword2 Notword3")).toBe(false);
 });
 
 test('mixed case', () => {
-  expect(Filter.isMatch("test Hello")).toBe(true);
-  expect(Filter.isMatch("hey There Hello")).toBe(true);
-  expect(Filter.isMatch("test test test")).toBe(true);
-  expect(Filter.isMatch("test lsdjfoasdfosdhf")).toBe(true);
-  expect(Filter.isMatch("STRIPE_API_KEY=123456d781fdf0dfdf323434cvfdfgyddf")).toBe(true);
-  expect(Filter.isMatch("test randomgarbage rndmgrbg")).toBe(true);
+  expect(Filter._checkDictionary("test Hello")).toBe(1);
+  expect(Filter._checkDictionary("hey There Hello")).toBe(1);
+  expect(Filter._checkDictionary("test test test")).toBe(1);
+  expect(Filter._checkDictionary("test lsdjfoasdfosdhf")).toBe(.5);
+  expect(Filter._checkDictionary("STRIPE_API_KEY=123456d781fdf0dfdf323434cvfdfgyddf")).toBe(3/4);
+  expect(Filter._checkDictionary("test randomgarbage rndmgrbg")).toBe(1/3);
 
-  expect(Filter.isMatch("randomgarbage")).toBe(false);
-  expect(Filter.isMatch("fooz barz")).toBe(false);
-  expect(Filter.isMatch("te1st randomgarbage rndmgrbg")).toBe(false);
+  expect(Filter._checkDictionary("")).toBe(0);
+  expect(Filter._checkDictionary("randomgarbage")).toBe(0);
+  expect(Filter._checkDictionary("fooz barz")).toBe(0);
+  expect(Filter._checkDictionary("te1st randomgarbage rndmgrbg")).toBe(0);
 });
 
 test('camel case', () => {
-  expect(Filter.isMatch("randomGarbage")).toBe(true);
-  expect(Filter.isMatch("wordNotword")).toBe(true);
-  expect(Filter.isMatch("thisIsForTestingPurposes")).toBe(true);
-  expect(Filter.isMatch("notwordAlsonotword")).toBe(false);
+  expect(Filter._checkDictionary("randomGarbage")).toBe(1);
+  expect(Filter._checkDictionary("wordNotword")).toBe(.5);
+  expect(Filter._checkDictionary("thisIsForTestingPurposes")).toBe(1);
+  expect(Filter._checkDictionary("notwordAlsonotword")).toBe(0);
 });
 
 test('symbols', () => {
-  expect(Filter.isMatch("case-sensitive")).toBe(true);
-  expect(Filter.isMatch("to-retrieve-a-list-of-the-handshakes-sent-to-an-account-1472510214747")).toBe(true);
-  expect(Filter.isMatch("January February March April May June July August September October November December")).toBe(true);
-  expect(Filter.isMatch("January_February_March_April_May_June_July_August_September_October_November_December")).toBe(true);
-  expect(Filter.isMatch("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toBe(true);
-  expect(Filter.isMatch("!__webpack_require__(225).ABV,")).toBe(true);
-  expect(Filter.isMatch("(!base64Chars[buf[i]])")).toBe(true);
-  expect(Filter.isMatch("!inline.isBase64Path(")).toBe(true);
-  expect(Filter.isMatch("0}),e)c._$tooltip.css(")).toBe(true);
+  expect(Filter._checkDictionary("case-sensitive")).toBe(1);
+  expect(Filter._checkDictionary("to-retrieve-a-list-of-the-handshakes-sent-to-an-account-1472510214747")).toBe(1);
+  expect(Filter._checkDictionary("January February March April May June July August September October November December")).toBe(1);
+  expect(Filter._checkDictionary("January_February_March_April_May_June_July_August_September_October_November_December")).toBe(1);
+  expect(Filter._checkDictionary("another_'\"@()[]<>{};:,.?!/\\\^\`-test")).toBe(1);
+  expect(Filter._checkDictionary("!__webpack_require__(225).ABV,")).toBe(2/3);
+  expect(Filter._checkDictionary("(!base64Chars[buf[i]])")).toBe(1);
+  expect(Filter._checkDictionary("!inline.isBase64Path(")).toBe(1);
+  expect(Filter._checkDictionary("0}),e)c._$tooltip.css(")).toBe(1);
 });
 
 test('custom dictionary', () => {
-  expect(Filter.isMatch("polyfill")).toBe(true);
-  expect(Filter.isMatch("Polyfill")).toBe(true);
-  expect(Filter.isMatch("AWS")).toBe(true);
-  expect(Filter.isMatch("PolyfillAWS")).toBe(true);
-  expect(Filter.isMatch("forge.test1.pkcs12.toPkcs12Asn1(")).toBe(true);
+  expect(Filter._checkDictionary("polyfill")).toBe(1);
+  expect(Filter._checkDictionary("Polyfill")).toBe(1);
+  expect(Filter._checkDictionary("AWS")).toBe(1);
+  expect(Filter._checkDictionary("PolyfillAWS")).toBe(1);
+  expect(Filter._checkDictionary("forge.test1.pkcs12.toPkcs12Asn1(")).toBe(.5);
 });
 
 test('numbers', () => {
-  expect(Filter.isMatch("404")).toBe(true);
-  expect(Filter.isMatch("mp4")).toBe(true);
+  expect(Filter._checkDictionary("404")).toBe(1);
+  expect(Filter._checkDictionary("mp4")).toBe(1);
+
+  expect(Filter._splitIntoTerms("404 notword Notword2 Word")).toStrictEqual(["404", "notword", "notword2", "word"]);
+  expect(Filter._checkDictionary("404 notword Notword2 Word")).toBe(.5);
+
+  expect(Filter._splitIntoTerms("4321 notword Notword2 Word")).toStrictEqual(["4321", "notword", "notword2", "word"]);
+  expect(Filter._checkDictionary("4321 notword Notword2 Word")).toBe(1/3);
 });
 
 test('split terms', () => {

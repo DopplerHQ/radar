@@ -14,6 +14,7 @@ class Dictionary extends Filter {
     this.customDictionaryMap = {};
 
     this.alphaNumericRegex = /^[a-z0-9]+$/ig;
+    this.lettersRegex = /[a-z]/ig;
 
     customDictionary.forEach((word) => {
       if (word.length >= this.minimumWordLength) {
@@ -63,13 +64,22 @@ class Dictionary extends Filter {
 
   _checkDictionary(term) {
     const terms = this._splitIntoTerms(term);
+    if (terms.length === 0)
+      return 0;
+
     const uniqueTerms = this._getUniqueTerms(terms);
+    let uniqueWords = 0;
 
-    const matches = uniqueTerms.filter((word) => (
-      dictionary.has(word) || (this.customDictionaryMap[word] === true)
-    ));
+    const matches = uniqueTerms.filter((word) => {
+      const isNumber = (word.match(this.lettersRegex) === null);
+      const foundInDictionary = dictionary.has(word) || (this.customDictionaryMap[word] === true);
+      if (!isNumber || foundInDictionary) {
+        ++uniqueWords;
+      }
+      return foundInDictionary;
+    });
 
-    const matchPercentage = (matches.length / uniqueTerms.length);
+    const matchPercentage = (matches.length / uniqueWords);
     return matchPercentage;
   }
 }
