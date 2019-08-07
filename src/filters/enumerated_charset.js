@@ -7,6 +7,8 @@ class EnumeratedCharset extends Filter {
 
   isMatch(term) {
     return term.includes('123456789')
+        || term.includes('123456')
+        || term.includes('456789')
         || term.includes('abcdefghijklmnopqrstuvwxyz')
         || term.includes('abcdef')
         || term.includes('defghi')
