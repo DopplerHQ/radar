@@ -82,6 +82,7 @@
   "html": [
     "html",
     "xhtml",
+    "xht",
     "htm"
   ],
   "julia": [

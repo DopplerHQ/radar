@@ -1,19 +1,20 @@
 {
   "audio": ["aif", "cda", "mid", "mp3", "mpa", "ogg", "wav", "wma", "wpl", "dts", "ac3"],
-  "video": ["3g2", "3gp", "avi", "flv", "h264", "h265", "m4v", "mkv", "mov", "mp4", "mpg", "mpeg", "rm", "swf", "vob", "wmv"],
+  "video": ["3g2", "3gp", "avi", "flv", "h264", "h265", "m4v", "mkv", "mov", "mp4", "mpg", "mpeg", "rm", "swf", "vob", "wmv", "webm"],
   "image": ["ai", "bmp", "gif", "ico", "jpeg", "jpg", "png", "ps", "psd", "svg", "tif", "tiff", "icns"],
   "compressed": ["7z", "arj", "pkg", "rar", "rpm", "gz", "z", "zip", "tar.gz", "tar", "bz2", "whl", "phar"],
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "asciidoc"],
-  "binary": ["o", "exe", "dmg", "deb", "msi", "node", "bin", "s", "so", "so.0", "jar", "war", "har", "hqx", "sa", "asm", "nasm", "a51", "syso"],
-  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp", "terminal", "patch", "license", "pbxproj", "git", "dump"],
+  "binary": ["o", "exe", "dmg", "deb", "msi", "node", "bin", "s", "so", "so.0", "jar", "war", "har", "hqx", "sa", "asm", "nasm", "a51", "syso", "xbf"],
+  "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp", "terminal", "patch", "license", "pbxproj", "git", "dump", "ini"],
   "translation": ["po", "pot", "qm"],
   "email": ["eml", "msg"],
   "minified-code": ["min.js", "min.css", "min.json"],
-  "stylesheet": ["css", "scss", "less", "sass"],
+  "stylesheet": ["css", "scss", "less", "sass", "jss"],
   "build": ["pb.cc", "pb.h", "build", "makefile", "make", "mak", "cmake", "nmake", "ll"],
   "crypto": ["sha1"],
   "ocaml": ["dot"],
   "go": ["sum"],
-  "typescript": ["d.ts", "tsbuildinfo"]
+  "typescript": ["d.ts", "tsbuildinfo"],
+  "web": ["vtt", "rss", "mht", "xslt", "shtm", "atom"]
 }
