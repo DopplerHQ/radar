@@ -33,6 +33,7 @@ class APIKeys extends Secret {
     this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
     this.lettersRegex = /[a-z]/ig;
+    this.groupsOfLettersRegex = /[a-z]+/ig;
     this.numbersRegex = /[0-9]/g;
 
     this.minAlphaNumericTermLength = 24;
@@ -84,6 +85,12 @@ class APIKeys extends Secret {
     const containsLetters = term.match(this.lettersRegex);
     // require 3 or more letters numbers to help reduce false positives
     if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
+      return false;
+    }
+
+    const groupsOfLetters = term.match(this.groupsOfLettersRegex);
+    // require more than one group of numbers
+    if ((groupsOfLetters === null) || (groupsOfLetters.length < 2)) {
       return false;
     }
 
