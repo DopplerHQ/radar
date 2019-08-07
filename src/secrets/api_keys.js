@@ -116,9 +116,17 @@ class APIKeys extends Secret {
       return false;
     }
 
-    const isTermAlphaNumeric = /^[a-z0-9]+$/i.test(term);
-    return (term.length >= this.minTermLength)
-      || (isTermAlphaNumeric && (term.length >= this.minAlphaNumericTermLength) && (term.length % 4 === 0));
+    if (term.length >= this.minTermLength) {
+      return true;
+    }
+
+    const alphaNumericTerms = term.match(/[a-z0-9]+/ig);
+    if (alphaNumericTerms === null) {
+      return false;
+    }
+
+    const termsOfValidLength = alphaNumericTerms.filter(t => (t.length >= this.minAlphaNumericTermLength) && (t.length % 4 === 0));
+    return termsOfValidLength.length > 0;
   }
 }
 
