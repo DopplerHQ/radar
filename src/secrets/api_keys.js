@@ -77,21 +77,23 @@ class APIKeys extends Secret {
       .split(/ +/)
       .filter(term => this.isValidTermLength(term))
       .filter(term => !term.endsWith('.com'))
-      .filter((term) => {
-        const containsLetters = term.match(this.lettersRegex);
-        // require 3 or more letters numbers to help reduce false positives
-        if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
-          return false;
-        }
+      .filter(term => this.isAlphaNumeric(term));
+  }
 
-        const containsNumbers = term.match(this.numbersRegex);
-        // require 3 or more distinct numbers to help reduce false positives
-        if ((containsNumbers === null) || (new Set(containsNumbers).size < 3)) {
-          return false;
-        }
+  isAlphaNumeric(term) {
+    const containsLetters = term.match(this.lettersRegex);
+    // require 3 or more letters numbers to help reduce false positives
+    if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
+      return false;
+    }
 
-        return true;
-      });
+    const containsNumbers = term.match(this.numbersRegex);
+    // require 3 or more distinct numbers to help reduce false positives
+    if ((containsNumbers === null) || (new Set(containsNumbers).size < 3)) {
+      return false;
+    }
+
+    return true;
   }
 
   static isValidCharacter(char) {
@@ -107,9 +109,9 @@ class APIKeys extends Secret {
       return false;
     }
 
-    const isAlphaNumeric = /^[a-z0-9]+$/i.test(term);
+    const isTermAlphaNumeric = /^[a-z0-9]+$/i.test(term);
     return (term.length >= this.minTermLength)
-      || (isAlphaNumeric && (term.length >= this.minAlphaNumericTermLength) && (term.length % 4 === 0));
+      || (isTermAlphaNumeric && (term.length >= this.minAlphaNumericTermLength) && (term.length % 4 === 0));
   }
 }
 
