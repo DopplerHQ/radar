@@ -4,6 +4,7 @@ const FileTags = {
   "NO_EXTENSION": "NO_EXTENSION",
   "ENV_FILE": "ENV_FILE",
   "GOLANG": "GOLANG",
+  "README": "README",
 };
 Object.freeze(FileTags);
 

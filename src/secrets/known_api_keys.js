@@ -7,10 +7,6 @@ class KnownAPIKeys extends Secret {
     const filters = ['known_api_keys'];
     super(name, { filters });
   }
-
-  getTerms(line) {
-    return [line];
-  }
 }
 
 const knownAPIKeys = new KnownAPIKeys();

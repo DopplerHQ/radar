@@ -19,7 +19,7 @@ class Classifier {
     return this._tag;
   }
 
-  isMatch(fileExt) {
+  isMatch(fileName, fileExt) {
     return this._extensions.reduce((acc, extension) => (
       acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
     ), false)

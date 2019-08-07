@@ -26,13 +26,13 @@ class APIKeys extends Secret {
       'dictionary',
     ];
     const filters = ['entropy'];
-    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.GOLANG];
+    const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.NO_EXTENSION];
     super(name, { preFilters, filters, excludedFileTags });
 
     this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
-    this.lettersRegex = /[a-z]/i;
-    this.numbersRegex = /[0-9]/;
+    this.lettersRegex = /[a-z]/ig;
+    this.numbersRegex = /[0-9]/g;
 
     this.minAlphaNumericTermLength = 24;
     this.minTermLength = 36;
@@ -40,9 +40,18 @@ class APIKeys extends Secret {
     this.maxLineLength = 512;
 
     // exclude reserved terms that can appear without being separated by a space
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'data:', 'gitHead', 'function', 'example', 'return'];
+    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8", "struct<", "<T>", "tarsum"];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
+  }
+
+  shouldScan(tags) {
+    // always allow readmes, even if they don't have an extension
+    if (tags.has(FileTags.README)) {
+      return true;
+    }
+
+    return super.shouldScan(tags);
   }
 
   getTerms(line) {
@@ -69,12 +78,14 @@ class APIKeys extends Secret {
       .filter(term => !term.endsWith('.com'))
       .filter((term) => {
         const containsLetters = term.match(this.lettersRegex);
-        if (containsLetters === null) {
+        // require 3 or more letters numbers to help reduce false positives
+        if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
           return false;
         }
 
         const containsNumbers = term.match(this.numbersRegex);
-        if (containsNumbers === null) {
+        // require 3 or more distinct numbers to help reduce false positives
+        if ((containsNumbers === null) || (new Set(containsNumbers).size < 3)) {
           return false;
         }
 

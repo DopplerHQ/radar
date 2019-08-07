@@ -6,7 +6,12 @@ class Path extends Filter {
   }
 
   isMatch(term) {
-    const hasPathNavigation = (term.includes('../') || term.includes('./') || term.includes('C:\\\\') || term.includes('c:\\\\'));
+    const hasPathNavigation = (term.includes('../')
+        || term.includes('./')
+        || term.includes('C:\\\\')
+        || term.includes('c:\\\\')
+        || term.includes('C:/')
+        || term.includes('c:/'));
     return hasPathNavigation;
   }
 }

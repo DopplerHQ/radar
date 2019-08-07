@@ -174,20 +174,23 @@ class Radar {
    * @param {String} relativePath Relative path to the directory from the original scan directory
    * @returns {Boolean}
    */
-  _checkDirectory(name, relativePath) {
-    const isNameWhitelisted = this._config.getIncludedDirectories().includes(name);
+  _checkDirectory(name, relativePath = "") {
+    const nameLower = name.toLowerCase();
+    const relativePathLower = relativePath.toLowerCase();
+
+    const isNameWhitelisted = this._config.getIncludedDirectories().includes(nameLower);
     if (isNameWhitelisted) {
       return true;
     }
 
     const excludedDirectories = this._config.getExcludedDirectories();
-    const isNameBlacklisted = excludedDirectories.includes(name) || excludedDirectories.includes(relativePath);
+    const isNameBlacklisted = excludedDirectories.includes(nameLower) || excludedDirectories.includes(relativePathLower);
     if (isNameBlacklisted) {
       return false;
     }
 
     const isRelativePathBlacklisted = excludedDirectories.reduce((acc, excludedDir) => (
-      acc || `${relativePath}/`.startsWith(`${excludedDir}/`)
+      acc || `${relativePathLower}/`.startsWith(`${excludedDir}/`)
     ), false);
     if (isRelativePathBlacklisted) {
       return false;

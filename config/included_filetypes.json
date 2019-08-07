@@ -28,7 +28,8 @@
     "crt",
     "cer",
     "csr",
-    "pub"
+    "pub",
+    "crl"
   ],
   "c": [
     "c",
@@ -37,12 +38,26 @@
     "cpp",
     "hpp",
     "cxx",
-    "m"
+    "m",
+    "cs"
+  ],
+  "clojure": [
+    "cl2",
+    "clj",
+    "cljc",
+    "cljx",
+    "cljs",
+    "cljscm",
+    "cljs.hl",
+    "hl",
+    "hic"
   ],
   "javascript": [
     "js",
+    "json",
     "ts",
     "coffee",
+    "cjsx",
     "es",
     "mjs",
     "gs",
@@ -57,7 +72,9 @@
     "scala"
   ],
   "shell": [
-    "sh"
+    "sh",
+    "bash",
+    "zsh"
   ],
   "go": [
     "go"
@@ -67,8 +84,19 @@
     "xhtml",
     "htm"
   ],
+  "julia": [
+    "jl"
+  ],
+  "lisp": [
+    "lisp",
+    "lsp",
+    "sexp",
+    "cl"
+  ],
   "perl": [
+    "perl",
     "pl",
+    "epl",
     "pm"
   ],
   "ruby": [
@@ -82,7 +110,10 @@
   ],
   "python": [
     "py",
-    "py3"
+    "py3",
+    "ipynb",
+    "pyi",
+    "pyde"
   ],
   "rust": [
     "rs"
@@ -102,5 +133,8 @@
   "ocaml": [
     "ml",
     "eliom"
+  ],
+  "swift": [
+    "swift"
   ]
 }
