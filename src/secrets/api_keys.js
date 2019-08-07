@@ -89,8 +89,8 @@ class APIKeys extends Secret {
     }
 
     const groupsOfLetters = term.match(this.groupsOfLettersRegex);
-    // require more than one group of numbers
-    if ((groupsOfLetters === null) || (groupsOfLetters.length < 2)) {
+    // require 3 or more groups of numbers
+    if ((groupsOfLetters === null) || (groupsOfLetters.length < 3)) {
       return false;
     }
 
