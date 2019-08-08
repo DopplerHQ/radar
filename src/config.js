@@ -1,7 +1,7 @@
 /**
- * Determines the appropriate value given an optional value and a default. Arrays will be merged.
- * @param {Any} value value to use, optional
- * @param {Any} defaultValue the defa
+ * Determines the appropriate value given an optional value and a default value. Arrays will be merged.
+ * @param {Any} value optional
+ * @param {Any} defaultValue required
  */
 const getValue = (value, defaultValue) => {
   if (value === undefined) {
