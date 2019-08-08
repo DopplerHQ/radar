@@ -1,6 +1,6 @@
 {
   "name": "@dopplerhq/radar",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Detect API keys, database urls, and other sensitive secrets in a directory",
   "main": "src/radar.js",
   "repository": {
