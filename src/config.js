@@ -1,7 +1,33 @@
+const getValue = (value, defaultValue) => {
+  if (value === undefined) {
+    return defaultValue;
+  }
+
+  if (defaultValue instanceof Array) {
+    if (value.length === 0) {
+      return defaultValue;
+    }
+    if (defaultValue.length === 0) {
+      return value;
+    }
+    return [...defaultValue, ...value];
+  }
+
+  return value;
+};
+
+const normalizeDirectory = (directory) => {
+  let lowercaseDirectory = directory.toLowerCase();
+  // remove trailing slash, if any
+  while (lowercaseDirectory.endsWith('/')) {
+    lowercaseDirectory = lowercaseDirectory.slice(0, -1);
+  }
+  return lowercaseDirectory;
+};
+
 class Config {
-  constructor() {
-    // default config
-    this.data = {
+  constructor(config = {}) {
+    const defaultConfig = {
       secretTypes: [],
       maxFileSizeMiB: 10,
       maxConcurrentFileReads: 10,
@@ -12,118 +38,54 @@ class Config {
       excludedDirectories: ['.git', 'node_modules', '.vscode'],
       excludedFileExts: [],
     };
+
+    this.data = {
+      secretTypes: getValue(config.secretTypes, defaultConfig.secretTypes),
+      maxFileSizeMiB: getValue(config.maxFileSizeMiB, defaultConfig.maxFileSizeMiB),
+      maxConcurrentFileReads: getValue(config.maxConcurrentFileReads, defaultConfig.maxConcurrentFileReads),
+      includedFiles: getValue(config.includedFiles, defaultConfig.includedFiles).map(ext => ext.toLowerCase()),
+      includedDirectories: getValue(config.includedDirectories, defaultConfig.includedDirectories).map(normalizeDirectory),
+      includedFileExts: getValue(config.includedFileExts, defaultConfig.includedFileExts).map(ext => ext.toLowerCase()),
+      excludedFiles: getValue(config.excludedFiles, defaultConfig.excludedFiles).map(ext => ext.toLowerCase()),
+      excludedDirectories: getValue(config.excludedDirectories, defaultConfig.excludedDirectories).map(normalizeDirectory),
+      excludedFileExts: getValue(config.excludedFileExts, defaultConfig.excludedFileExts).map(ext => ext.toLowerCase()),
+    };
   }
 
   getSecretTypes() {
     return this.data.secretTypes;
   }
 
-  setSecretTypes(secretTypes) {
-    this.data.secretTypes = secretTypes;
-  }
-
   getMaxFileSizeMiB() {
     return this.data.maxFileSizeMiB;
-  }
-
-  setMaxFileSizeMiB(maxFileSizeMiB) {
-    this.data.maxFileSizeMiB = maxFileSizeMiB;
   }
 
   getMaxConcurrentFileReads() {
     return this.data.maxConcurrentFileReads;
   }
 
-  setMaxConcurrentFileReads(maxConcurrentFileReads) {
-    this.data.maxConcurrentFileReads = maxConcurrentFileReads;
-  }
-
   getIncludedFileExts() {
     return this.data.includedFileExts;
-  }
-
-  /**
-   *
-   * @param {Array<String>} includedFileExts case-insensitive
-   */
-  setIncludedFileExts(includedFileExts) {
-    this.data.includedFileExts.push(...includedFileExts.map(ext => ext.toLowerCase()));
   }
 
   getIncludedFiles() {
     return this.data.includedFiles;
   }
 
-  /**
-   *
-   * @param {Array<String>} includedFiles case-insensitive
-   */
-  setIncludedFiles(includedFiles) {
-    this.data.includedFiles.push(...includedFiles.map(f => f.toLowerCase()));
-  }
-
   getIncludedDirectories() {
     return this.data.includedDirectories;
-  }
-
-  /**
-   *
-   * @param {Array<String>} includedDirectories case-insensitive
-   */
-  setIncludedDirectories(includedDirectories) {
-    const normalizedDirectories = includedDirectories.map((dir) => {
-      let normalizedDir = dir.toLowerCase();
-      // remove trailing slash, if any
-      while (normalizedDir.endsWith('/')) {
-        normalizedDir = normalizedDir.slice(0, -1);
-      }
-      return normalizedDir;
-    })
-    this.data.includedDirectories.push(...normalizedDirectories);
   }
 
   getExcludedFileExts() {
     return this.data.excludedFileExts;
   }
 
-  /**
-   *
-   * @param {Array<String>} excludedFileExts case-insensitive
-   */
-  setExcludedFileExts(excludedFileExts) {
-    this.data.excludedFileExts.push(...excludedFileExts.map(ext => ext.toLowerCase()));
-  }
-
   getExcludedFiles() {
     return this.data.excludedFiles;
   }
 
-  /**
-   *
-   * @param {Array<String>} excludedFiles case-insensitive
-   */
-  setExcludedFiles(excludedFiles) {
-    this.data.excludedFiles.push(...excludedFiles.map(f => f.toLowerCase()));
-  }
-
   getExcludedDirectories() {
     return this.data.excludedDirectories;
-  }
-
-  /**
-   *
-   * @param {Array<String>} excludedDirectories case-insensitive
-   */
-  setExcludedDirectories(excludedDirectories) {
-    const normalizedDirectories = excludedDirectories.map((dir) => {
-      let normalizedDir = dir.toLowerCase();
-      // remove trailing slash, if any
-      while (normalizedDir.endsWith('/')) {
-        normalizedDir = normalizedDir.slice(0, -1);
-      }
-      return normalizedDir;
-    })
-    this.data.excludedDirectories.push(...normalizedDirectories);
   }
 }
 

@@ -4,14 +4,13 @@ const program = require('commander');
 const Table = require('easy-table');
 
 const packageFile = require('../package');
-const { Radar, Config } = require('./radar');
+const Radar = require('./radar');
 const Git = require('./git');
 const Filesystem = require('./filesystem');
 const ProgressBar = require('./progressbar');
 
 class CLI {
   constructor() {
-    this.config = new Config();
     this.progressBar = new ProgressBar();
 
     program
@@ -34,7 +33,6 @@ class CLI {
 
   async run(args) {
     program.parse(args);
-    this.setConfig();
 
     let { path } = program;
     const { repo, branch } = program;
@@ -48,7 +46,8 @@ class CLI {
       return Promise.reject();
     }
 
-    const radar = new Radar(this.config, this.onFilesToScan.bind(this), this.onFileScanned.bind(this));
+    const config = this.generateRadarConfig();
+    const radar = new Radar(config, this.onFilesToScan.bind(this), this.onFileScanned.bind(this));
     return radar.scan(path);
   }
 
@@ -84,40 +83,19 @@ class CLI {
     return tempPath;
   }
 
-  setConfig() {
+  generateRadarConfig() {
     const { secretTypes, maxFileSize, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = program;
 
-    if (secretTypes) {
-      this.config.setSecretTypes(secretTypes);
-    }
-
-    if (maxFileSize) {
-      this.config.setMaxFileSizeMiB(maxFileSize);
-    }
-
-    if (includeFiles) {
-      this.config.setIncludedFiles(includeFiles.split(",").map(name => name.trim()));
-    }
-
-    if (excludeFiles) {
-      this.config.setExcludedFiles(excludeFiles.split(",").map(name => name.trim()));
-    }
-
-    if (includeDirs) {
-      this.config.setIncludedDirectories(includeDirs.split(",").map(name => name.trim()));
-    }
-
-    if (excludeDirs) {
-      this.config.setExcludedDirectories(excludeDirs.split(",").map(name => name.trim()));
-    }
-
-    if (includeFileExts) {
-      this.config.setIncludedFileExts(includeFileExts.split(",").map(ext => ext.trim()));
-    }
-
-    if (excludeFileExts) {
-      this.config.setExcludedFileExts(excludeFileExts.split(",").map(ext => ext.trim()));
-    }
+    return {
+      secretTypes,
+      maxFileSizeMiB: maxFileSize,
+      includedFiles: includeFiles ? includeFiles.split(",").map(name => name.trim()) : undefined,
+      excludedFiles: excludeFiles ? excludeFiles.split(",").map(name => name.trim()) : undefined,
+      includedDirectories: includeDirs ? includeDirs.split(",").map(name => name.trim()) : undefined,
+      excludedDirectories: excludeDirs ? excludeDirs.split(",").map(name => name.trim()) : undefined,
+      includedFileExts: includeFileExts ? includeFileExts.split(",").map(ext => ext.trim()) : undefined,
+      excludedFileExts: excludeFileExts ? excludeFileExts.split(",").map(ext => ext.trim()) : undefined,
+    };
   }
 
   onFilesToScan(num) {

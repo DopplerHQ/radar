@@ -13,18 +13,23 @@ const OneMebibyte = 1024 * 1024;
 class Radar {
   /**
    *
-   * @param {Config} config
+   * @param {Object} config
    * @param {function} onFilesToScan called with the total number of files to be scanned
    * @param {function} onFileScanned called whenever a file is scanned
    */
-  constructor(config = new Config(), onFilesToScan = () => {}, onFileScanned = () => {}) {
-    Object.keys(ExcludedFiletypes).forEach(filetype => config.setExcludedFileExts(ExcludedFiletypes[filetype].map(f => f.toLowerCase())));
+  constructor(config = {}, onFilesToScan = () => {}, onFileScanned = () => {}) {
+    if (config.excludedFileExts === undefined) {
+      config.excludedFileExts = [];
+    }
+    Object.keys(ExcludedFiletypes).forEach(filetype => (
+      config.excludedFileExts.push(...ExcludedFiletypes[filetype].map(f => f.toLowerCase()))
+    ));
 
-    this._config = config;
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
     this._scanner = new Scanner();
+    this._config = new Config(config);
     this._scanner.init(this._config.getSecretTypes());
 
     // these function gets executed outside of this context, so explicitly bind them
@@ -248,4 +253,4 @@ class Radar {
   }
 }
 
-module.exports = { Radar, Config };
+module.exports = Radar;
