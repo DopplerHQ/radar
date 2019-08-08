@@ -1,15 +1,19 @@
+/**
+ * Determines the appropriate value given an optional value and a default. Arrays will be merged.
+ * @param {Any} value value to use, optional
+ * @param {Any} defaultValue the defa
+ */
 const getValue = (value, defaultValue) => {
   if (value === undefined) {
     return defaultValue;
   }
 
   if (defaultValue instanceof Array) {
-    if (value.length === 0) {
-      return defaultValue;
-    }
-    if (defaultValue.length === 0) {
-      return value;
-    }
+    const isValueEmpty = value.length === 0;
+    const isDefaultValueEmpty = defaultValue.length === 0;
+
+    if (isValueEmpty) return defaultValue;
+    if (isDefaultValueEmpty) return value;
     return [...defaultValue, ...value];
   }
 
