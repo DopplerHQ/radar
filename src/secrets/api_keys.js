@@ -7,6 +7,8 @@ class APIKeys extends Secret {
   constructor() {
     const name = 'api_key';
     const preFilters = [
+      'uri_encoding',
+      'hex_notation',
       'xml',
       'common_patterns',
       'date',
@@ -32,6 +34,7 @@ class APIKeys extends Secret {
     this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
     this.lettersRegex = /[a-z]/ig;
+    this.groupsOfNumbersRegex = /[0-9]+/ig;
     this.numbersRegex = /[0-9]/g;
 
     this.minAlphaNumericTermLength = 24;
@@ -75,22 +78,29 @@ class APIKeys extends Secret {
       .trim()
       .split(/ +/)
       .filter(term => this.isValidTermLength(term))
-      .filter(term => !term.endsWith('.com'))
-      .filter((term) => {
-        const containsLetters = term.match(this.lettersRegex);
-        // require 3 or more letters numbers to help reduce false positives
-        if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
-          return false;
-        }
+      .filter(term => this.isAlphaNumeric(term));
+  }
 
-        const containsNumbers = term.match(this.numbersRegex);
-        // require 3 or more distinct numbers to help reduce false positives
-        if ((containsNumbers === null) || (new Set(containsNumbers).size < 3)) {
-          return false;
-        }
+  isAlphaNumeric(term) {
+    const containsLetters = term.match(this.lettersRegex);
+    // require 3 or more letters numbers to help reduce false positives
+    if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
+      return false;
+    }
 
-        return true;
-      });
+    const groupsOfNumbers = term.match(this.groupsOfNumbersRegex);
+    // require 3 or more groups of numbers
+    if ((groupsOfNumbers === null) || (groupsOfNumbers.length < 3)) {
+      return false;
+    }
+
+    const containsNumbers = term.match(this.numbersRegex);
+    // require 3 or more distinct numbers to help reduce false positives
+    if ((containsNumbers === null) || (new Set(containsNumbers).size < 3)) {
+      return false;
+    }
+
+    return true;
   }
 
   static isValidCharacter(char) {
@@ -106,9 +116,17 @@ class APIKeys extends Secret {
       return false;
     }
 
-    const isAlphaNumeric = /^[a-z0-9]+$/i.test(term);
-    return (term.length >= this.minTermLength)
-      || (isAlphaNumeric && (term.length >= this.minAlphaNumericTermLength) && (term.length % 4 === 0));
+    if (term.length >= this.minTermLength) {
+      return true;
+    }
+
+    const alphaNumericTerms = term.match(/[a-z0-9]+/ig);
+    if (alphaNumericTerms === null) {
+      return false;
+    }
+
+    const termsOfValidLength = alphaNumericTerms.filter(t => (t.length >= this.minAlphaNumericTermLength) && (t.length % 4 === 0));
+    return termsOfValidLength.length > 0;
   }
 }
 
