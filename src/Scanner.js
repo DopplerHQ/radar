@@ -16,8 +16,8 @@ class Scanner {
         const fileName = file.substring(0, file.indexOf('.'));
         return ((secretTypes.length === 0) || secretTypes.includes(fileName))
       })
-      .map(file => (file.endsWith('.js') ? require(`${secretTypesPath}/${file}`) : null))
-      .filter(file => (file !== null));
+      .filter(file => file.endsWith('.js'))
+      .map(file => require(`${secretTypesPath}/${file}`));
   }
 
   /**
