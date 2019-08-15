@@ -94,6 +94,10 @@ class Filesystem {
    * @returns {String}
    */
   static getRelativePath(path, basePath) {
+    if (!path.includes('/') || !basePath.includes('/') || !path.startsWith(basePath)) {
+      return path;
+    }
+
     let relativePath = path.substring(basePath.length);
     while (relativePath.startsWith('/')) {
       relativePath = relativePath.substring(1);

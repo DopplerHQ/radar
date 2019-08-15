@@ -15,3 +15,14 @@ test("relative path - trailing slash(es)", () => {
   expect(Filesystem.getRelativePath(`${path}/dir2/test.txt`, path)).toStrictEqual("dir2/test.txt");
   expect(Filesystem.getRelativePath(`${path}/dir3/dir4/test.txt`, path)).toStrictEqual("dir3/dir4/test.txt");
 });
+
+
+test("relative path - edge cases", () => {
+  expect(Filesystem.getRelativePath("README.md", "")).toStrictEqual("README.md");
+  expect(Filesystem.getRelativePath("README.md", ".")).toStrictEqual("README.md");
+  expect(Filesystem.getRelativePath("README.md", "./")).toStrictEqual("README.md");
+  expect(Filesystem.getRelativePath("./README.md", "./")).toStrictEqual("README.md");
+  expect(Filesystem.getRelativePath("./README.md", ".")).toStrictEqual("./README.md");
+  expect(Filesystem.getRelativePath("test/README.md", ".")).toStrictEqual("test/README.md");
+  expect(Filesystem.getRelativePath("test/README.md", "./")).toStrictEqual("test/README.md");
+});
