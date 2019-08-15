@@ -56,6 +56,10 @@ class Config {
     };
   }
 
+  config() {
+    return this.data;
+  }
+
   getSecretTypes() {
     return this.data.secretTypes;
   }

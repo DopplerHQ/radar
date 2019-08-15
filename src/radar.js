@@ -62,7 +62,7 @@ class Radar {
       const filePath = path.substring(0, path.lastIndexOf('/'));
       return this._getFileObject(filePath, fileName)
         .then(this._scanFile)
-        .then(results => Radar._getResultsMap(filePath, [results]));
+        .then(results => Radar._getResultsMap(filePath, [results].filter(result => result.hasSecrets())));
     }
   }
 
@@ -261,6 +261,10 @@ class Radar {
   listFilters() {
     return this._scanner.getFilters()
       .map(file => file.substring(0, file.indexOf('.')));
+  }
+
+  config() {
+    return this._config.config();
   }
 }
 
