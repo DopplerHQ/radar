@@ -24,7 +24,7 @@ class File {
   }
 
   extension() {
-    if (this._extension == null) {
+    if (this._extension === null) {
       this._extension = (() => {
         const firstPeriod = this._name.indexOf('.');
         if (firstPeriod === -1) {
