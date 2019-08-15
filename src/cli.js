@@ -87,6 +87,7 @@ class CLI {
           })
           console.log(table.toString());
         }
+        break;
     }
   }
 
