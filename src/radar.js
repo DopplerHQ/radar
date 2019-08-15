@@ -252,6 +252,16 @@ class Radar {
     });
     return results;
   }
+
+  listSecretTypes() {
+    return this._scanner.getSecretTypes()
+      .map(file => file.substring(0, file.indexOf('.')));
+  }
+
+  listFilters() {
+    return this._scanner.getFilters()
+      .map(file => file.substring(0, file.indexOf('.')));
+  }
 }
 
 module.exports = Radar;
