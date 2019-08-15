@@ -1,4 +1,5 @@
 const asyncPool = require("tiny-async-pool");
+const Path = require('path');
 
 const Filesystem = require('./filesystem');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
@@ -73,7 +74,7 @@ class Radar {
     const dirEntries = await Filesystem.getDirectoryEntries(path, true);
 
     for (const entry of dirEntries) {
-      const entryPath = `${path}/${entry.name}`;
+      const entryPath = Path.join(path, entry.name);
 
       const relativePath = Filesystem.getRelativePath(entryPath, this.basePath);
       if (entry.isDirectory() && this._checkDirectory(entry.name, relativePath)) {
@@ -98,7 +99,7 @@ class Radar {
    * @returns {File}
    */
   async _getFileObject(path, name) {
-    const fullPath = `${path}/${name}`;
+    const fullPath = Path.join(path, name);
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
     return new File(name, path, fileSize);
