@@ -4,8 +4,8 @@ class AuthURL extends Filter {
   constructor() {
     super('Auth URL');
 
-    // look for protocol, username (any chars except / : @), colon, password (any chars except / : @), @ sign, and optional domain
-    this.authUrlRegex = /\/\/[^\/:@]+:[^\/:@]+@[^\/:@]*\/?/;
+    // look for protocol (//), username (any chars except / : @ .), colon (:), password (any chars except / : @ .), @ symbol
+    this.authUrlRegex = /\/\/[^\/:@\.]{3,}:[^\/:@\.]{3,}@/;
   }
 
   isMatch(term) {
