@@ -30,7 +30,7 @@ test('full path', () => {
   expect(file1.fullPath()).toStrictEqual("/root/test.txt");
 
   const file2 = new File("test.txt", "/root/");
-  expect(file2.fullPath()).toStrictEqual("/root//test.txt");
+  expect(file2.fullPath()).toStrictEqual("/root/test.txt");
 
   const file3 = new File("test.txt", "/a/lot/of/sub/dirs");
   expect(file3.fullPath()).toStrictEqual("/a/lot/of/sub/dirs/test.txt");
