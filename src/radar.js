@@ -33,6 +33,16 @@ class Radar {
     this._config = new Config(config);
     this._scanner.init(this._config.getSecretTypes());
 
+    // verify all specified secret_types are valid
+    if ((config.secretTypes !== undefined) && (config.secretTypes.length > 0)) {
+      const allSecretTypes = this.listSecretTypes();
+      config.secretTypes.forEach((secretType) => {
+        if (!allSecretTypes.includes(secretType)) {
+          throw new Error(`Invalid secret type ${secretType}`)
+        }
+      });
+    }
+
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
     this._scanFile = this._scanFile.bind(this);
