@@ -184,12 +184,30 @@ const loadCommands = () => {
     });
 
   program
-    .command("list <type>")
-    .description("Print radar configuration")
+    .command("list-secrets")
+    .description("Print all available secret types")
     .option("--json", "Output results as json blob")
-    .action((listType, options) => {
-      cli.setOptions(options);
-      cli.list(listType);
+    .action((options) => {
+      cli.init(options);
+      cli.list("secret-types");
+    });
+
+  program
+    .command("list-filters")
+    .description("Print all available filters")
+    .option("--json", "Output results as json blob")
+    .action((options) => {
+      cli.init(options);
+      cli.list("filters");
+    });
+
+  program
+    .command("list-defaults")
+    .description("Print the default configuration")
+    .option("--json", "Output results as json blob")
+    .action((options) => {
+      cli.init(options);
+      cli.list("defaults");
     });
 }
 
