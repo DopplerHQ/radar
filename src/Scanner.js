@@ -13,7 +13,10 @@ class Scanner {
    */
   init(secretTypes) {
     this.secretTypesToIdentify = this.getSecretTypes(secretTypes)
-      .map(file => require(path.join(this.secretTypesPath, file)));
+      .map(fileName => ({
+        name: fileName.substring(0, fileName.indexOf('.')),
+        secretType: require(path.join(this.secretTypesPath, fileName)),
+      }));
   }
 
   /**
@@ -45,8 +48,8 @@ class Scanner {
    */
   findSecrets(line, scannedFile) {
     const allSecrets = [];
-    this.secretTypesToIdentify.filter(secretType => this.shouldScanForSecretType(secretType, scannedFile))
-      .map((secretType) => {
+    this.secretTypesToIdentify.filter(({ secretType }) => this.shouldScanForSecretType(secretType, scannedFile))
+      .map(({ secretType }) => {
         const terms = secretType.getTerms(line);
         const { secrets, tags } = secretType.check(terms);
 

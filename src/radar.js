@@ -264,8 +264,8 @@ class Radar {
   }
 
   listSecretTypes() {
-    return this._scanner.getSecretTypes()
-      .map(file => file.substring(0, file.indexOf('.')));
+    return this._scanner.secretTypesToIdentify
+      .map(({ name }) => name)
   }
 
   listFilters() {
