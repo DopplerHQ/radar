@@ -98,6 +98,7 @@ class APIKeys extends Secret {
   }
 
   static isCharacterValid(char) {
+    // allow ASCII special characters and alphanumerics
     return (char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126);
   }
 
