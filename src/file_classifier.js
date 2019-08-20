@@ -1,6 +1,7 @@
-const FileTags = require('./objects/file_tags');
 const fs = require('fs');
 const path = require('path');
+
+const FileTags = require('./objects/file_tags');
 
 class FileClassifier {
   constructor() {
@@ -8,7 +9,7 @@ class FileClassifier {
     // NOTE this will execute synchronously on this file's initial load
     this.classifiers = fs.readdirSync(classifiersPath)
       .filter(file => file.endsWith('.js'))
-      .map(file => require(`${classifiersPath}/${file}`));
+      .map(file => require(path.join(classifiersPath, file)));
   }
 
   /**

@@ -1,8 +1,8 @@
 # Doppler Radar
 
-Radar is a token scanning tool that detects API keys, credentials, database urls, and other sensitive secrets in your codebase. It curbs fraudulent use and unauthorized access of your secrets that were accidentally committed. For security to be built into every application, Radar can integrate with your CI/CD pipeline to continuously monitor and halt leaks before they are merged upstream. And do you know how many secrets have already slipped into your repos? Radar can help you track them down.
+Radar is a token scanning tool that detects API keys, credentials, database urls, and other sensitive secrets in your codebase. It curbs fraudulent use and unauthorized access of secrets that have been accidentally committed. Radar can integrate with your CI/CD pipeline to continuously monitor and halt leaks before they are merged upstream. Do you know how many secrets have already slipped into your repos? Radar can help you track them down.
 
-Note: Radar does not perform any network requests and the secrets analysis will be performed entirely locally. This might seem obvious to you, but we want it to be especially explicit.
+**Note:** Radar does not perform any network requests and the secrets analysis will be performed entirely locally. This might seem obvious, but we want to be especially explicit.
 
 ## Installation
 
@@ -14,31 +14,30 @@ $ npm install -g @dopplerhq/radar
 
 ### Command Line
 
-Scan a git repo:
-```
-$ radar --repo REPO_URL [--branch BRANCH]
-```
-
 Scan a local file/directory:
 ```
-$ radar --path PATH
+$ radar scan PATH
+```
+
+Scan a git repo:
+```
+$ radar scan REPO_URL [--branch BRANCH]
 ```
 
 You can see a full list of configuration options by running `radar --help`
 ```
-$ radar --help
+$ radar scan --help
 
-Usage: radar [options]
+Usage: scan [options] <path>
+
+Scan a file, directory, or remote git repo for secrets
 
 Options:
-  -V, --version               output the version number
-  -p, --path <path>           Scan the specified path
-  -r, --repo <url>            Scan the specified git repo url
-  -b, --branch <name>         Scan the specified git branch
+  -b, --branch <name>         Scan the git branch (specified path must be a git url)
   --secret-types <list>       Secret types to scan for (e.g. "crypto_keys, auth_urls")
   --max-file-size <MiB>       Maximum size of files to scan
   --include-files <list>      File names to include, case-insensitive (overrides excluded files)
-  --exclude-files <list>      File names to exclude, case-insensitive (e.g. "package.json, CHANGELOG.md")
+  --exclude-files <list>      File names to exclude, case-insensitive (e.g. "package.json, CHANGELOG.md, src/test.js")
   --include-dirs <list>       Directory names to include, case-insensitive (overrides excluded directories)
   --exclude-dirs <list>       Directory names to exclude, case-insensitive (e.g. "test, e2e")
   --include-file-exts <list>  File extensions to include, case-insensitive (overrides excluded file extensions)
@@ -48,23 +47,39 @@ Options:
   -h, --help                  output usage information
 ```
 
+See all available commands
+```
+Usage: radar [options] [command]
+
+Options:
+  -V, --version            output the version number
+  -h, --help               output usage information
+
+Commands:
+  scan [options] <path>    Scan a file, directory, or remote git repo for secrets
+  list-secrets [options]   Print all available secret types
+  list-filters [options]   Print all available filters
+  list-defaults [options]  Print the default configuration
+```
+
 ### Node library
 
 Scan a local file/directory:
 
 ``` js
-const { Radar } = require("@dopplerhq/radar");
+const Radar = require("@dopplerhq/radar");
 const results = new Radar().scan(directory_path);
 ```
 
 #### Configuration
 
-You can further configure the Node library by passing it a `Config` object.
+You can further configure the Node library by passing in a configuration object.
 
 ``` js
-const { Radar, Config } = require("@dopplerhq/radar");
-const config = new Config();
-config.setSecretTypes(["auth_urls", "crypto_keys", "api_keys"]);
+const Radar = require("@dopplerhq/radar");
+const config = {
+  secretTypes: ["auth_urls", "crypto_keys", "api_keys"],
+};
 const results = new Radar(config).scan(directory_path);
 ```
 
@@ -88,18 +103,26 @@ You can instruct the CLI to output JSON by specifying the `--json` flag. This ou
       "fileSize": 903,
       "fileExtension": "env"
     },
-    "secrets": [
+    "lines": [
       {
-        "secret": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
-        "type": "api_key",
         "line": "STRIPE_API_KEY=BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
-        "lineNumber": 4
+        "lineNumber": 4,
+        "findings": [
+          {
+            "text": "BpvW9qw31eXXHEGDMbERBkQ24lF6EWkUyaOgU4LG",
+            "type": "api_key"
+          }
+        ]
       },
       {
-        "secret": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
-        "type": "api_key",
         "line": "SENDGRID_API_KEY=SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
-        "lineNumber": 11
+        "lineNumber": 11,
+        "findings": [
+          {
+            "text": "SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA",
+            "type": "api_key"
+          }
+        ]
       }
     ]
   }
@@ -111,9 +134,11 @@ API token leakage is rampant. In a high profile study, North Carolina State Univ
 
 ## How it works
 
-Radar uses filters to calculate the likelihood that a string is a stored secret. This includes things like the string's entropy, the inclusion of dictionary words, and more. A list of identified secrets is returned so that action may be taken.
+Radar uses filters to identify stored secrets. Filters look at things like a string's entropy, the inclusion of dictionary words, overall string length, and more. A list of identified secrets is returned so that action may be taken.
 
-Radar's model is a bit different than other tools. These tools typically employ a set of regex patterns to identify tokens from common service providers. This is highly reliable for supported services, but has the obvious shortcomings of a) supporting a limited number of services and b) not supporting other types of static secrets. The filter approach that Radar employs casts a wider net, which can result in false positives. Radar has the explicit goal of minimizing these false positives to avoid generating useless noise. We tend to find that when a security tool is overly noisy, humans begin to ignore all of its output.
+Radar's model is a bit different than other tools. These tools typically employ a set of regex patterns to identify tokens from common service providers (Radar's `known_api_keys` secret type provides this functionality). This is highly reliable for supported services but has the obvious shortcomings of a) supporting a limited number of services and b) not supporting other types of static secrets. The filter approach that Radar employs casts a wider net, which can result in false positives.
+
+Radar has the explicit goal of minimizing false positives to avoid generating useless noise. We tend to find that when a security tool is overly noisy, humans begin to ignore all of its output. The way we accomplish false positive minimization is with carefully chosen tradeoffs. For example, Radar ignores all identified UUIDs. Some servicess do provide a UUID (hopefully v4) as a secret, however most static UUIDs we see in code are not in fact secrets. Thus, we trade a few potential true positives for a large reducion in false positives.
 
 ## Thoughts?
 You wouldn't ride in a leaky boat; why would you ship a leaky app?

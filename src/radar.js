@@ -1,4 +1,5 @@
 const asyncPool = require("tiny-async-pool");
+const Path = require('path');
 
 const Filesystem = require('./filesystem');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
@@ -32,6 +33,16 @@ class Radar {
     this._config = new Config(config);
     this._scanner.init(this._config.getSecretTypes());
 
+    // verify all specified secret_types are valid
+    if ((config.secretTypes !== undefined) && (config.secretTypes.length > 0)) {
+      const allSecretTypes = this.listSecretTypes();
+      config.secretTypes.forEach((secretType) => {
+        if (!allSecretTypes.includes(secretType)) {
+          throw new Error(`Invalid secret type ${secretType}`)
+        }
+      });
+    }
+
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
     this._scanFile = this._scanFile.bind(this);
@@ -61,7 +72,7 @@ class Radar {
       const filePath = path.substring(0, path.lastIndexOf('/'));
       return this._getFileObject(filePath, fileName)
         .then(this._scanFile)
-        .then(results => Radar._getResultsMap(filePath, [results]));
+        .then(results => Radar._getResultsMap(filePath, [results].filter(result => result.hasSecrets())));
     }
   }
 
@@ -73,7 +84,7 @@ class Radar {
     const dirEntries = await Filesystem.getDirectoryEntries(path, true);
 
     for (const entry of dirEntries) {
-      const entryPath = `${path}/${entry.name}`;
+      const entryPath = Path.join(path, entry.name);
 
       const relativePath = Filesystem.getRelativePath(entryPath, this.basePath);
       if (entry.isDirectory() && this._checkDirectory(entry.name, relativePath)) {
@@ -98,7 +109,7 @@ class Radar {
    * @returns {File}
    */
   async _getFileObject(path, name) {
-    const fullPath = `${path}/${name}`;
+    const fullPath = Path.join(path, name);
     const fileStats = await Filesystem.getFileStats(fullPath);
     const fileSize = fileStats.size;
     return new File(name, path, fileSize);
@@ -250,6 +261,20 @@ class Radar {
       results[relativePath] = scannedFile.toObject();
     });
     return results;
+  }
+
+  listSecretTypes() {
+    return this._scanner.secretTypesToIdentify
+      .map(({ name }) => name)
+  }
+
+  listFilters() {
+    return this._scanner.getFilters()
+      .map(file => file.substring(0, file.indexOf('.')));
+  }
+
+  config() {
+    return this._config.config();
   }
 }
 

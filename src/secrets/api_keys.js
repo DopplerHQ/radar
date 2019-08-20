@@ -59,31 +59,25 @@ class APIKeys extends Secret {
 
   getTerms(line) {
     const lineLowerCase = line.toLowerCase();
-    const lineContainsExclusion = this.excludedTerms.reduce((acc, val) => (
-      acc || lineLowerCase.includes(val)
-    ), false);
-    if (lineContainsExclusion) {
-      return [];
-    }
-
-    if (!this.isValidLineLength(line)) {
+    if (this.isLineContainsExclusions(lineLowerCase, this.excludedTerms)
+        || !this.isLineLengthValid(line)) {
       return [];
     }
 
     return line.split('')
-      .map(char => APIKeys.isValidCharacter(char) ? char : ' ')
+      .map(char => APIKeys.isCharacterValid(char) ? char : ' ')
       .join('')
       .replace(this.charactersToReplace, ' ')
       .replace(this.variableNameRegex, ' ')
       .trim()
       .split(/ +/)
-      .filter(term => this.isValidTermLength(term))
+      .filter(term => this.isTermLengthValid(term))
       .filter(term => this.isAlphaNumeric(term));
   }
 
   isAlphaNumeric(term) {
     const containsLetters = term.match(this.lettersRegex);
-    // require 3 or more letters numbers to help reduce false positives
+    // require 3 or more unique letters to help reduce false positives
     if ((containsLetters === null) || (new Set(containsLetters).size < 3)) {
       return false;
     }
@@ -103,15 +97,20 @@ class APIKeys extends Secret {
     return true;
   }
 
-  static isValidCharacter(char) {
+  static isCharacterValid(char) {
+    // allow ASCII special characters and alphanumerics
     return (char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126);
   }
 
-  isValidLineLength(line) {
+  isLineContainsExclusions(line, excludedTerms) {
+    return excludedTerms.some(term => line.includes(term));
+  }
+
+  isLineLengthValid(line) {
     return line.length <= this.maxLineLength;
   }
 
-  isValidTermLength(term) {
+  isTermLengthValid(term) {
     if (term.length > this.maxTermLength) {
       return false;
     }

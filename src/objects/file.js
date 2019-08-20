@@ -1,3 +1,5 @@
+const path = require('path');
+
 class File {
   /**
    * @param {String} name
@@ -9,6 +11,7 @@ class File {
     this._path = path;
     this._size = size;
     this._extension = null;
+    this._fullPath = null;
   }
 
   name() {
@@ -16,7 +19,11 @@ class File {
   }
 
   fullPath() {
-    return `${this._path}/${this._name}`;
+    if (this._fullPath === null) {
+      this._fullPath = path.join(this._path, this._name);
+    }
+
+    return this._fullPath;
   }
 
   size() {
@@ -24,7 +31,7 @@ class File {
   }
 
   extension() {
-    if (this._extension == null) {
+    if (this._extension === null) {
       this._extension = (() => {
         const firstPeriod = this._name.indexOf('.');
         if (firstPeriod === -1) {
