@@ -11,14 +11,14 @@ const generateRadarConfig = (options)  =>{
   const { secretTypes, maxFileSize, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = options;
 
   return {
-    secretTypes: secretTypes ? util.parseStringArray(secretTypes) : undefined,
-    maxFileSizeMiB: maxFileSize,
-    includedFiles: includeFiles ? util.parseStringArray(includeFiles) : undefined,
-    excludedFiles: excludeFiles ? util.parseStringArray(excludeFiles) : undefined,
-    includedDirectories: includeDirs ? util.parseStringArray(includeDirs) : undefined,
-    excludedDirectories: excludeDirs ? util.parseStringArray(excludeDirs) : undefined,
-    includedFileExts: includeFileExts ? util.parseStringArray(includeFileExts) : undefined,
-    excludedFileExts: excludeFileExts ? util.parseStringArray(excludeFileExts) : undefined,
+    secretTypes: util.parseStringArray(secretTypes),
+    maxFileSizeMiB: util.parseNumber(maxFileSize),
+    includedFiles: util.parseStringArray(includeFiles),
+    excludedFiles: util.parseStringArray(excludeFiles),
+    includedDirectories: util.parseStringArray(includeDirs),
+    excludedDirectories: util.parseStringArray(excludeDirs),
+    includedFileExts: util.parseExtensionArray(includeFileExts),
+    excludedFileExts: util.parseExtensionArray(excludeFileExts),
   };
 };
 

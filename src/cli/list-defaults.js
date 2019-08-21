@@ -49,12 +49,10 @@ program
     const { json, exclude, names } = program.opts();
     let defaultConfig = (new Radar()).config();
     if (name === undefined) {
-      if (exclude !== undefined) {
-        const excludeConfigValues = util.parseStringArray(exclude);
-        excludeConfigValues.forEach((name) => {
-          delete defaultConfig[name];
-        });
-      }
+      const excludeConfigValues = util.parseStringArray(exclude);
+      excludeConfigValues.forEach((name) => {
+        delete defaultConfig[name];
+      });
       printDefaults(defaultConfig, json, names);
     }
     else {

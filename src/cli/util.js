@@ -4,6 +4,28 @@ const getCommandArgs = (args) => {
   return commandArgs;
 };
 
-const parseStringArray = str => str.split(",").map(s => s.trim()).filter(value => value !== '');
+const parseStringArray = (str) => {
+  if (str === undefined) {
+    return [];
+  }
 
-module.exports = { getCommandArgs, parseStringArray };
+  return str.split(",")
+    .map(s => s.trim())
+    .filter(value => (value !== ''));
+};
+
+const parseExtensionArray = (str) => {
+  return parseStringArray(str)
+    .map(ext => (ext.startsWith('.') ? ext.substring(1) : ext))
+    .filter(value => (value !== ''));
+}
+
+const parseNumber = (num) => {
+  if (num === undefined) {
+    return undefined;
+  }
+
+  return Number.isInteger(Number(num)) ? num : undefined;
+};
+
+module.exports = { getCommandArgs, parseStringArray, parseExtensionArray, parseNumber };
