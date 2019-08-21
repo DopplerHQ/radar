@@ -222,7 +222,10 @@ class Radar {
    */
   _checkFileSize(bytes) {
     const mebibytes = (bytes / OneMebibyte);
-    return mebibytes <= this._config.getMaxFileSizeMiB()
+    const maxFileSizeMiB = this._config.getMaxFileSizeMiB();
+    return (maxFileSizeMiB <= 0)
+      ? true
+      : mebibytes <= maxFileSizeMiB;
   }
 
   /**
