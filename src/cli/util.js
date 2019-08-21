@@ -21,11 +21,12 @@ const parseExtensionArray = (str) => {
 }
 
 const parseNumber = (num) => {
-  if (num === undefined) {
+  if (num === undefined || num === "") {
     return undefined;
   }
 
-  return Number.isInteger(Number(num)) ? num : undefined;
+  const number = Number(num);
+  return Number.isInteger(number) ? number : undefined;
 };
 
 module.exports = { getCommandArgs, parseStringArray, parseExtensionArray, parseNumber };
