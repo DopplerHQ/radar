@@ -13,9 +13,9 @@ program
     const args = util.getCommandArgs(params);
 
     if (args.length === 0) {
-        program.help();
-        return;
-      }
+      program.help();
+      return;
+    }
 
     const programHasCommands = program.commands.length > 0;
     if (programHasCommands) {
