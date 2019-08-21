@@ -7,10 +7,10 @@ const util = require('./util');
 const printDefaults = (config, json = false, names = false) => {
   if (json) {
     if (names) {
-      console.log(Object.keys(config));
+      console.log(JSON.stringify(Object.keys(config)));
     }
     else {
-      console.log(config);
+      console.log(JSON.stringify(config, null, 2));
     }
     return;
   }

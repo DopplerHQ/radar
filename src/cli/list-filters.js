@@ -5,7 +5,7 @@ const Radar = require('../radar');
 
 const printFilters = (filters, json = false) => {
   if (json) {
-    console.log(filters);
+    console.log(JSON.stringify(filters, null, 2));
     return;
   }
 

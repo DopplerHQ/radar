@@ -5,7 +5,7 @@ const Radar = require('../radar');
 
 const printSecretTypes = (secretTypes, json = false) => {
   if (json) {
-    console.log(secretTypes);
+    console.log(JSON.stringify(secretTypes, null, 2));
     return;
   }
 

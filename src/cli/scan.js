@@ -24,7 +24,7 @@ const generateRadarConfig = (options)  =>{
 
 const printScanResults = (results, json = false) => {
   if (json) {
-    console.dir(results, { depth: 5 } );
+    console.log(JSON.stringify(results, null, 2));
     return;
   }
 
