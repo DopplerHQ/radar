@@ -51,15 +51,16 @@ See all available commands
 ```
 Usage: radar [options] [command]
 
+Detect API keys, credentials, and other sensitive secrets in your codebase
+
 Options:
-  -V, --version            output the version number
-  -h, --help               output usage information
+  -V, --version  output the version number
+  -h, --help     output usage information
 
 Commands:
-  scan [options] <path>    Scan a file, directory, or remote git repo for secrets
-  list-secrets [options]   Print all available secret types
-  list-filters [options]   Print all available filters
-  list-defaults [options]  Print the default configuration
+  scan <path>    Scan a file, directory, or remote git repo for secrets
+  list <type>    List available configuration
+  help [cmd]     display help for [cmd]
 ```
 
 ### Node library
