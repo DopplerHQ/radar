@@ -78,10 +78,10 @@ program
       return;
     }
 
-    const path = args[0];
+    let path = args[0];
     const progressBar = new ProgressBar();
     const options = program.opts();
-    const { json, progress } = options;
+    const { json, progress, branch } = options;
 
     const isGitUrl = (path.endsWith(".git") && (path.startsWith("https://") || path.startsWith("git@")));
     if (isGitUrl) {
