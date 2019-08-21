@@ -7,7 +7,8 @@ class Git {
     if (path === undefined) {
       path = await Filesystem.makeTempDirectory();
     }
-    return git(path).clone(repo, path, ["--single-branch", "--depth", 1, "--branch", branch]);
+    await git(path).clone(repo, path, ["--single-branch", "--depth", 1, "--branch", branch]);
+    return path;
   }
 }
 
