@@ -8,7 +8,7 @@ program
   .description("List available configuration")
   .command("secrets", "Print all available secret types", { executableFile: 'list-secrets' })
   .command("filters", "Print all available filters", { executableFile: 'list-filters' })
-  .command("defaults", "Print the default configuration", { executableFile: 'list-defaults' })
+  .command("defaults [name]", "Print the default configuration", { executableFile: 'list-defaults' })
   .action((...params) => {
     const args = util.getCommandArgs(params);
 
