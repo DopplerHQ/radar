@@ -2,7 +2,11 @@ const progress = require('cli-progress');
 
 class ProgressBar {
   constructor() {
-    this.bar = new progress.Bar({ stopOnComplete: true, clearOnComplete: true }, progress.Presets.shades_classic);
+    this.bar = new progress.Bar({
+      stopOnComplete: true,
+      clearOnComplete: true,
+      etaBuffer: 1000,
+    }, progress.Presets.shades_classic);
   }
 
   init(num) {
