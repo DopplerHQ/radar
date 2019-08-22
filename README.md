@@ -2,7 +2,7 @@
 
 Radar is a token scanning tool that detects API keys, credentials, database urls, and other sensitive secrets in your codebase. It curbs fraudulent use and unauthorized access of secrets that have been accidentally committed. Radar can integrate with your CI/CD pipeline to continuously monitor and halt leaks before they are merged upstream. Do you know how many secrets have already slipped into your repos? Radar can help you track them down.
 
-**Note:** Radar does not perform any network requests and the secrets analysis will be performed entirely locally. This might seem obvious, but we want to be especially explicit.
+**Note:** Radar does not make any network requests and all secrets analysis will be performed locally. This might seem obvious, but we want it to be especially explicit.
 
 ## Installation
 
@@ -95,7 +95,7 @@ File  Line  Secret                                            Type
       11    SG.mjhasdf3hQ46NBfgRqSf3tIMg.HfKdKxhQN8WlmbkkFJA  api_key
 ```
 
-You can instruct the CLI to output JSON by specifying the `--json` flag. This output is identical to the results returned by the Node library's `scan()` function.
+You can instruct the CLI to output JSON by specifying the `--json` flag. This output is functionally identical to the results returned by the Node library's `scan()` function.
 
 ```json
 {
@@ -133,13 +133,21 @@ You can instruct the CLI to output JSON by specifying the `--json` flag. This ou
 ## Why it matters
 API token leakage is rampant. In a high profile study, North Carolina State University identified over 200,000 secrets across 100,000 public GitHub repositories. These secrets were sitting on the public internet and available to any adversary. With these secrets, anyone could have accessed confidential/legally protected data or racked up a huge bill. Static secrets also tend to indicate the use of that same secret across all environments, breaking another security best practice. Security is hard™, but a few small steps can go a long way towards increasing your organization's security posture.
 
-## How it works
+## Architecture
 
-Radar uses filters to identify stored secrets. Filters look at things like a string's entropy, the inclusion of dictionary words, overall string length, and more. A list of identified secrets is returned so that action may be taken.
+Radar is entirely language agnostic and was built to be extensible. Thus, its model is a bit different than other tools. Most tools use a set of regex patterns to identify tokens from common service providers (Radar's `known_api_keys` secret type provides this functionality). This is highly reliable for supported services, but has the obvious shortcomings of a) supporting a limited number of services and b) not supporting other types of static secrets. Radar is able to remain language agnostic while detecting more secrets than other tools by employing three different constructs: Secret Types, Filters, and Classifiers.
 
-Radar's model is a bit different than other tools. These tools typically employ a set of regex patterns to identify tokens from common service providers (Radar's `known_api_keys` secret type provides this functionality). This is highly reliable for supported services but has the obvious shortcomings of a) supporting a limited number of services and b) not supporting other types of static secrets. The filter approach that Radar employs casts a wider net, which can result in false positives.
+**Secret Types**: Radar defines the secrets it should try to identify by declaring Secret Types. Each Secret Type specifies the filters it uses to qualify (and disqualify) arbitrary text. The results from multiple filters are combined to more accurately determine is some text is a secet.
 
-Radar has the explicit goal of minimizing false positives to avoid generating useless noise. We tend to find that when a security tool is overly noisy, humans begin to ignore all of its output. The way we accomplish false positive minimization is with carefully chosen tradeoffs. For example, Radar ignores all identified UUIDs. Some servicess do provide a UUID (hopefully v4) as a secret, however most static UUIDs we see in code are not in fact secrets. Thus, we trade a few potential true positives for a large reducion in false positives.
+**Filters**: Filters are small pieces of code that answer a simple question: is this text a url, is this a date, is this an email address, etc. Filters are intended to be narrow in scope.
+
+**Classifiers**: Classifiers make our scanning efforts more granular by specifying file types that should/shouldn't be scanned. For example, we can restrict cryptographic private key scanning to files using a known key extension (e.g. .pem and .key). This allows us to increase Radar's speed while reducing false positives.
+
+Together, these three contructs allow Radar to work. Check out the examples folder to see a sample Secret Type, Filter, and Classifier. The Secret Type is responsible for orchestrating the filter and classifier. You can also check out the project's existing secret types/filters/classifiers and their respective base classes for more info.
+
+## False positives
+
+Radar has the explicit goal of minimizing false positives to avoid generating useless noise. We tend to find that when a security tool is overly noisy, humans begin to ignore all of its output. The way we accomplish false positive minimization is with carefully chosen tradeoffs. For example, Radar ignores all identified UUIDs. Some services do provide a UUID (hopefully v4) as a secret, however most static UUIDs we see in code are not in fact secrets. Thus, we trade a few potential true positives for a large reducion in false positives.
 
 ## Thoughts?
 You wouldn't ride in a leaky boat; why would you ship a leaky app?
