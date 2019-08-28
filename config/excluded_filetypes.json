@@ -5,7 +5,7 @@
   "compressed": ["7z", "arj", "pkg", "rar", "rpm", "gz", "z", "zip", "tar.gz", "tar", "bz2", "whl", "phar"],
   "font": ["otf", "ttf", "woff", "woff2", "eot"],
   "document": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "rtf", "asciidoc"],
-  "binary": ["o", "exe", "dmg", "deb", "msi", "node", "bin", "s", "so", "so.0", "jar", "war", "har", "hqx", "sa", "asm", "nasm", "a51", "syso", "xbf"],
+  "binary": ["o", "exe", "dmg", "deb", "msi", "node", "bin", "s", "so", "so.0", "jar", "war", "har", "hqx", "sa", "asm", "nasm", "a51", "syso", "xbf", "mobileprovision", "ipa", "app"],
   "other": ["log", "sql", "map", "xml", "lock", "gitignore", "example", "torrent", "nsi", "tmp", "terminal", "patch", "license", "pbxproj", "git", "dump", "ini"],
   "translation": ["po", "pot", "qm"],
   "email": ["eml", "msg"],
