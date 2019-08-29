@@ -75,14 +75,16 @@ test("directory exclusion - all possible states", () => {
   expect(radar._checkDirectory("gooddir")).toBe(true);
 
   // whitelisted
-  config = { includedDirectories: ["baddir"] };
+  config = { includedDirectories: ["gooddir"], excludedDirectories: ["test.gooddir"] };
   radar = new Radar(config);
-  expect(radar._checkDirectory("baddir")).toBe(true);
+  expect(radar._checkDirectory("gooddir")).toBe(true);
+  expect(radar._checkDirectory("test.gooddir")).toBe(true);
 
   // blacklisted
   config = { excludedDirectories: ["baddir"] };
   radar = new Radar(config);
   expect(radar._checkDirectory("baddir")).toBe(false);
+  expect(radar._checkDirectory("test.baddir")).toBe(false);
 
   // whitelisted and blacklisted
   config = { includedDirectories: ["baddir"], excludedDirectories: ["baddir"] };

@@ -194,13 +194,15 @@ class Radar {
     const nameLower = name.toLowerCase();
     const relativePathLower = relativePath.toLowerCase();
 
-    const isNameWhitelisted = this._config.getIncludedDirectories().includes(nameLower);
+    const includedDirectories = this._config.getIncludedDirectories();
+    const isNameWhitelisted = includedDirectories.includes(nameLower) || includedDirectories.reduce((acc, dir) => acc || nameLower.endsWith(dir), false);
     if (isNameWhitelisted) {
       return true;
     }
 
     const excludedDirectories = this._config.getExcludedDirectories();
-    const isNameBlacklisted = excludedDirectories.includes(nameLower) || excludedDirectories.includes(relativePathLower);
+    const isNameBlacklisted = excludedDirectories.includes(nameLower) || excludedDirectories.includes(relativePathLower)
+                              || excludedDirectories.reduce((acc, dir) => acc || nameLower.endsWith(dir), false);
     if (isNameBlacklisted) {
       return false;
     }
