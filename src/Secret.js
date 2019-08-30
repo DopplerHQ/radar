@@ -56,7 +56,7 @@ class Secret {
    */
   getTerms(line) {
     return line.split(/ +/)
-  };
+  }
 
   /**
    *
@@ -80,7 +80,7 @@ class Secret {
 
     const acceptAllTags = (this._fileTags.length === 0);
     return acceptAllTags;
-  };
+  }
 }
 
 module.exports = Secret;
