@@ -59,8 +59,8 @@ class APIKeys extends Secret {
 
   getTerms(line) {
     const lineLowerCase = line.toLowerCase();
-    if (this.isLineContainsExclusions(lineLowerCase, this.excludedTerms)
-        || !this.isLineLengthValid(line)) {
+    if (APIKeys.isLineContainsExclusions(lineLowerCase, this.excludedTerms)
+        || !APIKeys.isLineLengthValid(line, this.maxLineLength)) {
       return [];
     }
 
@@ -102,12 +102,12 @@ class APIKeys extends Secret {
     return (char.charCodeAt(0) >= 33) && (char.charCodeAt(0) <= 126);
   }
 
-  isLineContainsExclusions(line, excludedTerms) {
+  static isLineContainsExclusions(line, excludedTerms) {
     return excludedTerms.some(term => line.includes(term));
   }
 
-  isLineLengthValid(line) {
-    return line.length <= this.maxLineLength;
+  static isLineLengthValid(line, maxLength) {
+    return line.length <= maxLength;
   }
 
   isTermLengthValid(term) {
