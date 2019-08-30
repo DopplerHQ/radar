@@ -2,12 +2,11 @@ class Secret {
   /**
    * @param {String} secret
    * @param {String} type
-   * @param {String} line
-   * @param {Number} lineNumber
    */
-  constructor(secret, type) {
+  constructor(secret, type, metadata) {
     this._secret = secret;
     this._type = type;
+    this._metadata = metadata;
   }
 
   secret() {
@@ -16,6 +15,10 @@ class Secret {
 
   type() {
     return this._type;
+  }
+
+  metadata() {
+    return this._metadata;
   }
 }
 

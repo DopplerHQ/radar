@@ -251,7 +251,7 @@ class Radar {
    */
   _onLineRead(scannedFile, line, lineNumber) {
     this._scanner.findSecrets(line, scannedFile)
-      .forEach(({ secret, secretType }) => scannedFile.addSecret(secret, secretType, line, lineNumber));
+      .forEach(({ secret, secretType, metadata }) => scannedFile.addSecret(secret, secretType, line, lineNumber, metadata));
   }
 
   /**

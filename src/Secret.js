@@ -4,7 +4,7 @@ class Secret {
    * @param {String} name
    * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
    */
-  constructor(name, { preFilters = [], filters = [], fileTags = [], excludedFileTags = [] }) {
+  constructor(name, { preFilters = [], filters = [], fileTags = [], excludedFileTags = [] } = {}) {
     if (name === undefined) {
       throw new Error("Secret name must be specified");
     }
@@ -46,6 +46,7 @@ class Secret {
     return {
       secrets,
       tags: [],
+      metadata: {},
     }
   }
 

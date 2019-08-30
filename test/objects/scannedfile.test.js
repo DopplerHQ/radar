@@ -1,5 +1,4 @@
 const File = require('../../src/objects/file');
-const Secret = require('../../src/objects/secret');
 const ScannedFile = require('../../src/objects/scannedfile');
 
 test('toObject- no secrets', () => {
@@ -34,6 +33,7 @@ test('toObject- with secrets', () => {
           {
             text: "thisisasecret",
             type: "API Key",
+            metadata: {},
           },
         ]
       },
@@ -44,6 +44,7 @@ test('toObject- with secrets', () => {
           {
             text: "anothersecret",
             type: "Auth URL",
+            metadata: {},
           },
         ]
       },

@@ -51,15 +51,18 @@ class Scanner {
     this.secretTypesToIdentify.filter(({ secretType }) => this.shouldScanForSecretType(secretType, scannedFile))
       .map(({ secretType }) => {
         const terms = secretType.getTerms(line);
-        const { secrets, tags } = secretType.check(terms);
+        const { secrets, tags, metadata } = secretType.check(terms);
 
         if ((tags !== undefined) && (Object.keys(tags).length > 0)) {
           this.handleTags(tags, scannedFile);
         }
 
-        return secrets.map(secret => ({
+        return secrets.map((secret, i) => ({
           secret,
           secretType: secretType.name(),
+          metadata: {
+            service: (metadata.services !== undefined) ? metadata.services[i] : undefined,
+          },
         }))
       })
       .forEach(s => allSecrets.push(...s));
