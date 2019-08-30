@@ -473,6 +473,7 @@
   "stdout",
   "str",
   "stringify",
+  "stringliteral",
   "struct",
   "subexp",
   "sublist",
