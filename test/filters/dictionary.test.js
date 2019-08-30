@@ -47,6 +47,7 @@ test('custom dictionary', () => {
   expect(Filter._checkDictionary("AWS")).toBe(1);
   expect(Filter._checkDictionary("PolyfillAWS")).toBe(1);
   expect(Filter._checkDictionary("forge.test1.pkcs12.toPkcs12Asn1(")).toBe(.5);
+  expect(Filter._checkDictionary("t_stringliteral_32cc480c4f0e15e5ce7060ec5e004886ed5a15831cba1ff1aa7cb787be55bb60")).toBe(.5);
 });
 
 test('numbers', () => {
