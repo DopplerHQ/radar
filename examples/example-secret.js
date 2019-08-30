@@ -2,7 +2,7 @@ const Secret = require('../src/Secret');
 const FileTags = require('../src/objects/file_tags');
 
 /**
- * This example Secret Type finds the word "example" in any files whose extension ends with "test"
+ * This Secret Type identifies the word "example" in any files whose extension ends with "test"
  */
 class ExampleSecret extends Secret {
   constructor() {
