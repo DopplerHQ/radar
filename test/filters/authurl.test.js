@@ -4,9 +4,14 @@ test('is auth url', () => {
   expect(Filter.isMatch("//user:pass@google.com")).toBe(true);
   expect(Filter.isMatch("//user:pass@")).toBe(true);
 
-  expect(Filter.isMatch("mongodb://${USER}:${PASSWORD}@localhost/${APP_NAME}")).toBe(true);
-  expect(Filter.isMatch("postgres://${USER}:${PASSWORD}@anton.local:5432/${APP_NAME}")).toBe(true);
+  expect(Filter.isMatch("mongodb://user:password@localhost/${APP_NAME}")).toBe(true);
+  expect(Filter.isMatch("postgres://user:password@anton.local:5432/${APP_NAME}")).toBe(true);
   expect(Filter.isMatch("otpauth://totp/local-part@domain?secret=thisisasecret&issuer=example.com")).toBe(true);
+});
+
+test('is auth url w/ variables', () => {
+  expect(Filter.isMatch("mongodb://${USER}:${PASSWORD}@localhost/${APP_NAME}")).toBe(false);
+  expect(Filter.isMatch("postgres://${USER}:${PASSWORD}@anton.local:5432/${APP_NAME}")).toBe(false);
 });
 
 // TODO should this evaluate to true (w/o introducing false positives)
