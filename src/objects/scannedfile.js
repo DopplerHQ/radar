@@ -32,8 +32,9 @@ class ScannedFile {
    * @param {String} type
    * @param {String} line
    * @param {Number} lineNumber
+   * @param {Object} metadata
    */
-  addSecret(secret, type, line, lineNumber) {
+  addSecret(secret, type, line, lineNumber, metadata = {}) {
     if (this._results[lineNumber] === undefined) {
       this._results[lineNumber] = {
         line,
@@ -42,7 +43,7 @@ class ScannedFile {
     }
 
     const secretsOnLine = this._results[lineNumber];
-    secretsOnLine.findings.push(new Secret(secret, type));
+    secretsOnLine.findings.push(new Secret(secret, type, metadata));
   }
 
    /**
@@ -81,6 +82,7 @@ class ScannedFile {
           findings: value.findings.map(secret => ({
             text: secret.secret(),
             type: secret.type(),
+            metadata: secret.metadata(),
           })),
         };
       })

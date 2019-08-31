@@ -29,9 +29,8 @@ class Radar {
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
-    this._scanner = new Scanner();
     this._config = new Config(config);
-    this._scanner.init(this._config.getSecretTypes());
+    this._secretTypes = Scanner.loadSecretTypes(this._config.getSecretTypes());
 
     // verify all specified secret_types are valid
     if ((config.secretTypes !== undefined) && (config.secretTypes.length > 0)) {
@@ -250,8 +249,8 @@ class Radar {
    * @param {Number} lineNumber
    */
   _onLineRead(scannedFile, line, lineNumber) {
-    this._scanner.findSecrets(line, scannedFile)
-      .forEach(({ secret, secretType }) => scannedFile.addSecret(secret, secretType, line, lineNumber));
+    Scanner.findSecrets(this._secretTypes, line, scannedFile)
+      .forEach(({ secret, secretType, metadata }) => scannedFile.addSecret(secret, secretType, line, lineNumber, metadata));
   }
 
   /**
@@ -269,12 +268,12 @@ class Radar {
   }
 
   listSecretTypes() {
-    return this._scanner.secretTypesToIdentify
+    return this._secretTypes
       .map(({ name }) => name)
   }
 
   listFilters() {
-    return this._scanner.getFilters()
+    return Scanner.getFilters()
       .map(file => file.substring(0, file.indexOf('.')));
   }
 
