@@ -159,6 +159,26 @@ class Radar {
     return true;
   }
 
+  /**
+   * Check that the directory isn't blacklisted
+   * @param {String} name the directory name
+   * @param {String} relativePath Relative path to the directory from the original scan directory. should include the directory name
+   * @returns {Boolean}
+   */
+  _checkDirectory(name, relativePath = "") {
+    const nameLower = name.toLowerCase();
+    const relativePathLower = relativePath.toLowerCase();
+
+    if (this._isDirectoryWhitelisted(nameLower, relativePathLower)) {
+      return true;
+    }
+
+    if (this._isDirectoryBlacklisted(nameLower, relativePathLower)) {
+      return false;
+    }
+
+    return true;
+  }
 
   // TODO unit test these individual functions
   _isNameWhitelisted(name, relativePath) {
@@ -171,6 +191,31 @@ class Radar {
     return excludedFiles.includes(name) || excludedFiles.includes(relativePath);
   }
 
+  _isDirectoryWhitelisted(name, relativePath) {
+    const includedDirectories = this._config.getIncludedDirectories();
+    if (includedDirectories.includes(name) || includedDirectories.reduce((acc, dir) => acc || name.endsWith(dir), false)) {
+      return true;
+    }
+
+    const isRelativePathIncluded = includedDirectories.includes(relativePath) || includedDirectories.reduce((acc, includedDir) => (
+      acc || `${relativePath}/`.startsWith(`${includedDir}/`)
+    ), false);
+    return isRelativePathIncluded;
+  }
+
+  _isDirectoryBlacklisted(name, relativePath) {
+    const excludedDirectories = this._config.getExcludedDirectories();
+    const isDirectoryExcluded = excludedDirectories.includes(name) || excludedDirectories.reduce((acc, dir) => acc || name.endsWith(dir), false);
+    if (isDirectoryExcluded) {
+      return true;
+    }
+
+    const isRelativePathExcluded = excludedDirectories.includes(relativePath) || excludedDirectories.reduce((acc, excludedDir) => (
+      acc || `${relativePath}/`.startsWith(`${excludedDir}/`)
+    ), false);
+    return isRelativePathExcluded;
+  }
+
   _isExtensionWhitelisted(fileExt) {
     return this._config.getIncludedFileExts().reduce((acc, extension) => (
       acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
@@ -181,39 +226,6 @@ class Radar {
     return this._config.getExcludedFileExts().reduce((acc, extension) => (
       acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
     ), false)
-  }
-
-  /**
-   * Check that the directory isn't blacklisted
-   * @param {String} name
-   * @param {String} relativePath Relative path to the directory from the original scan directory
-   * @returns {Boolean}
-   */
-  _checkDirectory(name, relativePath = "") {
-    const nameLower = name.toLowerCase();
-    const relativePathLower = relativePath.toLowerCase();
-
-    const includedDirectories = this._config.getIncludedDirectories();
-    const isNameWhitelisted = includedDirectories.includes(nameLower) || includedDirectories.reduce((acc, dir) => acc || nameLower.endsWith(dir), false);
-    if (isNameWhitelisted) {
-      return true;
-    }
-
-    const excludedDirectories = this._config.getExcludedDirectories();
-    const isNameBlacklisted = excludedDirectories.includes(nameLower) || excludedDirectories.includes(relativePathLower)
-                              || excludedDirectories.reduce((acc, dir) => acc || nameLower.endsWith(dir), false);
-    if (isNameBlacklisted) {
-      return false;
-    }
-
-    const isRelativePathBlacklisted = excludedDirectories.reduce((acc, excludedDir) => (
-      acc || `${relativePathLower}/`.startsWith(`${excludedDir}/`)
-    ), false);
-    if (isRelativePathBlacklisted) {
-      return false;
-    }
-
-    return true;
   }
 
   /**

@@ -96,12 +96,28 @@ test("directory exclusion- relative paths", () => {
   let config = { excludedDirectories: ["nested/directory"] };
   let radar = new Radar(config);
   radar.basePath = "/root";
+  expect(radar._checkDirectory("directory", "nested/directory")).toBe(false);
   expect(radar._checkDirectory("test", "nested/directory/test")).toBe(false);
   expect(radar._checkDirectory("test", "nested/directory/test1/test2/test")).toBe(false);
 
+  expect(radar._checkDirectory("test", "nested/test")).toBe(true);
   expect(radar._checkDirectory("test", "nested/differentdirectory/test")).toBe(true);
   expect(radar._checkDirectory("test", "")).toBe(true);
   expect(radar._checkDirectory("test", "/")).toBe(true);
+
+  config = { includedDirectories: ["nested/directory"], excludedDirectories: ["nested/directory/two"] };
+  radar = new Radar(config);
+  expect(radar._checkDirectory("directory", "nested/directory")).toBe(true);
+  expect(radar._checkDirectory("one", "nested/directory/one")).toBe(true);
+  expect(radar._checkDirectory("two", "nested/directory/two")).toBe(true); // TODO this should probably be false
+  expect(radar._checkDirectory("twotwo", "nested/directory/twotwo")).toBe(true);
+
+  config = { includedDirectories: ["nested/directory/one"], excludedDirectories: ["nested/directory"] };
+  radar = new Radar(config);
+  expect(radar._checkDirectory("directory", "nested/directory")).toBe(false);
+  expect(radar._checkDirectory("one", "nested/directory/one")).toBe(true);
+  expect(radar._checkDirectory("two", "nested/directory/two")).toBe(false);
+  expect(radar._checkDirectory("twotwo", "nested/directory/twotwo")).toBe(false);
 });
 
 test("file size exclusion", () => {
