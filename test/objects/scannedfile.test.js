@@ -9,6 +9,7 @@ test('toObject- no secrets', () => {
     metadata: {
       size: 123,
       extension: "txt",
+      numLines: 0,
     },
     lines: [],
   });
@@ -17,6 +18,9 @@ test('toObject- no secrets', () => {
 test('toObject- with secrets', () => {
   const file = new File("test.txt", "/root", 123);
   const scannedFile = new ScannedFile(file);
+  for (let i = 0; i < 25; ++i) {
+    scannedFile.file().incrNumLines();
+  }
   scannedFile.addSecret("thisisasecret", "API Key", "text thisisasecret more text", 13);
   scannedFile.addSecret("anothersecret", "Auth URL", "hi anothersecret", 21);
 
@@ -24,6 +28,7 @@ test('toObject- with secrets', () => {
     metadata: {
       size: 123,
       extension: "txt",
+      numLines: 25,
     },
     lines: [
       {

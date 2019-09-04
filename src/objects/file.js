@@ -12,6 +12,7 @@ class File {
     this._size = size;
     this._extension = null;
     this._fullPath = null;
+    this._numLines = 0;
   }
 
   name() {
@@ -28,6 +29,14 @@ class File {
 
   size() {
     return this._size;
+  }
+
+  numLines() {
+    return this._numLines;
+  }
+
+  incrNumLines() {
+    this._numLines += 1;
   }
 
   extension() {

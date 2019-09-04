@@ -130,6 +130,7 @@ test("results map", () => {
         metadata: {
           size: 123,
           extension: "txt",
+          numLines: 0,
         },
         lines: [],
       },
@@ -137,6 +138,7 @@ test("results map", () => {
         metadata: {
           size: 456,
           extension: "ext",
+          numLines: 0,
         },
         lines: [],
       },

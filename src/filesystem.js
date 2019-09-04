@@ -59,6 +59,7 @@ class Filesystem {
 
         rl.on('line', async (line) => {
           ++lineNumber;
+          scannedFile.file().incrNumLines();
           const currLineNumber = lineNumber;
           onLineRead(scannedFile, line, currLineNumber);
         });
