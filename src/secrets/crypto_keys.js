@@ -16,6 +16,7 @@ class CryptoKeys extends Secret {
       return {
         secrets,
         tags: {},
+        metadata: {},
       };
     }
 
@@ -29,6 +30,7 @@ class CryptoKeys extends Secret {
       tags: {
         [tag]: isBeginBlock,
       },
+      metadata: {},
     };
   }
 

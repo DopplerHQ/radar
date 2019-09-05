@@ -32,6 +32,7 @@ class KnownAPIKeys extends Secret {
       return {
         secrets: [],
         services: [],
+        metadata: {},
       };
     }
 
