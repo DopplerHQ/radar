@@ -1,4 +1,5 @@
 const DefaultConfig = require('./dictionaries/config');
+const ExcludedFiletypes = require('../config/excluded_filetypes');
 
 /**
  * Determines the appropriate value given an optional value and a default value. Arrays will be merged.
@@ -44,6 +45,10 @@ class Config {
       excludedDirectories: DefaultConfig.excludedDirectories,
       excludedFileExts: DefaultConfig.excludedFileExts,
     };
+
+    Object.keys(ExcludedFiletypes).forEach(filetype => (
+      defaultConfig.excludedFileExts.push(...ExcludedFiletypes[filetype].map(f => f.toLowerCase()))
+    ));
 
     this.data = {
       secretTypes: getValue(config.secretTypes, defaultConfig.secretTypes),

@@ -3,7 +3,6 @@ const Path = require('path');
 const micromatch = require('micromatch');
 
 const Filesystem = require('./filesystem');
-const ExcludedFiletypes = require('../config/excluded_filetypes');
 const File = require('./objects/file');
 const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./Scanner');
@@ -22,13 +21,6 @@ class Radar {
    * @param {function} onFileScanned called whenever a file is scanned
    */
   constructor(config = {}, onFilesToScan = () => {}, onFileScanned = () => {}) {
-    if (config.excludedFileExts === undefined) {
-      config.excludedFileExts = [];
-    }
-    Object.keys(ExcludedFiletypes).forEach(filetype => (
-      config.excludedFileExts.push(...ExcludedFiletypes[filetype].map(f => f.toLowerCase()))
-    ));
-
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
