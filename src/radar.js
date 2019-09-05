@@ -47,13 +47,13 @@ class Radar {
    * @param {String} path
    */
   async scan(path) {
-    const stats = await Filesystem.getFileStats(path);
-
     await Filesystem.pathExists(path)
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
-    if (stats.isDirectory()) {
+    const stats = await Filesystem.getFileStats(path);
       this.basePath = path;
+
+    if (stats.isDirectory()) {
       const filesToScan = await this._getDirectoryFiles(path);
       this._onFilesToScan(filesToScan.length);
       return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
