@@ -69,6 +69,16 @@ class Radar {
   }
 
   /**
+   *
+   * @param {string} path
+   * @param {string} basePath
+   */
+  async shouldScanFile(path, basePath = "") {
+    const file = await Radar._getFileObject(path, basePath, 0);
+    return this._shouldScanFile(file);
+  }
+
+  /**
    * @param {String} path
    * @param {Array<File>} filesToScan array of files to scan
    */
