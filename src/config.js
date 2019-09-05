@@ -38,7 +38,7 @@ class Config {
       includedFiles: [],
       includedDirectories: [],
       includedFileExts: [],
-      excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock', 'go.sum'],
+      excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock', 'go.sum', 'certs.go'],
       excludedDirectories: ['**/.git', '**/node_modules', '**/.vscode', '**/.xcodeproj'],
       excludedFileExts: [],
     };
