@@ -62,3 +62,9 @@ test("array access", () => {
   expect(Filter.isMatch("test[1]")).toBe(true);
   expect(Filter.isMatch("test[1].test")).toBe(true);
 });
+
+test("group of alphanumerics", () => {
+  expect(Filter.isMatch("ABKAVQF-RUO4CYO-FSC2VIP-VRX4QDA-TQQRN2J-MRDXJUC-FXNWP6N-S6ZSAAR")).toBe(true);
+
+  expect(Filter.isMatch("ABKAVQF-RUO4CYO-FSC2VIP-VRX4QDA-TQQRN2J-MRDXJUC-FXNWP6N")).toBe(false);
+});

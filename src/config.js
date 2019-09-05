@@ -1,3 +1,6 @@
+const DefaultConfig = require('./dictionaries/config');
+const ExcludedFiletypes = require('../config/excluded_filetypes');
+
 /**
  * Determines the appropriate value given an optional value and a default value. Arrays will be merged.
  * @param {Any} value optional
@@ -20,6 +23,10 @@ const getValue = (value, defaultValue) => {
   return value;
 };
 
+const normalizeFile = (file) => {
+  return file.toLowerCase();
+};
+
 const normalizeDirectory = (directory) => {
   let lowercaseDirectory = directory.toLowerCase();
   // remove trailing slash, if any
@@ -29,30 +36,41 @@ const normalizeDirectory = (directory) => {
   return lowercaseDirectory;
 };
 
+const normalizeExtension = (extension) => {
+  const extLower = extension.toLowerCase();
+  return extLower.startsWith('.')
+    ? extLower
+    : `.${extLower}`;
+};
+
 class Config {
   constructor(config = {}) {
     const defaultConfig = {
-      secretTypes: [],
-      maxFileSizeMiB: 10,
-      maxConcurrentFileReads: 10,
-      includedFiles: [],
-      includedDirectories: [],
-      includedFileExts: [],
-      excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock', 'go.sum'],
-      excludedDirectories: ['.git', 'node_modules', '.vscode', '.xcodeproj'],
-      excludedFileExts: [],
+      secretTypes: DefaultConfig.secretTypes,
+      maxFileSizeMiB: DefaultConfig.maxFileSizeMiB,
+      maxConcurrentFileReads: DefaultConfig.maxConcurrentFileReads,
+      includedFiles: DefaultConfig.includedFiles,
+      includedDirectories: DefaultConfig.includedDirectories,
+      includedFileExts: DefaultConfig.includedFileExts,
+      excludedFiles: DefaultConfig.excludedFiles,
+      excludedDirectories: DefaultConfig.excludedDirectories,
+      excludedFileExts: DefaultConfig.excludedFileExts,
     };
+
+    Object.keys(ExcludedFiletypes).forEach(filetype => (
+      defaultConfig.excludedFileExts.push(...ExcludedFiletypes[filetype].map(f => f.toLowerCase()))
+    ));
 
     this.data = {
       secretTypes: getValue(config.secretTypes, defaultConfig.secretTypes),
       maxFileSizeMiB: getValue(config.maxFileSizeMiB, defaultConfig.maxFileSizeMiB),
       maxConcurrentFileReads: getValue(config.maxConcurrentFileReads, defaultConfig.maxConcurrentFileReads),
-      includedFiles: getValue(config.includedFiles, defaultConfig.includedFiles).map(ext => ext.toLowerCase()),
+      includedFiles: getValue(config.includedFiles, defaultConfig.includedFiles).map(normalizeFile),
       includedDirectories: getValue(config.includedDirectories, defaultConfig.includedDirectories).map(normalizeDirectory),
-      includedFileExts: getValue(config.includedFileExts, defaultConfig.includedFileExts).map(ext => ext.toLowerCase()),
-      excludedFiles: getValue(config.excludedFiles, defaultConfig.excludedFiles).map(ext => ext.toLowerCase()),
+      includedFileExts: getValue(config.includedFileExts, defaultConfig.includedFileExts).map(normalizeExtension),
+      excludedFiles: getValue(config.excludedFiles, defaultConfig.excludedFiles).map(normalizeFile),
       excludedDirectories: getValue(config.excludedDirectories, defaultConfig.excludedDirectories).map(normalizeDirectory),
-      excludedFileExts: getValue(config.excludedFileExts, defaultConfig.excludedFileExts).map(ext => ext.toLowerCase()),
+      excludedFileExts: getValue(config.excludedFileExts, defaultConfig.excludedFileExts).map(normalizeExtension),
     };
   }
 

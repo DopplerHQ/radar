@@ -73,6 +73,7 @@ class ScannedFile {
       metadata: {
         size: this._file.size(),
         extension: this._file.extension(),
+        numLines: this._file.numLines(),
       },
       lines: Object.keys(this._results).map((key) => {
         const value = this._results[key];

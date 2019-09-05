@@ -1,8 +1,8 @@
 const asyncPool = require("tiny-async-pool");
 const Path = require('path');
+const micromatch = require('micromatch');
 
 const Filesystem = require('./filesystem');
-const ExcludedFiletypes = require('../config/excluded_filetypes');
 const File = require('./objects/file');
 const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./Scanner');
@@ -10,6 +10,8 @@ const Config = require('./config');
 const FileClassifier = require('./file_classifier');
 
 const OneMebibyte = 1024 * 1024;
+
+const MicroMatchOptions = { nocase: true };
 
 class Radar {
   /**
@@ -19,13 +21,6 @@ class Radar {
    * @param {function} onFileScanned called whenever a file is scanned
    */
   constructor(config = {}, onFilesToScan = () => {}, onFileScanned = () => {}) {
-    if (config.excludedFileExts === undefined) {
-      config.excludedFileExts = [];
-    }
-    Object.keys(ExcludedFiletypes).forEach(filetype => (
-      config.excludedFileExts.push(...ExcludedFiletypes[filetype].map(f => f.toLowerCase()))
-    ));
-
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
@@ -139,7 +134,7 @@ class Radar {
    * @param {String} ext
    * @returns {Boolean} true if the file is ok, false if it's blacklisted
    */
-  _checkFileName(name, ext, relativePath) {
+  _checkFileName(name, ext, relativePath = "") {
     if (this._isNameWhitelisted(name, relativePath)) {
       return true;
     }
@@ -159,61 +154,58 @@ class Radar {
     return true;
   }
 
-
-  // TODO unit test these individual functions
-  _isNameWhitelisted(name, relativePath) {
-    const includedFiles = this._config.getIncludedFiles();
-    return includedFiles.includes(name) || includedFiles.includes(relativePath);
-  }
-
-  _isNameBlacklisted(name, relativePath) {
-    const excludedFiles = this._config.getExcludedFiles();
-    return excludedFiles.includes(name) || excludedFiles.includes(relativePath);
-  }
-
-  _isExtensionWhitelisted(fileExt) {
-    return this._config.getIncludedFileExts().reduce((acc, extension) => (
-      acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
-    ), false)
-  }
-
-  _isExtensionBlacklisted(fileExt) {
-    return this._config.getExcludedFileExts().reduce((acc, extension) => (
-      acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
-    ), false)
-  }
-
   /**
    * Check that the directory isn't blacklisted
-   * @param {String} name
-   * @param {String} relativePath Relative path to the directory from the original scan directory
+   * @param {String} name the directory name
+   * @param {String} relativePath Relative path to the directory from the original scan directory. should include the directory name
    * @returns {Boolean}
    */
   _checkDirectory(name, relativePath = "") {
     const nameLower = name.toLowerCase();
     const relativePathLower = relativePath.toLowerCase();
 
-    const includedDirectories = this._config.getIncludedDirectories();
-    const isNameWhitelisted = includedDirectories.includes(nameLower) || includedDirectories.reduce((acc, dir) => acc || nameLower.endsWith(dir), false);
-    if (isNameWhitelisted) {
+    if (this._isDirectoryWhitelisted(nameLower, relativePathLower)) {
       return true;
     }
 
-    const excludedDirectories = this._config.getExcludedDirectories();
-    const isNameBlacklisted = excludedDirectories.includes(nameLower) || excludedDirectories.includes(relativePathLower)
-                              || excludedDirectories.reduce((acc, dir) => acc || nameLower.endsWith(dir), false);
-    if (isNameBlacklisted) {
-      return false;
-    }
-
-    const isRelativePathBlacklisted = excludedDirectories.reduce((acc, excludedDir) => (
-      acc || `${relativePathLower}/`.startsWith(`${excludedDir}/`)
-    ), false);
-    if (isRelativePathBlacklisted) {
+    if (this._isDirectoryBlacklisted(nameLower, relativePathLower)) {
       return false;
     }
 
     return true;
+  }
+
+  // TODO unit test these individual functions
+  _isNameWhitelisted(name, relativePath) {
+    const includedFiles = this._config.getIncludedFiles();
+    return micromatch.isMatch(name, includedFiles, MicroMatchOptions) || micromatch.isMatch(relativePath, includedFiles, MicroMatchOptions);
+  }
+
+  _isNameBlacklisted(name, relativePath) {
+    const excludedFiles = this._config.getExcludedFiles();
+    return micromatch.isMatch(name, excludedFiles, MicroMatchOptions) || micromatch.isMatch(relativePath, excludedFiles, MicroMatchOptions);
+  }
+
+  _isDirectoryWhitelisted(name, relativePath) {
+    const includedDirectories = this._config.getIncludedDirectories();
+    return micromatch.isMatch(name, includedDirectories, MicroMatchOptions) || micromatch.isMatch(relativePath, includedDirectories, MicroMatchOptions);
+  }
+
+  _isDirectoryBlacklisted(name, relativePath) {
+    const excludedDirectories = this._config.getExcludedDirectories();
+    return micromatch.isMatch(name, excludedDirectories, MicroMatchOptions) || micromatch.isMatch(relativePath, excludedDirectories, MicroMatchOptions);
+  }
+
+  _isExtensionWhitelisted(fileExt) {
+    const ext = fileExt.startsWith('.') ? fileExt : `.${fileExt}`;
+    const includedFileExts = this._config.getIncludedFileExts();
+    return micromatch.isMatch(ext, includedFileExts, MicroMatchOptions);
+  }
+
+  _isExtensionBlacklisted(fileExt) {
+    const ext = fileExt.startsWith('.') ? fileExt : `.${fileExt}`;
+    const excludedFileExts = this._config.getExcludedFileExts();
+    return micromatch.isMatch(ext, excludedFileExts, MicroMatchOptions);
   }
 
   /**

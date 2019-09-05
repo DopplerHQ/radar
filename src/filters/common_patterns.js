@@ -15,6 +15,8 @@ class CommonPatterns extends Filter {
     // find variables ending with a number
     this.variableWithVersion = /^([a-z_]+(\.|:))+[a-z_]+(=|:)[0-9]+(\.[0-9]+)*$/i;
     this.arrayAccess = /\[[0-9]\]/;
+    // 8 groups of 7-character alphanumeric sequences (ABKAVQF-RUO4CYO-FSC2VIP-...)
+    this.groupOfAlphaNumeric = /(?:[a-z0-9]{7}-){7}[a-z0-9]{7}/i;
   }
 
   isMatch(term) {
@@ -26,7 +28,8 @@ class CommonPatterns extends Filter {
         || this.featureFlag.test(term)
         || this.variableCurlyBraces.test(term)
         || this.variableParentheses.test(term)
-        || this.variableWithVersion.test(term);
+        || this.variableWithVersion.test(term)
+        || this.groupOfAlphaNumeric.test(term);
   }
 }
 
