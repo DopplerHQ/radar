@@ -12,6 +12,8 @@ const FileClassifier = require('./file_classifier');
 
 const OneMebibyte = 1024 * 1024;
 
+const MicroMatchOptions = { nocase: true };
+
 class Radar {
   /**
    *
@@ -184,22 +186,22 @@ class Radar {
   // TODO unit test these individual functions
   _isNameWhitelisted(name, relativePath) {
     const includedFiles = this._config.getIncludedFiles();
-    return micromatch.isMatch(name, includedFiles) || micromatch.isMatch(relativePath, includedFiles)
+    return micromatch.isMatch(name, includedFiles, MicroMatchOptions) || micromatch.isMatch(relativePath, includedFiles, MicroMatchOptions);
   }
 
   _isNameBlacklisted(name, relativePath) {
     const excludedFiles = this._config.getExcludedFiles();
-    return micromatch.isMatch(name, excludedFiles) || micromatch.isMatch(relativePath, excludedFiles)
+    return micromatch.isMatch(name, excludedFiles, MicroMatchOptions) || micromatch.isMatch(relativePath, excludedFiles, MicroMatchOptions);
   }
 
   _isDirectoryWhitelisted(name, relativePath) {
     const includedDirectories = this._config.getIncludedDirectories();
-    return micromatch.isMatch(name, includedDirectories) || micromatch.isMatch(relativePath, includedDirectories);
+    return micromatch.isMatch(name, includedDirectories, MicroMatchOptions) || micromatch.isMatch(relativePath, includedDirectories, MicroMatchOptions);
   }
 
   _isDirectoryBlacklisted(name, relativePath) {
     const excludedDirectories = this._config.getExcludedDirectories();
-    return micromatch.isMatch(name, excludedDirectories) || micromatch.isMatch(relativePath, excludedDirectories);
+    return micromatch.isMatch(name, excludedDirectories, MicroMatchOptions) || micromatch.isMatch(relativePath, excludedDirectories, MicroMatchOptions);
   }
 
   _isExtensionWhitelisted(fileExt) {
