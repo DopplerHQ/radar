@@ -113,6 +113,9 @@ class Radar {
   static async _getFileObject(fullPath, basePath, fileSize) {
     const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
     const name = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+    if (basePath.endsWith(name)) {
+      basePath = path;
+    }
 
     if (fileSize === undefined) {
     const fileStats = await Filesystem.getFileStats(fullPath);
