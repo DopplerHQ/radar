@@ -19,6 +19,10 @@ class File {
     return this._name;
   }
 
+  path() {
+    return this._path;
+  }
+
   fullPath() {
     if (this._fullPath === null) {
       this._fullPath = path.join(this._path, this._name);
