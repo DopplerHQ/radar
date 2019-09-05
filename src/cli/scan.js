@@ -59,8 +59,8 @@ program
   .option("--exclude-files <list>", "File names to exclude (case-insensitive). See `doppler list defaults excludedFiles`)")
   .option("--include-dirs <list>", "Directory names to include (case-insensitive). Overrides excluded directories. See `doppler list defaults includedDirectories`")
   .option("--exclude-dirs <list>", "Directory names to exclude (case-insensitive). See `doppler list defaults excludedFiles`)")
-  .option("--include-file-exts <list>", "File extensions to include (case-insensitive). Overrides excluded file extenesions. See `doppler list defaults includedFileExts`")
-  .option("--exclude-file-exts <list>", "File extensions to exclude (case-insensitive). See `doppler list defaults excludedFileExts`)")
+  .option("--include-file-exts <list>", "File extensions to scan; overrides excluded file extensions. Case-insensitive. Example: `--include-file-exts \"txt,ini\"`. See excluded file extensions with `radar list defaults excludedFileExts`")
+  .option("--exclude-file-exts <list>", "File extensions to exclude. Case-insensitive. Example: `--exclude-file-exts \"test\"` to exclude files with an extension containing '.test' (e.g. 'file.test', 'file.test.js', 'file.js.test')")
   .option("--json", "Output results as json blob")
   .option("--no-progress", "Disable the progress bar")
   .action(async (...params) => {

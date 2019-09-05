@@ -59,6 +59,32 @@ test("file exclusion- all possible states", () => {
   expect(radar._checkFileName("badfile", "badext")).toBe(false);
 });
 
+test("file extensions", () => {
+  let radar = new Radar();
+  expect(radar._isExtensionWhitelisted("badext")).toBe(false);
+  expect(radar._isExtensionWhitelisted("badext.js")).toBe(false);
+  expect(radar._isExtensionWhitelisted("js.badext")).toBe(false);
+
+  expect(radar._isExtensionBlacklisted("badext")).toBe(false);
+  expect(radar._isExtensionBlacklisted("badext.js")).toBe(false);
+  expect(radar._isExtensionBlacklisted("js.badext")).toBe(false);
+
+  const config = { excludedFileExts: ["badext"] };
+  radar = new Radar(config);
+
+  expect(radar._isExtensionWhitelisted("badext")).toBe(false);
+  expect(radar._isExtensionWhitelisted("badext.js")).toBe(false);
+  expect(radar._isExtensionWhitelisted("js.badext")).toBe(false);
+
+  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
+  expect(radar._isExtensionBlacklisted("badext.js")).toBe(true);
+  expect(radar._isExtensionBlacklisted("js.badext")).toBe(true);
+
+  expect(radar._isExtensionBlacklisted("badext1")).toBe(false);
+  expect(radar._isExtensionBlacklisted("badext1.js")).toBe(false);
+  expect(radar._isExtensionBlacklisted("js.badext1")).toBe(false);
+});
+
 test("file exclusion- relative paths", () => {
   let config = { excludedFiles: ["nested/directory/testname.testext"] };
   let radar = new Radar(config);
