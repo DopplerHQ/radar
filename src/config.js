@@ -1,3 +1,5 @@
+const DefaultConfig = require('./dictionaries/config');
+
 /**
  * Determines the appropriate value given an optional value and a default value. Arrays will be merged.
  * @param {Any} value optional
@@ -32,15 +34,15 @@ const normalizeDirectory = (directory) => {
 class Config {
   constructor(config = {}) {
     const defaultConfig = {
-      secretTypes: [],
-      maxFileSizeMiB: 10,
-      maxConcurrentFileReads: 10,
-      includedFiles: [],
-      includedDirectories: [],
-      includedFileExts: [],
-      excludedFiles: ['package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock', 'go.sum', 'certs.go'],
-      excludedDirectories: ['**/.git', '**/node_modules', '**/.vscode', '**/.xcodeproj'],
-      excludedFileExts: [],
+      secretTypes: DefaultConfig.secretTypes,
+      maxFileSizeMiB: DefaultConfig.maxFileSizeMiB,
+      maxConcurrentFileReads: DefaultConfig.maxConcurrentFileReads,
+      includedFiles: DefaultConfig.includedFiles,
+      includedDirectories: DefaultConfig.includedDirectories,
+      includedFileExts: DefaultConfig.includedFileExts,
+      excludedFiles: DefaultConfig.excludedFiles,
+      excludedDirectories: DefaultConfig.excludedDirectories,
+      excludedFileExts: DefaultConfig.excludedFileExts,
     };
 
     this.data = {
