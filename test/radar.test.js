@@ -105,27 +105,37 @@ test("directory exclusion", () => {
 test("file extensions", () => {
   let radar = new Radar();
   expect(radar._isExtensionWhitelisted("badext")).toBe(false);
-  expect(radar._isExtensionWhitelisted("badext.js")).toBe(false);
-  expect(radar._isExtensionWhitelisted("js.badext")).toBe(false);
-
   expect(radar._isExtensionBlacklisted("badext")).toBe(false);
+
+  let config = { excludedFileExts: ["badext"] };
+  radar = new Radar(config);
+  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
   expect(radar._isExtensionBlacklisted("badext.js")).toBe(false);
   expect(radar._isExtensionBlacklisted("js.badext")).toBe(false);
 
-  const config = { excludedFileExts: ["badext"] };
+  config = { excludedFileExts: ["badext*"] };
   radar = new Radar(config);
-
-  expect(radar._isExtensionWhitelisted("badext")).toBe(false);
-  expect(radar._isExtensionWhitelisted("badext.js")).toBe(false);
-  expect(radar._isExtensionWhitelisted("js.badext")).toBe(false);
-
-  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
-  expect(radar._isExtensionBlacklisted("badext.js")).toBe(true);
-  expect(radar._isExtensionBlacklisted("js.badext")).toBe(true);
-
-  expect(radar._isExtensionBlacklisted("badext1")).toBe(false);
-  expect(radar._isExtensionBlacklisted("badext1.js")).toBe(false);
+  expect(radar._isExtensionBlacklisted("badext1")).toBe(true);
+  expect(radar._isExtensionBlacklisted("badext1.js")).toBe(true);
   expect(radar._isExtensionBlacklisted("js.badext1")).toBe(false);
+
+  config = { excludedFileExts: ["*badext*"] };
+  radar = new Radar(config);
+  expect(radar._isExtensionBlacklisted("badext1")).toBe(true);
+  expect(radar._isExtensionBlacklisted("badext1.js")).toBe(true);
+  expect(radar._isExtensionBlacklisted("js.badext1")).toBe(true);
+});
+
+test("file extension- leading period is unnecessary", () => {
+  let config = { excludedFileExts: ["badext"] };
+  let radar = new Radar(config);
+  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
+
+  config = { excludedFileExts: [".badext"] };
+  radar = new Radar(config);
+  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
 });
 
 test("file exclusion- relative paths", () => {

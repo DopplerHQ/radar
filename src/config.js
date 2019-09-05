@@ -23,6 +23,10 @@ const getValue = (value, defaultValue) => {
   return value;
 };
 
+const normalizeFile = (file) => {
+  return file.toLowerCase();
+};
+
 const normalizeDirectory = (directory) => {
   let lowercaseDirectory = directory.toLowerCase();
   // remove trailing slash, if any
@@ -30,6 +34,13 @@ const normalizeDirectory = (directory) => {
     lowercaseDirectory = lowercaseDirectory.slice(0, -1);
   }
   return lowercaseDirectory;
+};
+
+const normalizeExtension = (extension) => {
+  const extLower = extension.toLowerCase();
+  return extLower.startsWith('.')
+    ? extLower
+    : `.${extLower}`;
 };
 
 class Config {
@@ -54,12 +65,12 @@ class Config {
       secretTypes: getValue(config.secretTypes, defaultConfig.secretTypes),
       maxFileSizeMiB: getValue(config.maxFileSizeMiB, defaultConfig.maxFileSizeMiB),
       maxConcurrentFileReads: getValue(config.maxConcurrentFileReads, defaultConfig.maxConcurrentFileReads),
-      includedFiles: getValue(config.includedFiles, defaultConfig.includedFiles).map(ext => ext.toLowerCase()),
+      includedFiles: getValue(config.includedFiles, defaultConfig.includedFiles).map(normalizeFile),
       includedDirectories: getValue(config.includedDirectories, defaultConfig.includedDirectories).map(normalizeDirectory),
-      includedFileExts: getValue(config.includedFileExts, defaultConfig.includedFileExts).map(ext => ext.toLowerCase()),
-      excludedFiles: getValue(config.excludedFiles, defaultConfig.excludedFiles).map(ext => ext.toLowerCase()),
+      includedFileExts: getValue(config.includedFileExts, defaultConfig.includedFileExts).map(normalizeExtension),
+      excludedFiles: getValue(config.excludedFiles, defaultConfig.excludedFiles).map(normalizeFile),
       excludedDirectories: getValue(config.excludedDirectories, defaultConfig.excludedDirectories).map(normalizeDirectory),
-      excludedFileExts: getValue(config.excludedFileExts, defaultConfig.excludedFileExts).map(ext => ext.toLowerCase()),
+      excludedFileExts: getValue(config.excludedFileExts, defaultConfig.excludedFileExts).map(normalizeExtension),
     };
   }
 

@@ -59,8 +59,8 @@ program
   .option("--exclude-files <list>", "File names to exclude. Supports globs. Case-insensitive. Example: `--exclude-files \"test.*\"` to exclude all files named 'test' with any extension")
   .option("--include-dirs <list>", "Directory names to scan; overrides excluded directories. Supports globs. Case-insensitive. Example: `--include-dirs \"node_modules\"` to include 'node_modules' within the root directory. See excluded directories with `radar list defaults excludedDirectories`")
   .option("--exclude-dirs <list>", "Directory names to exclude. Supports globs. Case-insensitive. Example: `--exclude-dirs \"**/node_modules\"` to exclude the 'node_modules' directory located in the root and any subdirectory (also excludes all of 'node_modules''s files and subdirectories)")
-  .option("--include-file-exts <list>", "File extensions to scan; overrides excluded file extensions. Case-insensitive. Example: `--include-file-exts \"txt,ini\"`. See excluded file extensions with `radar list defaults excludedFileExts`")
-  .option("--exclude-file-exts <list>", "File extensions to exclude. Case-insensitive. Example: `--exclude-file-exts \"test\"` to exclude files with an extension containing '.test' (e.g. 'file.test', 'file.test.js', 'file.js.test')")
+  .option("--include-file-exts <list>", "File extensions to scan; overrides excluded file extensions. Supports globs. Case-insensitive. Example: `--include-file-exts \"txt,ini\"`. See excluded file extensions with `radar list defaults excludedFileExts`")
+  .option("--exclude-file-exts <list>", "File extensions to exclude. Supports globs. Case-insensitive. Example: `--exclude-file-exts \"*test*\"` to exclude any file with an extension containing 'test' (e.g. 'file.test', 'file.test.js', 'file.js.test')")
   .option("--json", "Output results as json blob")
   .option("--no-progress", "Disable the progress bar")
   .action(async (...params) => {

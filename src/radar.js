@@ -198,16 +198,14 @@ class Radar {
 
   _isExtensionWhitelisted(fileExt) {
     const ext = fileExt.startsWith('.') ? fileExt : `.${fileExt}`;
-    return this._config.getIncludedFileExts().reduce((acc, includedExt) => (
-      acc || ext === includedExt || ext.endsWith(`.${includedExt}`) || ext.includes(`.${includedExt}.`)
-    ), false)
+    const includedFileExts = this._config.getIncludedFileExts();
+    return micromatch.isMatch(ext, includedFileExts, MicroMatchOptions);
   }
 
   _isExtensionBlacklisted(fileExt) {
     const ext = fileExt.startsWith('.') ? fileExt : `.${fileExt}`;
-    return this._config.getExcludedFileExts().reduce((acc, excludedExt) => (
-      acc || ext === excludedExt || ext.endsWith(`.${excludedExt}`) || ext.includes(`.${excludedExt}.`)
-    ), false)
+    const excludedFileExts = this._config.getExcludedFileExts();
+    return micromatch.isMatch(ext, excludedFileExts, MicroMatchOptions);
   }
 
   /**
