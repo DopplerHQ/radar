@@ -1,5 +1,6 @@
 const asyncPool = require("tiny-async-pool");
 const Path = require('path');
+const micromatch = require('micromatch');
 
 const Filesystem = require('./filesystem');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
@@ -139,7 +140,7 @@ class Radar {
    * @param {String} ext
    * @returns {Boolean} true if the file is ok, false if it's blacklisted
    */
-  _checkFileName(name, ext, relativePath) {
+  _checkFileName(name, ext, relativePath = "") {
     if (this._isNameWhitelisted(name, relativePath)) {
       return true;
     }
@@ -183,37 +184,22 @@ class Radar {
   // TODO unit test these individual functions
   _isNameWhitelisted(name, relativePath) {
     const includedFiles = this._config.getIncludedFiles();
-    return includedFiles.includes(name) || includedFiles.includes(relativePath);
+    return micromatch.isMatch(name, includedFiles) || micromatch.isMatch(relativePath, includedFiles)
   }
 
   _isNameBlacklisted(name, relativePath) {
     const excludedFiles = this._config.getExcludedFiles();
-    return excludedFiles.includes(name) || excludedFiles.includes(relativePath);
+    return micromatch.isMatch(name, excludedFiles) || micromatch.isMatch(relativePath, excludedFiles)
   }
 
   _isDirectoryWhitelisted(name, relativePath) {
     const includedDirectories = this._config.getIncludedDirectories();
-    if (includedDirectories.includes(name) || includedDirectories.reduce((acc, dir) => acc || name.endsWith(dir), false)) {
-      return true;
-    }
-
-    const isRelativePathIncluded = includedDirectories.includes(relativePath) || includedDirectories.reduce((acc, includedDir) => (
-      acc || `${relativePath}/`.startsWith(`${includedDir}/`)
-    ), false);
-    return isRelativePathIncluded;
+    return micromatch.isMatch(name, includedDirectories) || micromatch.isMatch(relativePath, includedDirectories);
   }
 
   _isDirectoryBlacklisted(name, relativePath) {
     const excludedDirectories = this._config.getExcludedDirectories();
-    const isDirectoryExcluded = excludedDirectories.includes(name) || excludedDirectories.reduce((acc, dir) => acc || name.endsWith(dir), false);
-    if (isDirectoryExcluded) {
-      return true;
-    }
-
-    const isRelativePathExcluded = excludedDirectories.includes(relativePath) || excludedDirectories.reduce((acc, excludedDir) => (
-      acc || `${relativePath}/`.startsWith(`${excludedDir}/`)
-    ), false);
-    return isRelativePathExcluded;
+    return micromatch.isMatch(name, excludedDirectories) || micromatch.isMatch(relativePath, excludedDirectories);
   }
 
   _isExtensionWhitelisted(fileExt) {
