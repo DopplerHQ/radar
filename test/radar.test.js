@@ -212,8 +212,8 @@ test("file size exclusion", () => {
 
 test("results map", () => {
   const path = "/root"
-  const scannedFile1 = new ScannedFile(new File("test.txt", path, 123));
-  const scannedFile2 = new ScannedFile(new File("anothertest.ext", path, 456));
+  const scannedFile1 = new ScannedFile(new File("test.txt", path, path, 123));
+  const scannedFile2 = new ScannedFile(new File("anothertest.ext", path, path, 456));
   const scanResults = [scannedFile1, scannedFile2];
 
   expect(Radar._getResultsMap(path, scanResults)).toStrictEqual(

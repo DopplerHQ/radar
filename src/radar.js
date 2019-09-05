@@ -51,7 +51,7 @@ class Radar {
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
     const stats = await Filesystem.getFileStats(path);
-      this.basePath = path;
+    this.basePath = path;
 
     if (stats.isDirectory()) {
       const filesToScan = await this._getDirectoryFiles(path);
@@ -62,7 +62,7 @@ class Radar {
 
     if (stats.isFile()) {
       this._onFilesToScan(1);
-      const file = await this._getFileObject(path);
+      const file = await Radar._getFileObject(path, this.basePath);
       return this._scanFile(file)
         .then(results => Radar._getResultsMap(file.path(), [results].filter(result => result.hasSecrets())));
     }
@@ -78,13 +78,12 @@ class Radar {
     for (const entry of dirEntries) {
       const entryPath = Path.join(path, entry.name);
 
-      const relativePath = Filesystem.getRelativePath(entryPath, this.basePath);
-      if (entry.isDirectory() && this._checkDirectory(entry.name, relativePath)) {
+      const file = await Radar._getFileObject(entryPath, this.basePath);
+      if (entry.isDirectory() && this._checkDirectory(entry.name, file.relativePath())) {
         await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
       if (entry.isFile()) {
-        const file = await this._getFileObject(entryPath);
         if (this._shouldScanFile(file)) {
           filesToScan.push(file);
         }
@@ -96,16 +95,21 @@ class Radar {
 
   /**
    *
-   * @param {String} fullPath
+   * @param {string} fullPath
+   * @param {string} basePath
+   * @param {number} fileSize will be calculated if undefined
    * @returns {File}
    */
-  async _getFileObject(fullPath) {
+  static async _getFileObject(fullPath, basePath, fileSize) {
     const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
     const name = fullPath.substring(fullPath.lastIndexOf('/') + 1);
 
+    if (fileSize === undefined) {
     const fileStats = await Filesystem.getFileStats(fullPath);
-    const fileSize = fileStats.size;
-    return new File(name, path, fileSize);
+      fileSize = fileStats.size;
+    }
+
+    return new File(name, path, basePath, fileSize);
   }
 
   /**
@@ -117,9 +121,8 @@ class Radar {
     const name = file.name().toLowerCase();
     const size = file.size();
     const ext = file.extension().toLowerCase();
-    const path = file.fullPath();
+    const relativePath = file.relativePath();
 
-    const relativePath = Filesystem.getRelativePath(path, this.basePath);
     return this._checkFileName(name, ext, relativePath) && this._checkFileSize(size);
   }
 
@@ -248,7 +251,7 @@ class Radar {
   static _getResultsMap(path, scanResults) {
     const results = {};
     scanResults.forEach((scannedFile) => {
-      const relativePath = Filesystem.getRelativePath(scannedFile.file().fullPath(), path);
+      const relativePath = scannedFile.file().relativePath();
       results[relativePath] = scannedFile.toObject();
     });
     return results;

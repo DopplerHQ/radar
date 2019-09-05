@@ -35,3 +35,66 @@ test('full path', () => {
   const file3 = new File("test.txt", "/a/lot/of/sub/dirs");
   expect(file3.fullPath()).toStrictEqual("/a/lot/of/sub/dirs/test.txt");
 });
+
+test('relative path', () => {
+  let file = new File("test.txt", "/root/dir/src", "/root/dir");
+  expect(file.relativePath()).toStrictEqual("src/test.txt");
+
+  file = new File("test.txt", "/root/dir/src/", "/root/dir");
+  expect(file.relativePath()).toStrictEqual("src/test.txt");
+});
+
+test("relative path - no trailing slash", () => {
+  const path = "/root/dir";
+
+  let file = new File("test.txt", path, path);
+  expect(file.relativePath()).toStrictEqual("test.txt");
+
+  file = new File("test.txt", `${path}/dir2`, path);
+  expect(file.relativePath()).toStrictEqual("dir2/test.txt");
+
+  file = new File("test.txt", `${path}/dir3/dir4`, path);
+  expect(file.relativePath()).toStrictEqual("dir3/dir4/test.txt");
+
+  file = new File("test.txt", `${path}/dir3/dir4`, `${path}/dir3`);
+  expect(file.relativePath()).toStrictEqual("dir4/test.txt");
+});
+
+test("relative path - trailing slash(es)", () => {
+  const path = "/root/dir////";
+
+  let file = new File("test.txt", path, path);
+  expect(file.relativePath()).toStrictEqual("test.txt");
+
+  file = new File("test.txt", `${path}/dir2`, path);
+  expect(file.relativePath()).toStrictEqual("dir2/test.txt");
+
+  file = new File("test.txt", `${path}/dir3/dir4`, path);
+  expect(file.relativePath()).toStrictEqual("dir3/dir4/test.txt");
+
+  file = new File("test.txt", `${path}/dir3/dir4`, `${path}/dir3`);
+  expect(file.relativePath()).toStrictEqual("dir4/test.txt");
+});
+
+test("relative path - edge cases", () => {
+  let file = new File("README.md", "", "");
+  expect(file.relativePath()).toStrictEqual("README.md");
+
+  file = new File("README.md", ".", ".");
+  expect(file.relativePath()).toStrictEqual("README.md");
+
+  file = new File("README.md", "./", "./");
+  expect(file.relativePath()).toStrictEqual("README.md");
+
+  file = new File("./README.md", "./", "./");
+  expect(file.relativePath()).toStrictEqual("README.md");
+
+  file = new File("./README.md", ".", ".");
+  expect(file.relativePath()).toStrictEqual("README.md");
+
+  file = new File("test/README.md", ".", ".");
+  expect(file.relativePath()).toStrictEqual("test/README.md");
+
+  file = new File("test/README.md", "./", "./");
+  expect(file.relativePath()).toStrictEqual("test/README.md");
+});
