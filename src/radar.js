@@ -118,7 +118,7 @@ class Radar {
     }
 
     if (fileSize === undefined) {
-    const fileStats = await Filesystem.getFileStats(fullPath);
+      const fileStats = await Filesystem.getFileStats(fullPath);
       fileSize = fileStats.size;
     }
 
