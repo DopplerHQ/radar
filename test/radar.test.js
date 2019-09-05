@@ -185,17 +185,19 @@ test("directory exclusion- relative paths", () => {
 });
 
 test("file size exclusion", () => {
-  // passing name, passing ext
+  const oneMiB = 1048576;
   let config = { maxFileSizeMiB: 1 };
-  const radar1 = new Radar(config);
-  expect(radar1._checkFileSize(1048575)).toBe(true);
-  expect(radar1._checkFileSize(1048576)).toBe(true);
-  expect(radar1._checkFileSize(1048577)).toBe(false);
+  let radar = new Radar(config);
+  expect(radar._checkFileSize(oneMiB - 1)).toBe(true);
+  expect(radar._checkFileSize(oneMiB)).toBe(true);
+  expect(radar._checkFileSize(oneMiB + 1)).toBe(false);
 
-  const radar2 = new Radar();
-  expect(radar2._checkFileSize(10485759)).toBe(true);
-  expect(radar2._checkFileSize(10485760)).toBe(true);
-  expect(radar2._checkFileSize(10485761)).toBe(false);
+  const tenMiB = oneMiB * 10;
+  config = { maxFileSizeMiB: 10 };
+  radar = new Radar(config);
+  expect(radar._checkFileSize(tenMiB - 1)).toBe(true);
+  expect(radar._checkFileSize(tenMiB)).toBe(true);
+  expect(radar._checkFileSize(tenMiB + 1)).toBe(false);
 });
 
 test("results map", () => {
