@@ -21,8 +21,16 @@ class Dictionary extends Filter {
         this.customDictionaryMap[word.toLowerCase()] = true;
       }
     });
+
     Object.keys(ExcludedFiletypes).forEach((type) => {
       ExcludedFiletypes[type].forEach((fileExt) => {
+        if (fileExt.startsWith("*.")) {
+          fileExt = fileExt.substring(2);
+        }
+        else if (fileExt.startsWith('.')) {
+          fileExt = fileExt.substring(1);
+        }
+
         if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
           this.customDictionaryMap[fileExt.toLowerCase()] = true;
         }
@@ -30,6 +38,13 @@ class Dictionary extends Filter {
     });
     Object.keys(IncludedFiletypes).forEach((type) => {
       IncludedFiletypes[type].forEach((fileExt) => {
+        if (fileExt.startsWith("*.")) {
+          fileExt = fileExt.substring(2);
+        }
+        else if (fileExt.startsWith('.')) {
+          fileExt = fileExt.substring(1);
+        }
+
         if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
           this.customDictionaryMap[fileExt.toLowerCase()] = true;
         }

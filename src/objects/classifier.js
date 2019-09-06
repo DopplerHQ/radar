@@ -1,4 +1,7 @@
+const micromatch = require('micromatch');
 const FileTags = require('./file_tags');
+
+const MicroMatchOptions = { nocase: true };
 
 class Classifier {
   /**
@@ -20,9 +23,7 @@ class Classifier {
   }
 
   isMatch(fileName, fileExt) {
-    return this._extensions.reduce((acc, extension) => (
-      acc || fileExt === extension || fileExt.endsWith(`.${extension}`)
-    ), false)
+    return micromatch.isMatch(fileExt, this._extensions, MicroMatchOptions)
   }
 }
 

@@ -4,7 +4,7 @@ const FileTags = require('../objects/file_tags');
 class EnvFile extends Classifier {
   constructor() {
     const tag = FileTags.ENV_FILE;
-    const extensions = ['env'];
+    const extensions = ['*.env'];
 
     super(tag, extensions);
   }
