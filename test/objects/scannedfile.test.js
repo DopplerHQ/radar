@@ -2,7 +2,7 @@ const File = require('../../src/objects/file');
 const ScannedFile = require('../../src/objects/scannedfile');
 
 test('toObject- no secrets', () => {
-  const file = new File("test.txt", "/root", 123);
+  const file = new File("test.txt", "/root", "", 123);
   const scannedFile = new ScannedFile(file);
 
   expect(scannedFile.toObject()).toStrictEqual({
@@ -16,7 +16,7 @@ test('toObject- no secrets', () => {
 });
 
 test('toObject- with secrets', () => {
-  const file = new File("test.txt", "/root", 123);
+  const file = new File("test.txt", "/root", "", 123);
   const scannedFile = new ScannedFile(file);
   for (let i = 0; i < 25; ++i) {
     scannedFile.file().incrNumLines();
@@ -58,7 +58,7 @@ test('toObject- with secrets', () => {
 });
 
 test('hasSecrets', () => {
-  const file = new File("test.txt", "/root", 123);
+  const file = new File("test.txt", "/root", "", 123);
 
   const scannedFile = new ScannedFile(file);
   expect(scannedFile.hasSecrets()).toStrictEqual(false);

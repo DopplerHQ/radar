@@ -47,13 +47,13 @@ class Radar {
    * @param {String} path
    */
   async scan(path) {
-    const stats = await Filesystem.getFileStats(path);
-
     await Filesystem.pathExists(path)
       .then(exists => (!exists && Promise.reject(`Path does not exist: ${path}`)));
 
+    const stats = await Filesystem.getFileStats(path);
+    this.basePath = path;
+
     if (stats.isDirectory()) {
-      this.basePath = path;
       const filesToScan = await this._getDirectoryFiles(path);
       this._onFilesToScan(filesToScan.length);
       return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
@@ -62,12 +62,20 @@ class Radar {
 
     if (stats.isFile()) {
       this._onFilesToScan(1);
-      const fileName = path.substring(path.lastIndexOf('/') + 1);
-      const filePath = path.substring(0, path.lastIndexOf('/'));
-      return this._getFileObject(filePath, fileName)
-        .then(this._scanFile)
-        .then(results => Radar._getResultsMap(filePath, [results].filter(result => result.hasSecrets())));
+      const file = await Radar._getFileObject(path, this.basePath);
+      return this._scanFile(file)
+        .then(results => Radar._getResultsMap(file.path(), [results].filter(result => result.hasSecrets())));
     }
+  }
+
+  /**
+   *
+   * @param {string} path
+   * @param {string} basePath
+   */
+  async shouldScanFile(path, basePath = "") {
+    const file = await Radar._getFileObject(path, basePath, 0);
+    return this._shouldScanFile(file);
   }
 
   /**
@@ -80,13 +88,12 @@ class Radar {
     for (const entry of dirEntries) {
       const entryPath = Path.join(path, entry.name);
 
-      const relativePath = Filesystem.getRelativePath(entryPath, this.basePath);
-      if (entry.isDirectory() && this._checkDirectory(entry.name, relativePath)) {
+      const file = await Radar._getFileObject(entryPath, this.basePath);
+      if (entry.isDirectory() && this._checkDirectory(entry.name, file.relativePath())) {
         await this._getDirectoryFiles(entryPath, filesToScan);
       }
 
       if (entry.isFile()) {
-        const file = await this._getFileObject(path, entry.name);
         if (this._shouldScanFile(file)) {
           filesToScan.push(file);
         }
@@ -98,15 +105,24 @@ class Radar {
 
   /**
    *
-   * @param {String} path
-   * @param {String} name
+   * @param {string} fullPath
+   * @param {string} basePath
+   * @param {number} fileSize will be calculated if undefined
    * @returns {File}
    */
-  async _getFileObject(path, name) {
-    const fullPath = Path.join(path, name);
-    const fileStats = await Filesystem.getFileStats(fullPath);
-    const fileSize = fileStats.size;
-    return new File(name, path, fileSize);
+  static async _getFileObject(fullPath, basePath, fileSize) {
+    const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+    const name = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+    if (basePath.endsWith(name)) {
+      basePath = path;
+    }
+
+    if (fileSize === undefined) {
+      const fileStats = await Filesystem.getFileStats(fullPath);
+      fileSize = fileStats.size;
+    }
+
+    return new File(name, path, basePath, fileSize);
   }
 
   /**
@@ -118,14 +134,9 @@ class Radar {
     const name = file.name().toLowerCase();
     const size = file.size();
     const ext = file.extension().toLowerCase();
-    const path = file.fullPath();
+    const relativePath = file.relativePath();
 
-    const relativePath = Filesystem.getRelativePath(path, this.basePath);
-    if (this._checkFileName(name, ext, relativePath) && this._checkFileSize(size)) {
-      return true;
-    }
-
-    return false;
+    return this._checkFileName(name, ext, relativePath) && this._checkFileSize(size);
   }
 
   /**
@@ -253,7 +264,7 @@ class Radar {
   static _getResultsMap(path, scanResults) {
     const results = {};
     scanResults.forEach((scannedFile) => {
-      const relativePath = Filesystem.getRelativePath(scannedFile.file().fullPath(), path);
+      const relativePath = scannedFile.file().relativePath();
       results[relativePath] = scannedFile.toObject();
     });
     return results;

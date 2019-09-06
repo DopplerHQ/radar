@@ -87,24 +87,6 @@ class Filesystem {
       });
     });
   }
-
-  /**
-   *
-   * @param {String} path
-   * @param {String} basePath
-   * @returns {String}
-   */
-  static getRelativePath(path, basePath) {
-    if (!path.includes('/') || !basePath.includes('/') || !path.startsWith(basePath)) {
-      return path;
-    }
-
-    let relativePath = path.substring(basePath.length);
-    while (relativePath.startsWith('/')) {
-      relativePath = relativePath.substring(1);
-    }
-    return relativePath;
-  }
 }
 
 module.exports = Filesystem;
