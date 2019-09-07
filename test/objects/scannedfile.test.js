@@ -8,7 +8,7 @@ test('toObject- no secrets', () => {
   expect(scannedFile.toObject()).toStrictEqual({
     metadata: {
       size: 123,
-      extension: "txt",
+      extension: ".txt",
       numLines: 0,
     },
     lines: [],
@@ -27,7 +27,7 @@ test('toObject- with secrets', () => {
   expect(scannedFile.toObject()).toStrictEqual({
     metadata: {
       size: 123,
-      extension: "txt",
+      extension: ".txt",
       numLines: 25,
     },
     lines: [

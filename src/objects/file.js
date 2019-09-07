@@ -81,7 +81,7 @@ class File {
           return '';
         }
 
-        return this._name.substring(firstPeriod + 1);
+        return this._name.substring(firstPeriod);
       })();
     }
 

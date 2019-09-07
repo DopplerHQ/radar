@@ -37,10 +37,7 @@ const normalizeDirectory = (directory) => {
 };
 
 const normalizeExtension = (extension) => {
-  const extLower = extension.toLowerCase();
-  return extLower.startsWith('.')
-    ? extLower
-    : `.${extLower}`;
+  return extension.toLowerCase();
 };
 
 class Config {

@@ -208,15 +208,13 @@ class Radar {
   }
 
   _isExtensionWhitelisted(fileExt) {
-    const ext = fileExt.startsWith('.') ? fileExt : `.${fileExt}`;
     const includedFileExts = this._config.getIncludedFileExts();
-    return micromatch.isMatch(ext, includedFileExts, MicroMatchOptions);
+    return micromatch.isMatch(fileExt, includedFileExts, MicroMatchOptions);
   }
 
   _isExtensionBlacklisted(fileExt) {
-    const ext = fileExt.startsWith('.') ? fileExt : `.${fileExt}`;
     const excludedFileExts = this._config.getExcludedFileExts();
-    return micromatch.isMatch(ext, excludedFileExts, MicroMatchOptions);
+    return micromatch.isMatch(fileExt, excludedFileExts, MicroMatchOptions);
   }
 
   /**
