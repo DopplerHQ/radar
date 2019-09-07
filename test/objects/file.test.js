@@ -2,22 +2,22 @@ const File = require('../../src/objects/file');
 
 test('extension', () => {
   const file1 = new File("test.txt");
-  expect(file1.extension()).toStrictEqual("txt");
+  expect(file1.extension()).toStrictEqual(".txt");
 
   const file2 = new File("index.min.js");
-  expect(file2.extension()).toStrictEqual("min.js");
+  expect(file2.extension()).toStrictEqual(".min.js");
 
   const file3 = new File("indexmin.js");
-  expect(file3.extension()).toStrictEqual("js");
+  expect(file3.extension()).toStrictEqual(".js");
 
   const file4 = new File("master.tar.gz");
-  expect(file4.extension()).toStrictEqual("tar.gz");
+  expect(file4.extension()).toStrictEqual(".tar.gz");
 
   const file5 = new File("test.crt.json");
-  expect(file5.extension()).toStrictEqual("crt.json");
+  expect(file5.extension()).toStrictEqual(".crt.json");
 
   const file6 = new File("test.test1.test2.test3");
-  expect(file6.extension()).toStrictEqual("test1.test2.test3");
+  expect(file6.extension()).toStrictEqual(".test1.test2.test3");
 });
 
 test('no extension', () => {

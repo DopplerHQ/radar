@@ -4,7 +4,7 @@ const FileTags = require('../objects/file_tags');
 class ReadMe extends Classifier {
   constructor() {
     const tag = FileTags.README;
-    const extensions = ['*.md'];
+    const extensions = ['(|*).md'];
 
     super(tag, extensions);
   }
