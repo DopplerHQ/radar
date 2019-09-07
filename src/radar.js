@@ -1,6 +1,5 @@
 const asyncPool = require("tiny-async-pool");
 const Path = require('path');
-const micromatch = require('micromatch');
 
 const Filesystem = require('./filesystem');
 const File = require('./objects/file');
@@ -8,10 +7,9 @@ const ScannedFile = require('./objects/scannedfile');
 const Scanner = require('./Scanner');
 const Config = require('./config');
 const FileClassifier = require('./file_classifier');
+const globs = require('./globs');
 
 const OneMebibyte = 1024 * 1024;
-
-const MicroMatchOptions = { nocase: true };
 
 class Radar {
   /**
@@ -189,32 +187,32 @@ class Radar {
   // TODO unit test these individual functions
   _isNameWhitelisted(name, relativePath) {
     const includedFiles = this._config.getIncludedFiles();
-    return micromatch.isMatch(name, includedFiles, MicroMatchOptions) || micromatch.isMatch(relativePath, includedFiles, MicroMatchOptions);
+    return globs.isMatch(name, includedFiles) || globs.isMatch(relativePath, includedFiles);
   }
 
   _isNameBlacklisted(name, relativePath) {
     const excludedFiles = this._config.getExcludedFiles();
-    return micromatch.isMatch(name, excludedFiles, MicroMatchOptions) || micromatch.isMatch(relativePath, excludedFiles, MicroMatchOptions);
+    return globs.isMatch(name, excludedFiles) || globs.isMatch(relativePath, excludedFiles);
   }
 
   _isDirectoryWhitelisted(name, relativePath) {
     const includedDirectories = this._config.getIncludedDirectories();
-    return micromatch.isMatch(name, includedDirectories, MicroMatchOptions) || micromatch.isMatch(relativePath, includedDirectories, MicroMatchOptions);
+    return globs.isMatch(name, includedDirectories) || globs.isMatch(relativePath, includedDirectories);
   }
 
   _isDirectoryBlacklisted(name, relativePath) {
     const excludedDirectories = this._config.getExcludedDirectories();
-    return micromatch.isMatch(name, excludedDirectories, MicroMatchOptions) || micromatch.isMatch(relativePath, excludedDirectories, MicroMatchOptions);
+    return globs.isMatch(name, excludedDirectories) || globs.isMatch(relativePath, excludedDirectories);
   }
 
-  _isExtensionWhitelisted(fileExt) {
+  _isExtensionWhitelisted(ext) {
     const includedFileExts = this._config.getIncludedFileExts();
-    return micromatch.isMatch(fileExt, includedFileExts, MicroMatchOptions);
+    return globs.isMatch(ext, includedFileExts);
   }
 
-  _isExtensionBlacklisted(fileExt) {
+  _isExtensionBlacklisted(ext) {
     const excludedFileExts = this._config.getExcludedFileExts();
-    return micromatch.isMatch(fileExt, excludedFileExts, MicroMatchOptions);
+    return globs.isMatch(ext, excludedFileExts);
   }
 
   /**
