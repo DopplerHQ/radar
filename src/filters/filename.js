@@ -1,10 +1,7 @@
-const micromatch = require('micromatch');
-
+const globs = require('../globs');
 const Filter = require('../objects/Filter');
 const ExcludedFiletypes = require('../../config/excluded_filetypes');
 const IncludedFiletypes = require('../../config/included_filetypes');
-
-const MicroMatchOptions = { nocase: true };
 
 class FileName extends Filter {
   constructor() {
@@ -49,7 +46,7 @@ class FileName extends Filter {
       return false;
     }
 
-    return micromatch.isMatch(possibleFileExtension, this.fileExtensions, MicroMatchOptions)
+    return globs.isMatch(possibleFileExtension, this.fileExtensions)
   }
 }
 

@@ -15,6 +15,7 @@
   "excludedDirectories": [
     "**/.git",
     "**/node_modules",
+    "**/bower_components",
     "**/.vscode",
     "**/.xcodeproj"
   ],

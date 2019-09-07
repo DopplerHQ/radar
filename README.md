@@ -34,14 +34,14 @@ Scan a file, directory, or remote git repo for secrets
 
 Options:
   -b, --branch <name>         Scan the git branch (specified path must be a git url)
-  --secret-types <list>       Secret types to scan for (e.g. "crypto_keys, auth_urls")
-  --max-file-size <MiB>       Maximum size of files to scan
-  --include-files <list>      File names to include, case-insensitive (overrides excluded files)
-  --exclude-files <list>      File names to exclude, case-insensitive (e.g. "package.json, CHANGELOG.md, src/test.js")
-  --include-dirs <list>       Directory names to include, case-insensitive (overrides excluded directories)
-  --exclude-dirs <list>       Directory names to exclude, case-insensitive (e.g. "test, e2e")
-  --include-file-exts <list>  File extensions to include, case-insensitive (overrides excluded file extensions)
-  --exclude-file-exts <list>  File extensions to exclude, case-insensitive (e.g. "md, tar.gz, csv")
+  --secret-types <list>       Secret types to scan for (from `radar list secrets`)
+  --max-file-size <MiB>       Don't scan any files larger than this
+  --include-files <list>      File names to scan; overrides excluded files. Supports globs. Case-insensitive. Example: `--include-files "yarn.lock"`. See excluded files with `radar list defaults excludedFiles`
+  --exclude-files <list>      File names to exclude. Supports globs. Case-insensitive. Example: `--exclude-files "test.*"` to exclude all files named 'test' with any extension
+  --include-dirs <list>       Directory names to scan; overrides excluded directories. Supports globs. Case-insensitive. Example: `--include-dirs "node_modules"` to include 'node_modules' within the root directory. See excluded directories with `radar list defaults excludedDirectories`
+  --exclude-dirs <list>       Directory names to exclude. Supports globs. Case-insensitive. Example: `--exclude-dirs "**/node_modules"` to exclude the 'node_modules' directory located in the root and any subdirectory (also excludes all of 'node_modules''s files and subdirectories)
+  --include-file-exts <list>  File extensions to scan; overrides excluded file extensions. Supports globs. Case-insensitive. Example: `--include-file-exts "*.txt,*.ini"`. See excluded file extensions with `radar list defaults excludedFileExts`
+  --exclude-file-exts <list>  File extensions to exclude. Supports globs. Case-insensitive. Example: `--exclude-file-exts "*.js,*example*"` to exclude any file with an extension ending with '.js' (e.g. file.js, file.test.js) or containing 'example' (e.g. 'file.example', 'file.example.c', 'file.c.example')
   --json                      Output results as json blob
   --no-progress               Disable the progress bar
   -h, --help                  output usage information
