@@ -1,11 +1,10 @@
-// const micromatch = require('picomatch');
-const micromatch = require('micromatch');
+const picomatch = require('picomatch');
 
-const MicroMatchOptions = {
+const MatchOptions = {
   nocase: true,
   dot: true,
 };
 
-const isMatch = (text, pattern) => micromatch.isMatch(text, pattern, MicroMatchOptions);
+const isMatch = (text, pattern) => picomatch.isMatch(text, pattern, MatchOptions);
 
 module.exports = { isMatch };
