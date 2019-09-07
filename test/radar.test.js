@@ -126,16 +126,15 @@ test("file extensions", () => {
   expect(radar._isExtensionBlacklisted("js.badext1")).toBe(true);
 });
 
-test("file extension- leading period is unnecessary", () => {
-  let config = { excludedFileExts: ["badext"] };
-  let radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
-  expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
+test("file extension- leading period is necessary", () => {
+  let radar = new Radar();
+  expect(radar._isExtensionBlacklisted(".png")).toBe(true);
+  expect(radar._isExtensionBlacklisted("png")).toBe(false);
 
-  config = { excludedFileExts: [".badext"] };
+  let config = { excludedFileExts: [".badext"] };
   radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
   expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
+  expect(radar._isExtensionBlacklisted("badext")).toBe(false);
 });
 
 test("file exclusion- relative paths", () => {
@@ -221,7 +220,7 @@ test("results map", () => {
       "test.txt": {
         metadata: {
           size: 123,
-          extension: "txt",
+          extension: ".txt",
           numLines: 0,
         },
         lines: [],
@@ -229,7 +228,7 @@ test("results map", () => {
       "anothertest.ext": {
         metadata: {
           size: 456,
-          extension: "ext",
+          extension: ".ext",
           numLines: 0,
         },
         lines: [],
