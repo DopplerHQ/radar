@@ -22,10 +22,14 @@ class Dictionary extends Filter {
       }
     });
 
+    // NOTE we want to explicitly remove the leading period here
     Object.keys(ExcludedFiletypes).forEach((type) => {
       ExcludedFiletypes[type].forEach((fileExt) => {
         if (fileExt.startsWith("*.")) {
           fileExt = fileExt.substring(2);
+        }
+        else if (fileExt.startsWith("(|*).")) {
+          fileExt = fileExt.substring(5);
         }
         else if (fileExt.startsWith('.')) {
           fileExt = fileExt.substring(1);
@@ -40,6 +44,9 @@ class Dictionary extends Filter {
       IncludedFiletypes[type].forEach((fileExt) => {
         if (fileExt.startsWith("*.")) {
           fileExt = fileExt.substring(2);
+        }
+        else if (fileExt.startsWith("(|*).")) {
+          fileExt = fileExt.substring(5);
         }
         else if (fileExt.startsWith('.')) {
           fileExt = fileExt.substring(1);
