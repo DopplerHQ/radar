@@ -19,7 +19,7 @@ class FileClassifier {
    */
   classify(file) {
     return this.classifiers.filter(classifier => (
-      classifier.isMatch(file.name().toLowerCase(), file.extension().toLowerCase())
+      classifier.isMatch(file)
     ))
       .map(classifier => classifier.tag());
   }
