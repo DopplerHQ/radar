@@ -22,18 +22,19 @@ class Radar {
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
-    this._config = new Config(config);
-    this._secretTypes = Scanner.loadSecretTypes(this._config.getSecretTypes());
-
     // verify all specified secret_types are valid
+    const allSecretTypes = Scanner.listSecretTypes();
     if ((config.secretTypes !== undefined) && (config.secretTypes.length > 0)) {
-      const allSecretTypes = this.listSecretTypes();
       config.secretTypes.forEach((secretType) => {
         if (!allSecretTypes.includes(secretType)) {
           throw new Error(`Invalid secret type ${secretType}`)
         }
       });
     }
+
+    this._config = new Config(config);
+    const secretTypesToUse = this._config.getSecretTypes();
+    this._secretTypes = Scanner.loadSecretTypes(secretTypesToUse);
 
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
@@ -106,9 +107,9 @@ class Radar {
    * @param {string} fullPath
    * @param {string} basePath
    * @param {number} fileSize will be calculated if undefined
-   * @returns {File}
+   * @returns {Promise<File>}
    */
-  static async _getFileObject(fullPath, basePath, fileSize) {
+  static async _getFileObject(fullPath, basePath, fileSize = undefined) {
     const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
     const name = fullPath.substring(fullPath.lastIndexOf('/') + 1);
     if (basePath.endsWith(name)) {
@@ -124,7 +125,7 @@ class Radar {
   }
 
   /**
-   *
+   * Check whether the file's name, size, etc pass our configured constraints
    * @param {File} file
    * @returns {Boolean}
    */
@@ -134,16 +135,10 @@ class Radar {
     const ext = file.extension().toLowerCase();
     const relativePath = file.relativePath();
 
-    return this._checkFileName(name, ext, relativePath) && this._checkFileSize(size);
-  }
+    if (!this._checkFileSize(size)) {
+      return false;
+    }
 
-  /**
-   * Check that the file name isn't blacklisted. Name white/blacklisting takes precedence over extension white/blacklisting
-   * @param {String} name
-   * @param {String} ext
-   * @returns {Boolean} true if the file is ok, false if it's blacklisted
-   */
-  _checkFileName(name, ext, relativePath = "") {
     if (this._isNameWhitelisted(name, relativePath)) {
       return true;
     }
@@ -230,7 +225,7 @@ class Radar {
 
   /**
    * @param {File} file
-   * @returns {ScannedFile}
+   * @returns {Promise<ScannedFile>}
    */
   async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
@@ -267,8 +262,7 @@ class Radar {
   }
 
   listSecretTypes() {
-    return this._secretTypes
-      .map(({ name }) => name)
+    return Scanner.listSecretTypes();
   }
 
   listFilters() {

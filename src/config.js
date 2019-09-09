@@ -1,10 +1,10 @@
-const DefaultConfig = require('./dictionaries/config');
+const DefaultConfig = require('../config/defaults');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
 
 /**
  * Determines the appropriate value given an optional value and a default value. Arrays will be merged.
- * @param {Any} value optional
- * @param {Any} defaultValue required
+ * @param {any} value optional
+ * @param {any} defaultValue required
  */
 const getValue = (value, defaultValue) => {
   if (value === undefined) {

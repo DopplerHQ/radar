@@ -10,8 +10,8 @@ class PrivateKey extends Classifier {
   }
 
   // override isMatch function since we can't easily check for a blank string with our glob library (micromatch)
-  isMatch(fileName, fileExt) {
-    return fileExt === "";
+  isMatch(file) {
+    return file.extension() === "";
   }
 }
 

@@ -9,8 +9,9 @@ class ReadMe extends Classifier {
     super(tag, extensions);
   }
 
-  isMatch(fileName, fileExt) {
-    return (fileName === "readme") || (fileName.startsWith("readme") && super.isMatch(fileName, fileExt));
+  isMatch(file) {
+    const fileName = file.name().toLowerCase();
+    return (fileName === "readme") || (fileName.startsWith("readme") && super.isMatch(file));
   }
 }
 

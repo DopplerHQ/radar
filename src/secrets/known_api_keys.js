@@ -31,7 +31,6 @@ class KnownAPIKeys extends Secret {
     if (secrets.length === 0) {
       return {
         secrets: [],
-        services: [],
         metadata: {},
       };
     }

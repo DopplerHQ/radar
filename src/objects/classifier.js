@@ -20,8 +20,12 @@ class Classifier {
     return this._tag;
   }
 
-  isMatch(fileName, fileExt) {
-    return globs.isMatch(fileExt, this._extensions)
+  /**
+   *
+   * @param {File} file
+   */
+  isMatch(file) {
+    return globs.isMatch(file.extension().toLowerCase(), this._extensions)
   }
 }
 

@@ -7,6 +7,7 @@ class APIKeys extends Secret {
   constructor() {
     const name = 'api_key';
     const preFilters = [
+      'base64',
       'uri_encoding',
       'hex_notation',
       'xml',

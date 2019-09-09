@@ -4,30 +4,37 @@ const path = require('path');
 const secretTypesPath = path.resolve(__dirname, 'secrets');
 const filtersPath = path.resolve(__dirname, 'filters');
 
+const SecretTypes = [
+  "api_keys",
+  "auth_urls",
+  "crypto_keys",
+  "env_variable",
+  "known_api_keys",
+];
+
 class Scanner {
   /**
    *
    * @param {Array<string>} secretTypes
    */
   static loadSecretTypes(secretTypes) {
-    return Scanner.getSecretTypes(secretTypes)
-      .map(fileName => ({
-        name: fileName.substring(0, fileName.indexOf('.')),
-        secretType: require(path.join(secretTypesPath, fileName)),
+    return Scanner.listSecretTypes(secretTypes)
+      .map(name => ({
+        name,
+        secretType: require(path.join(secretTypesPath, `${name}.js`)),
       }));
   }
 
   /**
    * Get a list of all secret types that radar can scan for
-   * @param {Array<string>} secretTypes secret types to allow. defaults to allowing all if blank
+   * @param {Array<string>} secretTypesToUse secret types to allow. defaults to allowing all if blank
    */
-  static getSecretTypes(secretTypes = []) {
-    return fs.readdirSync(secretTypesPath)
-      .filter(file => {
-        const fileName = file.substring(0, file.indexOf('.'));
-        return ((secretTypes.length === 0) || secretTypes.includes(fileName));
-      })
-      .filter(file => file.endsWith('.js'));
+  static listSecretTypes(secretTypesToUse = []) {
+    if (secretTypesToUse.length === 0) {
+      return SecretTypes;
+    }
+
+    return SecretTypes.filter(type => secretTypesToUse.includes(type));
   }
 
   /**
@@ -40,10 +47,10 @@ class Scanner {
 
   /**
    *
-   * @param {Array<{ name: string, secretType: Object }}>} secretTypes
+   * @param {Array<{ name: string, secretType: Object }>} secretTypes
    * @param {string} line
    * @param {ScannedFile} scannedFile
-   * @returns {Array<{ secret: string, secretType: string}}>}
+   * @returns {Array<{ secret: string, secretType: string, metadata: Object }}>}
    */
   static findSecrets(secretTypes, line, scannedFile) {
     const allSecrets = [];
