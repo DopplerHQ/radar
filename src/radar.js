@@ -22,18 +22,19 @@ class Radar {
     this._onFilesToScan = onFilesToScan;
     this._onFileScanned = onFileScanned;
 
-    this._config = new Config(config);
-    this._secretTypes = Scanner.loadSecretTypes(this._config.getSecretTypes());
-
     // verify all specified secret_types are valid
+    const allSecretTypes = Scanner.listSecretTypes();
     if ((config.secretTypes !== undefined) && (config.secretTypes.length > 0)) {
-      const allSecretTypes = this.listSecretTypes();
       config.secretTypes.forEach((secretType) => {
         if (!allSecretTypes.includes(secretType)) {
           throw new Error(`Invalid secret type ${secretType}`)
         }
       });
     }
+
+    this._config = new Config(config);
+    const secretTypesToUse = this._config.getSecretTypes();
+    this._secretTypes = Scanner.loadSecretTypes(secretTypesToUse);
 
     // these function gets executed outside of this context, so explicitly bind them
     this._onLineRead = this._onLineRead.bind(this);
@@ -261,8 +262,7 @@ class Radar {
   }
 
   listSecretTypes() {
-    return this._secretTypes
-      .map(({ name }) => name)
+    return Scanner.listSecretTypes();
   }
 
   listFilters() {
