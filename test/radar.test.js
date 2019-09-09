@@ -6,57 +6,57 @@ test("file exclusion- all possible states", () => {
   // no white/blacklist
   let config = {};
   let radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "goodext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
 
   // whitelisted name
   config = { includedFiles: ["badfile"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("badfile", "goodext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("badfile.goodext", "", 0))).toBe(true);
 
   // blacklisted name
   config = { excludedFiles: ["badfile"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("badfile", "goodext")).toBe(false);
+  expect(radar._shouldScanFile(Radar._getFileObject("badfile.goodext", "", 0))).toBe(false);
 
   // whitelisted ext
   config = { includedFileExts: ["badext"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "badext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
 
   // blacklisted ext
   config = { excludedFileExts: ["badext"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "badext")).toBe(false);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(false);
 
   // whitelisted name, blacklisted ext
   config = { excludedFileExts: ["badext"], includedFiles: ["goodfile"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "badext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
 
   // blacklisted name, whitelisted ext
   config = { excludedFiles: ["badfile"], includedFileExts: ["badext"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("badfile", "badext")).toBe(false);
+  expect(radar._shouldScanFile(Radar._getFileObject("badfile.badext", "", 0))).toBe(false);
 
   // whitelisted name, whitelisted ext
   config = { includedFileExts: ["goodext"], includedFiles: ["goodfile"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "goodext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
 
   // whitelisted name, blacklisted name
   config = { excludedFiles: ["goodfile"], includedFiles: ["goodfile"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "badext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
 
   // whitelisted ext, blacklisted ext
   config = { includedFileExts: ["goodext"], excludedFileExts: ["goodext"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("goodfile", "goodext")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
 
   // blacklisted name, blacklisted ext
   config = { excludedFiles: ["badfile"], excludedFileExts: ["badext"] };
   radar = new Radar(config);
-  expect(radar._checkFileName("badfile", "badext")).toBe(false);
+  expect(radar._shouldScanFile(Radar._getFileObject("badfile.badext", "", 0))).toBe(false);
 });
 
 test("filename exclusion", () => {
@@ -141,9 +141,9 @@ test("file exclusion- relative paths", () => {
   let config = { excludedFiles: ["nested/directory/testname.testext"] };
   let radar = new Radar(config);
   radar.basePath = "/root";
-  expect(radar._checkFileName("testname", "testext", "nested/directory/testname.testext")).toBe(false);
-  expect(radar._checkFileName("testname", "testext", "fake/nested/directory")).toBe(true);
-  expect(radar._checkFileName("testname", "testext", "")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("testname.testext", "", 0), "nested/directory/testname.testext")).toBe(false);
+  expect(radar._shouldScanFile(Radar._getFileObject("testname.testext", "", 0), "fake/nested/directory")).toBe(true);
+  expect(radar._shouldScanFile(Radar._getFileObject("testname.testext", "", 0), "")).toBe(true);
 });
 
 test("directory exclusion - all possible states", () => {
