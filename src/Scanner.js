@@ -47,10 +47,10 @@ class Scanner {
 
   /**
    *
-   * @param {Array<{ name: string, secretType: Object }}>} secretTypes
+   * @param {Array<{ name: string, secretType: Object }>} secretTypes
    * @param {string} line
    * @param {ScannedFile} scannedFile
-   * @returns {Array<{ secret: string, secretType: string}}>}
+   * @returns {Array<{ secret: string, secretType: string, metadata: Object }}>}
    */
   static findSecrets(secretTypes, line, scannedFile) {
     const allSecrets = [];

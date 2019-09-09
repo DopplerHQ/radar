@@ -2,7 +2,7 @@ class Secret {
   /**
    * Pre-filters and filters will be tested in the order they're specified
    * @param {String} name
-   * @param { preFilters: {Array<String>}, filters: {Array<String>}, extensions: {Array<String>}, excludedExtensions: {Array<String>} } options
+   * @param {{ preFilters: Array<String>, filters: Array<String>, fileTags: Array<FileTags>, excludedFileTags: Array<FileTags> }} options
    */
   constructor(name, { preFilters = [], filters = [], fileTags = [], excludedFileTags = [] } = {}) {
     if (name === undefined) {
@@ -27,7 +27,7 @@ class Secret {
   /**
    * Checks a list of terms against the secret's filters
    * @param {Array<String>} terms
-   * @returns {Array<Object>} Detected secrets and tags to add/remove from the file
+   * @returns {{ secrets: string[]; tags: []; metadata: {} }} Detected secrets and tags to add/remove from the file
    */
   check(terms) {
     const secrets = terms.filter((term) => {

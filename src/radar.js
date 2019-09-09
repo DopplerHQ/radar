@@ -107,9 +107,9 @@ class Radar {
    * @param {string} fullPath
    * @param {string} basePath
    * @param {number} fileSize will be calculated if undefined
-   * @returns {File}
+   * @returns {Promise<File>}
    */
-  static async _getFileObject(fullPath, basePath, fileSize) {
+  static async _getFileObject(fullPath, basePath, fileSize = undefined) {
     const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
     const name = fullPath.substring(fullPath.lastIndexOf('/') + 1);
     if (basePath.endsWith(name)) {
@@ -225,7 +225,7 @@ class Radar {
 
   /**
    * @param {File} file
-   * @returns {ScannedFile}
+   * @returns {Promise<ScannedFile>}
    */
   async _scanFile(file) {
     const scannedFile = new ScannedFile(file);
