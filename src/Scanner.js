@@ -4,12 +4,13 @@ const path = require('path');
 const secretTypesPath = path.resolve(__dirname, 'secrets');
 const filtersPath = path.resolve(__dirname, 'filters');
 
+// the order of these indicate priority when de-duping
 const SecretTypes = [
-  "api_keys",
-  "auth_urls",
-  "crypto_keys",
-  "env_variable",
   "known_api_keys",
+  "crypto_keys",
+  "auth_urls",
+  "api_keys",
+  "env_variable",
 ];
 
 class Scanner {
@@ -47,7 +48,7 @@ class Scanner {
 
   /**
    *
-   * @param {Array<{ name: string, secretType: Object }>} secretTypes
+   * @param {Array<{ name: string, secretType: Object }>} secretTypes order matters! secret types listed sooner take precedence when deduping
    * @param {string} line
    * @param {ScannedFile} scannedFile
    * @returns {Array<{ secret: string, secretType: string, metadata: Object }}>}
@@ -72,7 +73,30 @@ class Scanner {
         }))
       })
       .forEach(s => allSecrets.push(...s));
-    return allSecrets;
+
+    return Scanner.dedupeSecrets(allSecrets);
+  }
+
+  /**
+   * Remove secrets detected earlier by other secret types
+   * @param {Object} secrets
+   */
+  static dedupeSecrets(secrets) {
+    return secrets.filter((secret, i) => {
+      if (i === 0) {
+        return true;
+      }
+
+      i -= 1;
+      while (i >= 0) {
+        // NOTE this won't detect partially overlapping secrets (e.g. "0123" and "1234"). that's ok (and probably desired?)
+        if (secrets[i].secret.includes(secret.secret)) {
+          return false;
+        }
+        i -= 1;
+      }
+      return true;
+    });
   }
 
   static handleTags(tags, scannedFile) {
