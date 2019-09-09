@@ -1,4 +1,4 @@
-const DefaultConfig = require('./dictionaries/config');
+const DefaultConfig = require('../config/defaults');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
 
 /**
