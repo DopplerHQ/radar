@@ -2,61 +2,61 @@ const Radar = require('../src/radar');
 const File = require('../src/objects/file');
 const ScannedFile = require('../src/objects/scannedfile');
 
-test("file exclusion- all possible states", () => {
+test("file exclusion- all possible states", async () => {
   // no white/blacklist
   let config = {};
   let radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
 
   // whitelisted name
-  config = { includedFiles: ["badfile"] };
+  config = { includedFiles: ["badfile.*"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("badfile.goodext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("badfile.goodext", "", 0))).toBe(true);
 
   // blacklisted name
-  config = { excludedFiles: ["badfile"] };
+  config = { excludedFiles: ["badfile.*"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("badfile.goodext", "", 0))).toBe(false);
+  expect(radar._shouldScanFile(await Radar._getFileObject("badfile.goodext", "", 0))).toBe(false);
 
   // whitelisted ext
-  config = { includedFileExts: ["badext"] };
+  config = { includedFileExts: [".badext"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
 
   // blacklisted ext
-  config = { excludedFileExts: ["badext"] };
+  config = { excludedFileExts: [".badext"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(false);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.badext", "", 0))).toBe(false);
 
   // whitelisted name, blacklisted ext
-  config = { excludedFileExts: ["badext"], includedFiles: ["goodfile"] };
+  config = { excludedFileExts: [".badext"], includedFiles: ["goodfile.*"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
 
   // blacklisted name, whitelisted ext
-  config = { excludedFiles: ["badfile"], includedFileExts: ["badext"] };
+  config = { excludedFiles: ["badfile.*"], includedFileExts: [".badext"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("badfile.badext", "", 0))).toBe(false);
+  expect(radar._shouldScanFile(await Radar._getFileObject("badfile.badext", "", 0))).toBe(false);
 
   // whitelisted name, whitelisted ext
-  config = { includedFileExts: ["goodext"], includedFiles: ["goodfile"] };
+  config = { includedFileExts: [".goodext"], includedFiles: ["goodfile.*"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
 
   // whitelisted name, blacklisted name
-  config = { excludedFiles: ["goodfile"], includedFiles: ["goodfile"] };
+  config = { excludedFiles: ["goodfile.*"], includedFiles: ["goodfile.*"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.badext", "", 0))).toBe(true);
 
   // whitelisted ext, blacklisted ext
-  config = { includedFileExts: ["goodext"], excludedFileExts: ["goodext"] };
+  config = { includedFileExts: [".goodext"], excludedFileExts: [".goodext"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("goodfile.goodext", "", 0))).toBe(true);
 
   // blacklisted name, blacklisted ext
-  config = { excludedFiles: ["badfile"], excludedFileExts: ["badext"] };
+  config = { excludedFiles: ["badfile.*"], excludedFileExts: [".badext"] };
   radar = new Radar(config);
-  expect(radar._shouldScanFile(Radar._getFileObject("badfile.badext", "", 0))).toBe(false);
+  expect(radar._shouldScanFile(await Radar._getFileObject("badfile.badext", "", 0))).toBe(false);
 });
 
 test("filename exclusion", () => {
@@ -107,23 +107,23 @@ test("file extensions", () => {
   expect(radar._isExtensionWhitelisted("badext")).toBe(false);
   expect(radar._isExtensionBlacklisted("badext")).toBe(false);
 
-  let config = { excludedFileExts: ["badext"] };
+  let config = { excludedFileExts: [".badext"] };
   radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted("badext")).toBe(true);
-  expect(radar._isExtensionBlacklisted("badext.js")).toBe(false);
-  expect(radar._isExtensionBlacklisted("js.badext")).toBe(false);
+  expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".badext.js")).toBe(false);
+  expect(radar._isExtensionBlacklisted(".js.badext")).toBe(false);
 
-  config = { excludedFileExts: ["badext*"] };
+  config = { excludedFileExts: [".badext*"] };
   radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted("badext1")).toBe(true);
-  expect(radar._isExtensionBlacklisted("badext1.js")).toBe(true);
-  expect(radar._isExtensionBlacklisted("js.badext1")).toBe(false);
+  expect(radar._isExtensionBlacklisted(".badext1")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".badext1.js")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".js.badext1")).toBe(false);
 
-  config = { excludedFileExts: ["*badext*"] };
+  config = { excludedFileExts: [".*badext*"] };
   radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted("badext1")).toBe(true);
-  expect(radar._isExtensionBlacklisted("badext1.js")).toBe(true);
-  expect(radar._isExtensionBlacklisted("js.badext1")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".badext1")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".badext1.js")).toBe(true);
+  expect(radar._isExtensionBlacklisted(".js.badext1")).toBe(true);
 });
 
 test("file extension- leading period is necessary", () => {
@@ -137,13 +137,13 @@ test("file extension- leading period is necessary", () => {
   expect(radar._isExtensionBlacklisted("badext")).toBe(false);
 });
 
-test("file exclusion- relative paths", () => {
+test("file exclusion- relative paths", async () => {
   let config = { excludedFiles: ["nested/directory/testname.testext"] };
   let radar = new Radar(config);
   radar.basePath = "/root";
-  expect(radar._shouldScanFile(Radar._getFileObject("testname.testext", "", 0), "nested/directory/testname.testext")).toBe(false);
-  expect(radar._shouldScanFile(Radar._getFileObject("testname.testext", "", 0), "fake/nested/directory")).toBe(true);
-  expect(radar._shouldScanFile(Radar._getFileObject("testname.testext", "", 0), "")).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("nested/directory/testname.testext", "", 0))).toBe(false);
+  expect(radar._shouldScanFile(await Radar._getFileObject("fake/nested/directory/testname.testext", "", 0))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("testname.testext", "", 0))).toBe(true);
 });
 
 test("directory exclusion - all possible states", () => {
