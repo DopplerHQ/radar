@@ -124,7 +124,7 @@ class Radar {
   }
 
   /**
-   *
+   * Check whether the file's name, size, etc pass our configured constraints
    * @param {File} file
    * @returns {Boolean}
    */
@@ -134,16 +134,10 @@ class Radar {
     const ext = file.extension().toLowerCase();
     const relativePath = file.relativePath();
 
-    return this._checkFileName(name, ext, relativePath) && this._checkFileSize(size);
-  }
+    if (!this._checkFileSize(size)) {
+      return false;
+    }
 
-  /**
-   * Check that the file name isn't blacklisted. Name white/blacklisting takes precedence over extension white/blacklisting
-   * @param {String} name
-   * @param {String} ext
-   * @returns {Boolean} true if the file is ok, false if it's blacklisted
-   */
-  _checkFileName(name, ext, relativePath = "") {
     if (this._isNameWhitelisted(name, relativePath)) {
       return true;
     }
