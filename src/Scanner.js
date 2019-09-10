@@ -87,13 +87,11 @@ class Scanner {
         return true;
       }
 
-      i -= 1;
-      while (i >= 0) {
+      for (i -= 1; i >= 0; i -= 1) {
         // NOTE this won't detect partially overlapping secrets (e.g. "0123" and "1234"). that's ok (and probably desired?)
         if (secrets[i].secret.includes(secret.secret)) {
           return false;
         }
-        i -= 1;
       }
       return true;
     });
