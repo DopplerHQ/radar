@@ -47,7 +47,7 @@ program
     const args = util.getCommandArgs(params);
     const name = args[0];
     const { json, exclude, names } = program.opts();
-    let defaultConfig = (new Radar()).config();
+    let defaultConfig = (new Radar()).config().config();
     if (name === undefined) {
       const excludeConfigValues = util.parseStringArray(exclude);
       excludeConfigValues.forEach((name) => {
