@@ -1,4 +1,5 @@
 const Secret = require('../Secret');
+const Services = require('../objects/known_api_services');
 
 class KnownAPIKeys extends Secret {
   constructor() {
@@ -46,43 +47,43 @@ class KnownAPIKeys extends Secret {
 
   matchKnownService(term) {
     if (this.dopplerRegex.test(term)) {
-      return "doppler";
+      return Services.DOPPLER;
     }
     if (this.awsRegex.test(term)) {
-      return "aws";
+      return Services.AWS;
     }
     if (this.mailgunRegex.test(term)) {
-      return "mailgun";
+      return Services.MAILGUN;
     }
     if (this.sendgridRegex.test(term)) {
-      return "sendgrid";
+      return Services.SENDGRID;
     }
     if (this.slackRegex.test(term)) {
-      return "slack";
+      return Services.SLACK;
     }
     if (this.slackWebhookRegex.test(term)) {
-      return "slack-webhook";
+      return Services.SLACK_WEBHOOK;
     }
     if (this.stripeRegex.test(term)) {
-      return "stripe";
+      return Services.STRIPE;
     }
     if (this.stripeWebhookRegex.test(term)) {
-      return "stripe-webhook";
+      return Services.STRIPE_WEBHOOK;
     }
     if (this.mailchimpRegex.test(term)) {
-      return "mailchimp";
+      return Services.MAILCHIMP;
     }
     if (this.sqreenRegex.test(term)) {
-      return "sqreen";
+      return Services.SQREEN;
     }
     if (this.squareRegex.test(term)) {
-      return "square";
+      return Services.SQUARE;
     }
     if (this.asanaRegex.test(term)) {
-      return "asana";
+      return Services.ASANA;
     }
     if (this.vaultServiceTokenRegex.test(term)) {
-      return "hashicorp-vault";
+      return Services.HASHICORP_VAULT;
     }
 
     return null;
