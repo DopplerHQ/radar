@@ -19,7 +19,4 @@ test('entropy above minimum', () => {
   expect(Filter.isMatch("0123456789abcdef")).toBe(true);
   expect(Filter.isMatch("0123456789abcdefghijklmnopqrst")).toBe(true);
   expect(Filter.isMatch("0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=")).toBe(true);
-
-  // TODO add a bunch of api keys with a range of entropy scores as a good test
-  // use findings from radar-tester-big
 });
