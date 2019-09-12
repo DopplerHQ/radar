@@ -16,6 +16,14 @@ test('is file name', () => {
   expect(Filter.isMatch(`/certs/pem-utils/key_pkcs8_encrypted.pem`)).toBe(true);
 });
 
+test('is not file name', () => {
+  expect(Filter.isMatch(`test`)).toBe(false);
+  expect(Filter.isMatch(`test.`)).toBe(false);
+  expect(Filter.isMatch(`random.randomext`)).toBe(false);
+  expect(Filter.isMatch(`.`)).toBe(false);
+  expect(Filter.isMatch(`..`)).toBe(false);
+});
+
 test('file name ends with special character', () => {
   expect(Filter.isMatch(`../apis/cloudfront-2018-06-18.min.json:`)).toBe(true);
   expect(Filter.isMatch(`../apis/cloudfront-2018-06-18.min.json?`)).toBe(true);
