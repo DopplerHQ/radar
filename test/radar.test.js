@@ -142,6 +142,12 @@ test("file exclusion- relative paths", async () => {
   expect(radar._shouldScanFile(await Radar._getFileObject("testname.testext", "", 0))).toBe(true);
 });
 
+test("file excluse- size", async () => {
+  let radar = new Radar();
+  expect(radar._shouldScanFile(await Radar._getFileObject("testname.testext", "", 1))).toBe(true);
+  expect(radar._shouldScanFile(await Radar._getFileObject("testname.testext", "", Number.MAX_SAFE_INTEGER))).toBe(false);
+});
+
 test("directory exclusion - all possible states", () => {
   // no white/blacklist
   let config = {};
