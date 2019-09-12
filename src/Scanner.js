@@ -19,7 +19,7 @@ class Scanner {
    * @param {Array<string>} secretTypes
    */
   static loadSecretTypes(secretTypes) {
-    return Scanner.listSecretTypes(secretTypes)
+    return Scanner.listSecretTypes(secretTypes, SecretTypes)
       .map(name => ({
         name,
         secretType: require(path.join(secretTypesPath, `${name}.js`)),
@@ -30,12 +30,12 @@ class Scanner {
    * Get a list of all secret types that radar can scan for
    * @param {Array<string>} secretTypesToUse secret types to allow. defaults to allowing all if blank
    */
-  static listSecretTypes(secretTypesToUse = []) {
+  static listSecretTypes(secretTypesToUse = [], allSecretTypes = SecretTypes) {
     if (secretTypesToUse.length === 0) {
-      return SecretTypes;
+      return allSecretTypes;
     }
 
-    return SecretTypes.filter(type => secretTypesToUse.includes(type));
+    return allSecretTypes.filter(type => secretTypesToUse.includes(type));
   }
 
   /**
