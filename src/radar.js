@@ -139,19 +139,19 @@ class Radar {
       return false;
     }
 
-    if (this._isNameWhitelisted(name, relativePath)) {
+    if (Radar._isNameWhitelisted(name, relativePath, this._config.getIncludedFiles())) {
       return true;
     }
 
-    if (this._isNameBlacklisted(name, relativePath)) {
+    if (Radar._isNameBlacklisted(name, relativePath, this._config.getExcludedFiles())) {
       return false;
     }
 
-    if (this._isExtensionWhitelisted(ext)) {
+    if (Radar._isExtensionWhitelisted(ext, this._config.getIncludedFileExts())) {
       return true;
     }
 
-    if (this._isExtensionBlacklisted(ext)) {
+    if (Radar._isExtensionBlacklisted(ext, this._config.getExcludedFileExts())) {
       return false;
     }
 
@@ -168,11 +168,11 @@ class Radar {
     const nameLower = name.toLowerCase();
     const relativePathLower = relativePath.toLowerCase();
 
-    if (this._isDirectoryWhitelisted(nameLower, relativePathLower)) {
+    if (Radar._isDirectoryWhitelisted(nameLower, relativePathLower, this._config.getIncludedDirectories())) {
       return true;
     }
 
-    if (this._isDirectoryBlacklisted(nameLower, relativePathLower)) {
+    if (Radar._isDirectoryBlacklisted(nameLower, relativePathLower, this._config.getExcludedDirectories())) {
       return false;
     }
 
@@ -180,33 +180,27 @@ class Radar {
   }
 
   // TODO unit test these individual functions
-  _isNameWhitelisted(name, relativePath) {
-    const includedFiles = this._config.getIncludedFiles();
+  static _isNameWhitelisted(name, relativePath, includedFiles) {
     return globs.isMatch(name, includedFiles) || globs.isMatch(relativePath, includedFiles);
   }
 
-  _isNameBlacklisted(name, relativePath) {
-    const excludedFiles = this._config.getExcludedFiles();
+  static _isNameBlacklisted(name, relativePath, excludedFiles) {
     return globs.isMatch(name, excludedFiles) || globs.isMatch(relativePath, excludedFiles);
   }
 
-  _isDirectoryWhitelisted(name, relativePath) {
-    const includedDirectories = this._config.getIncludedDirectories();
+  static _isDirectoryWhitelisted(name, relativePath, includedDirectories) {
     return globs.isMatch(name, includedDirectories) || globs.isMatch(relativePath, includedDirectories);
   }
 
-  _isDirectoryBlacklisted(name, relativePath) {
-    const excludedDirectories = this._config.getExcludedDirectories();
+  static _isDirectoryBlacklisted(name, relativePath, excludedDirectories) {
     return globs.isMatch(name, excludedDirectories) || globs.isMatch(relativePath, excludedDirectories);
   }
 
-  _isExtensionWhitelisted(ext) {
-    const includedFileExts = this._config.getIncludedFileExts();
+  static _isExtensionWhitelisted(ext, includedFileExts) {
     return globs.isMatch(ext, includedFileExts);
   }
 
-  _isExtensionBlacklisted(ext) {
-    const excludedFileExts = this._config.getExcludedFileExts();
+  static _isExtensionBlacklisted(ext, excludedFileExts) {
     return globs.isMatch(ext, excludedFileExts);
   }
 
@@ -271,7 +265,7 @@ class Radar {
   }
 
   config() {
-    return this._config.config();
+    return this._config;
   }
 }
 

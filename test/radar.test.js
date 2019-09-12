@@ -60,81 +60,77 @@ test("file exclusion- all possible states", async () => {
 });
 
 test("filename exclusion", () => {
-  let config = { excludedFiles: ["test/one/file.txt"] };
-  const radar = new Radar(config);
+  const excludedFiles = ["test/one/file.txt1"];
 
-  expect(radar._isNameBlacklisted("file.txt", "")).toBe(false);
-  expect(radar._isNameBlacklisted("file.txt", "one/file.txt")).toBe(false);
-  expect(radar._isNameBlacklisted("file.txt", "test/one/file.txt")).toBe(true);
-  expect(radar._isNameBlacklisted("file.txt", "/test/one/file.txt")).toBe(false);
-  expect(radar._isNameBlacklisted("file.txt", "another/test/one/file.txt")).toBe(false);
+  expect(Radar._isNameBlacklisted("file.txt1", "", excludedFiles)).toBe(false);
+  expect(Radar._isNameBlacklisted("file.txt1", "one/file.txt1", excludedFiles)).toBe(false);
+  expect(Radar._isNameBlacklisted("file.txt1", "test/one/file.txt1", excludedFiles)).toBe(true);
+  expect(Radar._isNameBlacklisted("file.txt1", "/test/one/file.txt1", excludedFiles)).toBe(false);
+  expect(Radar._isNameBlacklisted("file.txt1", "another/test/one/file.txt1", excludedFiles)).toBe(false);
 })
 
 test("default file exclusions", () => {
   const radar = new Radar();
+  const excludedFiles = radar.config().getExcludedFiles();
   // test default "package-lock.json" exclusion
-  expect(radar._isNameBlacklisted("package-lock.json", "")).toBe(true);
-  expect(radar._isNameBlacklisted("package-lock.json", "src/package-lock.json")).toBe(true);
-  expect(radar._isNameBlacklisted("package-lock.json", "src/dir/package-lock.json")).toBe(true);
+  expect(Radar._isNameBlacklisted("package-lock.json", "", excludedFiles)).toBe(true);
+  expect(Radar._isNameBlacklisted("package-lock.json", "src/package-lock.json", excludedFiles)).toBe(true);
+  expect(Radar._isNameBlacklisted("package-lock.json", "src/dir/package-lock.json", excludedFiles)).toBe(true);
 });
 
 test("default directory exclusions", () => {
   const radar = new Radar();
+  const excludedDirectories = radar.config().getExcludedDirectories();
   // test default "node_modules" exclusion
-  expect(radar._isDirectoryBlacklisted("node_modules", "")).toBe(true);
-  expect(radar._isDirectoryBlacklisted("node_modules", "src/node_modules")).toBe(true);
-  expect(radar._isDirectoryBlacklisted("node_modules", "src/dir/node_modules")).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("node_modules", "", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("node_modules", "src/node_modules", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("node_modules", "src/dir/node_modules", excludedDirectories)).toBe(true);
 
   // this dir shouldn't be explicitly excluded. rather, it'll never even be known about because its parent is excluded
-  expect(radar._isDirectoryBlacklisted("test", "src/dir/node_modules/test")).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("test", "src/dir/node_modules/test", excludedDirectories)).toBe(false);
 });
 
 test("directory exclusion", () => {
-  const config = { excludedDirectories: ["test/**/*"] };
-  const radar = new Radar(config);
+  const excludedDirectories = ["test/**/*"];
 
-  expect(radar._isDirectoryBlacklisted("test", "test")).toBe(false);
-  expect(radar._isDirectoryBlacklisted("file.txt", "test/file.txt")).toBe(true);
-  expect(radar._isDirectoryBlacklisted("one", "test/one")).toBe(true);
-  expect(radar._isDirectoryBlacklisted("two", "test/one/two")).toBe(true);
-  expect(radar._isDirectoryBlacklisted("file.txt", "test/one/two/file.txt")).toBe(true);
-  expect(radar._isDirectoryBlacklisted("file.txt", "/test/one/two/file.txt")).toBe(false);
-  expect(radar._isDirectoryBlacklisted("file.txt", "another/test/one/two/file.txt")).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("test", "test", excludedDirectories)).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "test/file.txt", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("one", "test/one", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("two", "test/one/two", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "test/one/two/file.txt", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "/test/one/two/file.txt", excludedDirectories)).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "another/test/one/two/file.txt", excludedDirectories)).toBe(false);
 })
 
 test("file extensions", () => {
-  let radar = new Radar();
-  expect(radar._isExtensionWhitelisted("badext")).toBe(false);
-  expect(radar._isExtensionBlacklisted("badext")).toBe(false);
+  expect(Radar._isExtensionWhitelisted("badext", [])).toBe(false);
+  expect(Radar._isExtensionBlacklisted("badext", [])).toBe(false);
 
-  let config = { excludedFileExts: [".badext"] };
-  radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
-  expect(radar._isExtensionBlacklisted(".badext.js")).toBe(false);
-  expect(radar._isExtensionBlacklisted(".js.badext")).toBe(false);
+  let excludedFileExts = [".badext"];
+  expect(Radar._isExtensionBlacklisted(".badext", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted(".badext.js", excludedFileExts)).toBe(false);
+  expect(Radar._isExtensionBlacklisted(".js.badext", excludedFileExts)).toBe(false);
 
-  config = { excludedFileExts: [".badext*"] };
-  radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted(".badext1")).toBe(true);
-  expect(radar._isExtensionBlacklisted(".badext1.js")).toBe(true);
-  expect(radar._isExtensionBlacklisted(".js.badext1")).toBe(false);
+  excludedFileExts = [".badext*"];
+  expect(Radar._isExtensionBlacklisted(".badext1", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted(".badext1.js", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted(".js.badext1", excludedFileExts)).toBe(false);
 
-  config = { excludedFileExts: [".*badext*"] };
-  radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted(".badext1")).toBe(true);
-  expect(radar._isExtensionBlacklisted(".badext1.js")).toBe(true);
-  expect(radar._isExtensionBlacklisted(".js.badext1")).toBe(true);
+  excludedFileExts = [".*badext*"];
+  expect(Radar._isExtensionBlacklisted(".badext1", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted(".badext1.js", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted(".js.badext1", excludedFileExts)).toBe(true);
 });
 
 test("file extension- leading period is necessary", () => {
   let radar = new Radar();
-  expect(radar._isExtensionBlacklisted(".png")).toBe(true);
-  expect(radar._isExtensionBlacklisted("png")).toBe(false);
+  let excludedFileExts = radar.config().getExcludedFileExts();
+  expect(Radar._isExtensionBlacklisted(".png", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted("png", excludedFileExts)).toBe(false);
 
-  let config = { excludedFileExts: [".badext"] };
-  radar = new Radar(config);
-  expect(radar._isExtensionBlacklisted(".badext")).toBe(true);
-  expect(radar._isExtensionBlacklisted("badext")).toBe(false);
+  excludedFileExts = [".badext"];
+  expect(Radar._isExtensionBlacklisted(".badext", excludedFileExts)).toBe(true);
+  expect(Radar._isExtensionBlacklisted("badext", excludedFileExts)).toBe(false);
 });
 
 test("file exclusion- relative paths", async () => {
