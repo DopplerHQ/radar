@@ -23,6 +23,13 @@ const getValue = (value, defaultValue) => {
   return value;
 };
 
+const getArray = (value = []) => {
+  if (value instanceof Array) {
+    return value;
+  }
+  return [value];
+}
+
 const normalizeFile = (file) => {
   return file.toLowerCase();
 };
@@ -59,15 +66,15 @@ class Config {
     ));
 
     this.data = {
-      secretTypes: getValue(config.secretTypes, defaultConfig.secretTypes),
+      secretTypes: getValue(getArray(config.secretTypes), defaultConfig.secretTypes),
       maxFileSizeMiB: getValue(config.maxFileSizeMiB, defaultConfig.maxFileSizeMiB),
       maxConcurrentFileReads: getValue(config.maxConcurrentFileReads, defaultConfig.maxConcurrentFileReads),
-      includedFiles: getValue(config.includedFiles, defaultConfig.includedFiles).map(normalizeFile),
-      includedDirectories: getValue(config.includedDirectories, defaultConfig.includedDirectories).map(normalizeDirectory),
-      includedFileExts: getValue(config.includedFileExts, defaultConfig.includedFileExts).map(normalizeExtension),
-      excludedFiles: getValue(config.excludedFiles, defaultConfig.excludedFiles).map(normalizeFile),
-      excludedDirectories: getValue(config.excludedDirectories, defaultConfig.excludedDirectories).map(normalizeDirectory),
-      excludedFileExts: getValue(config.excludedFileExts, defaultConfig.excludedFileExts).map(normalizeExtension),
+      includedFiles: getValue(getArray(config.includedFiles), defaultConfig.includedFiles).map(normalizeFile),
+      includedDirectories: getValue(getArray(config.includedDirectories), defaultConfig.includedDirectories).map(normalizeDirectory),
+      includedFileExts: getValue(getArray(config.includedFileExts), defaultConfig.includedFileExts).map(normalizeExtension),
+      excludedFiles: getValue(getArray(config.excludedFiles), defaultConfig.excludedFiles).map(normalizeFile),
+      excludedDirectories: getValue(getArray(config.excludedDirectories), defaultConfig.excludedDirectories).map(normalizeDirectory),
+      excludedFileExts: getValue(getArray(config.excludedFileExts), defaultConfig.excludedFileExts).map(normalizeExtension),
     };
   }
 
