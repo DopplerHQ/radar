@@ -6,7 +6,8 @@ class KnownAPIKeys extends Secret {
     const name = 'known_api_key';
     super(name);
 
-    this.dopplerRegex = /(^|\W)dplr_[a-zA-Z0-9]{40}($|\W)/;
+    this.dopplerRegexOld = /(^|\W)dplr_[a-zA-Z0-9]{40}($|\W)/;
+    this.dopplerRegex = /(^|\W)DP\.[a-zA-Z0-9]{40}($|\W)/;
     // AWS access keys and STS keys (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-unique-ids)
     this.awsRegex = /(^|\W)A(K|S)IA[A-Z0-9]{8,}/;
     this.mailgunRegex = /(^|\W)key-[a-z0-9]{32}($|\W)/;
@@ -46,7 +47,7 @@ class KnownAPIKeys extends Secret {
   }
 
   matchKnownService(term) {
-    if (this.dopplerRegex.test(term)) {
+    if (this.dopplerRegexOld.test(term) || this.dopplerRegex.test(term)) {
       return Services.DOPPLER;
     }
     if (this.awsRegex.test(term)) {
