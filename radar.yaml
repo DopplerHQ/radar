@@ -1,2 +1,3 @@
 config:
   excludedDirectories: ["test/"]
+  excludedFiles: ["README.md"]
