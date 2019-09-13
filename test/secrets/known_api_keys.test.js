@@ -11,6 +11,7 @@ const generateResponse = (secret, service) => ({
 test('doppler api key', () => {
   const service = Services.DOPPLER;
   expect(Secret.check(["dplr_a0aA9nri4wDvBPR7p5VuSUsZmXt0sLX0Wgv7EPy1"])).toStrictEqual(generateResponse("dplr_a0aA9nri4wDvBPR7p5VuSUsZmXt0sLX0Wgv7EPy1", service));
+  expect(Secret.check(["DP.zujRMOJza32aS1wmJEh6qkfW0qjgLwKt51K9ETtI"])).toStrictEqual(generateResponse("DP.zujRMOJza32aS1wmJEh6qkfW0qjgLwKt51K9ETtI", service));
 });
 
 test('aws api key', () => {
