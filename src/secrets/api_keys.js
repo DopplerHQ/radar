@@ -47,6 +47,10 @@ class APIKeys extends Secret {
     this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8", "struct<", "<T>", "tarsum"];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
+    // exclude terms matching at least one of these regexes
+    this.excludedRegex = [
+      /(^|\W)pk_(test|live)_[a-zA-Z0-9]+/,
+    ];
   }
 
   shouldScan(tags) {
@@ -73,7 +77,8 @@ class APIKeys extends Secret {
       .trim()
       .split(/ +/)
       .filter(term => this.isTermLengthValid(term))
-      .filter(term => this.isAlphaNumeric(term));
+      .filter(term => this.isAlphaNumeric(term))
+      .filter(term => this.excludedRegex.every(regex => !regex.test(term)));
   }
 
   isAlphaNumeric(term) {
