@@ -52,18 +52,20 @@ class Radar {
     const stats = await Filesystem.getFileStats(path);
     this.basePath = path;
 
-    if (stats.isDirectory()) {
-      const filesToScan = await this._getDirectoryFiles(path);
-      this._onFilesToScan(filesToScan.length);
-      return asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile)
-        .then(results => Radar._getResultsMap(path, results.filter(result => result.hasSecrets())));
-    }
+    const filesToScan = await (async () => {
+      if (stats.isDirectory()) {
+        return await this._getDirectoryFiles(path);
+      }
+      if (stats.isFile()) {
+        return [await Radar._getFileObject(path, this.basePath)];
+      }
+      return null;
+    })();
 
-    if (stats.isFile()) {
-      this._onFilesToScan(1);
-      const file = await Radar._getFileObject(path, this.basePath);
-      return this._scanFile(file)
-        .then(results => Radar._getResultsMap(file.path(), [results].filter(result => result.hasSecrets())));
+    if (filesToScan !== null) {
+      this._onFilesToScan(filesToScan.length);
+      let results = await asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile);
+      return Radar._getResultsMap(path, results.filter(result => result.hasSecrets()));
     }
   }
 
