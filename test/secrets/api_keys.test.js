@@ -33,3 +33,8 @@ test('is alpha numeric', () => {
   // must have 3 distinct groups of numbers
   expect(APIKeys.isAlphaNumeric("abc 1 2 2")).toStrictEqual(false);
 });
+
+test('terms excluded by regex', () => {
+  expect(APIKeys.getTerms("pk_test_uhHMJ7wv13LbAl5rmfZvI08d")).toStrictEqual([]);
+  expect(APIKeys.getTerms("pk_live_uhHMJ7wv13LbAl5rmfZvI08d")).toStrictEqual([]);
+});
