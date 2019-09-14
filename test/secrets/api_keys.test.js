@@ -37,4 +37,5 @@ test('is alpha numeric', () => {
 test('terms excluded by regex', () => {
   expect(APIKeys.getTerms("pk_test_uhHMJ7wv13LbAl5rmfZvI08d")).toStrictEqual([]);
   expect(APIKeys.getTerms("pk_live_uhHMJ7wv13LbAl5rmfZvI08d")).toStrictEqual([]);
+  expect(APIKeys.getTerms("iauth_1CmMk2IyNTgGDVfzFKlCm0gU")).toStrictEqual([]);
 });

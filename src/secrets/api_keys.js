@@ -50,6 +50,7 @@ class APIKeys extends Secret {
     // exclude terms matching at least one of these regexes
     this.excludedRegex = [
       /(^|\W)pk_(test|live)_[a-zA-Z0-9]+/,
+      /(^|\W)iauth_[a-zA-Z0-9]{24}($|\W)/,
     ];
   }
 
