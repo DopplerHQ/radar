@@ -78,21 +78,18 @@ class Scanner {
   }
 
   /**
-   * Remove secrets detected earlier by other secret types
+   * Remove secrets already detected by other secret types
    * @param {Object} secrets
    */
   static dedupeSecrets(secrets) {
-    return secrets.filter((secret, i) => {
-      if (i === 0) {
-        return true;
-      }
+    const uniqueSecrets = new Set();
 
-      for (i -= 1; i >= 0; i -= 1) {
-        // NOTE this won't detect partially overlapping secrets (e.g. "0123" and "1234"). that's ok (and probably desired?)
-        if (secrets[i].secret.includes(secret.secret)) {
+    return secrets.filter(({ secret }) => {
+      if (uniqueSecrets.has(secret)) {
           return false;
         }
-      }
+
+      uniqueSecrets.add(secret);
       return true;
     });
   }
