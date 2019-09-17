@@ -68,3 +68,10 @@ test("group of alphanumerics", () => {
 
   expect(Filter.isMatch("ABKAVQF-RUO4CYO-FSC2VIP-VRX4QDA-TQQRN2J-MRDXJUC-FXNWP6N")).toBe(false);
 });
+
+test("underscore separated terms", () => {
+  expect(Filter.isMatch("COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2")).toBe(true);
+  expect(Filter.isMatch("R_AARCH64_TLSLD_LDST128_DTPREL_LO12_NC")).toBe(true);
+  expect(Filter.isMatch("WEBGL_compressed_texture_etc.COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2")).toBe(true);
+  expect(Filter.isMatch("gl.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2")).toBe(true);
+});
