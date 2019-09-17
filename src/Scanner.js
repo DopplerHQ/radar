@@ -10,7 +10,8 @@ const SecretTypes = [
   "crypto_keys",
   "auth_urls",
   "api_keys",
-  "env_variable",
+  // disable env variable scanning for now. doesn't provide much value (yet)
+  // "env_variable",
 ];
 
 class Scanner {
