@@ -34,3 +34,14 @@ test('is not auth url', () => {
 
   expect(Filter.isMatch("random text")).toBe(false);
 });
+
+test('is variable', () => {
+  expect(Filter.isVariable("$test")).toBe(true);
+  expect(Filter.isVariable("#test")).toBe(true);
+  expect(Filter.isVariable("{test}")).toBe(true);
+  expect(Filter.isVariable("<test>")).toBe(true);
+  expect(Filter.isVariable("*****")).toBe(true);
+
+  expect(Filter.isVariable("test")).toBe(false);
+  expect(Filter.isVariable("*test")).toBe(false);
+});
