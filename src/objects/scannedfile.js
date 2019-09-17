@@ -79,7 +79,7 @@ class ScannedFile {
         const value = this._results[key];
         return {
           line: value.line,
-          lineNumber: parseInt(key),
+          lineNumber: Number(key),
           findings: value.findings.map(secret => ({
             text: secret.secret(),
             type: secret.type(),
