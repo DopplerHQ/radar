@@ -29,7 +29,8 @@ class AuthURL extends Filter {
 
   static isVariable(text) {
     return text.startsWith('$') || text.startsWith('#')
-      || (text.startsWith('{') && text.endsWith('}'));
+      || (text.startsWith('{') && text.endsWith('}'))
+      || (text.startsWith('<') && text.endsWith('>'));
   }
 }
 
