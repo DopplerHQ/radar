@@ -32,7 +32,7 @@ class APIKeys extends Secret {
     const excludedFileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.ENV_FILE, FileTags.NO_EXTENSION];
     super(name, { preFilters, filters, excludedFileTags });
 
-    this.charactersToReplace = /(\||"|'|;|\\|\(\)|{}|(->))+/g;
+    this.charactersToReplace = /(\||"|'|`|;|\\|\(\)|{}|(->))+/g;
     this.variableNameRegex = (/^([a-zA-Z0-9]{2,}_)+([a-zA-Z0-9]){2,}(=|:)/);
     this.lettersRegex = /[a-z]/ig;
     this.groupsOfNumbersRegex = /[0-9]+/ig;
@@ -44,7 +44,7 @@ class APIKeys extends Secret {
     this.maxLineLength = 512;
 
     // exclude reserved terms that can appear without being separated by a space
-    this.excludedTerms = ['regexp', 'shasum', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8", "struct<", "<T>", "tarsum"];
+    this.excludedTerms = ['regexp', 'shasum', 'sha256', 'sha1', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'git', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8", "struct<", "<T>", "tarsum"];
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
     // exclude terms matching at least one of these regexes
