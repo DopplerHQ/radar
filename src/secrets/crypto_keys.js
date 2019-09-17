@@ -5,9 +5,8 @@ class CryptoKeys extends Secret {
   constructor() {
     const name = 'crypto_key';
     const filters = ['private_keys', 'public_keys'];
-    const fileTags = [FileTags.CRYPTO_PRIVATE_KEY, FileTags.CRYPTO_PUBLIC_KEY, FileTags.NO_EXTENSION];
 
-    super(name, { filters, fileTags });
+    super(name, { filters });
   }
 
   check(terms) {
