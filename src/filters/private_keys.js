@@ -4,8 +4,8 @@ class PrivateKeys extends Filter {
   constructor() {
     super('Identify cryptographic private keys');
 
-    this.beginPrivateKeyRegex = (/^.*BEGIN .*PRIVATE KEY.*$/i);
-    this.endPrivateKeyRegex = (/^.*END .*PRIVATE KEY.*$/i);
+    this.beginPrivateKeyRegex = (/^.*BEGIN .{0,20}PRIVATE KEY.*$/i);
+    this.endPrivateKeyRegex = (/^.*END .{0,20}PRIVATE KEY.*$/i);
   }
 
   isMatch(term) {
