@@ -58,7 +58,8 @@ test('stripe webhook', () => {
 test('mailchimp api key', () => {
   const service = Services.MAILCHIMP;
   expect(Secret.check(["e8dce5838970d83428c97c574c435b3d-us3"])).toStrictEqual(generateResponse("e8dce5838970d83428c97c574c435b3d-us3", service));
-  expect(Secret.check(["5f3290914054a7b2030ed7ccc3b98e72-c50f4a19-c3e64fd6"])).toStrictEqual(generateResponse("5f3290914054a7b2030ed7ccc3b98e72-c50f4a19-c3e64fd6", service));
+  expect(Secret.check(["1021115cfd2835ee42ca41e335e7bcf5-us3"])).toStrictEqual(generateResponse("1021115cfd2835ee42ca41e335e7bcf5-us3", service));
+  expect(Secret.check(["bf2898d2af6d91b23e21a9c49d32cf7a-us3"])).toStrictEqual(generateResponse("bf2898d2af6d91b23e21a9c49d32cf7a-us3", service));
 });
 
 test('sqreen api key', () => {

@@ -17,7 +17,7 @@ class KnownAPIKeys extends Secret {
     this.slackWebhookRegex = /(^|\W)https:\/\/hooks\.slack\.com\/T[a-zA-Z0-9]+\/B[a-zA-Z0-9]+\/[a-zA-Z0-9]+/;
     this.stripeRegex = /(^|\W)sk_(test|live)_[a-zA-Z0-9]+/;
     this.stripeWebhookRegex = /(^|\W)whsec_[a-zA-Z0-9]+/;
-    this.mailchimpRegex = /(^|\W)[a-z0-9]{32}-[a-z0-9]{3,}/;
+    this.mailchimpRegex = /(^|\W)[a-z0-9]{32}-[a-z]{2}[0-9]($|\W)/;
     this.sqreenRegex = /(^|\W)org_[a-z0-9]{60}($|\W)/;
     this.squareRegex = /(^|\W)EAAAE[a-zA-Z0-9\-_]{32,}/;
     this.asanaRegex = /(^|\W)0\/[a-z0-9]{32}($|\W)/;
