@@ -80,13 +80,6 @@ test('asana api key', () => {
   expect(Secret.check(["0/47ed1b9ef4a32dd30bf4f18ab33cff35"])).toStrictEqual(generateResponse("0/47ed1b9ef4a32dd30bf4f18ab33cff35", service));
 });
 
-test('vault service token', () => {
-  const service = Services.HASHICORP_VAULT;
-  expect(Secret.check(["s.Cy1cZb3SxPt0AyrItnfsYKOt"])).toStrictEqual(generateResponse("s.Cy1cZb3SxPt0AyrItnfsYKOt", service));
-  expect(Secret.check(["s.qEyxgivQEIoR9QyCW0ZPFsve"])).toStrictEqual(generateResponse("s.qEyxgivQEIoR9QyCW0ZPFsve", service));
-  expect(Secret.check(["s.CuqM2F9yV20Z5B30sAorMDrg"])).toStrictEqual(generateResponse("s.CuqM2F9yV20Z5B30sAorMDrg", service));
-});
-
 test('not a key', () => {
   expect(Secret.check([""])).toStrictEqual({ secrets: [], metadata: {} });
   expect(Secret.check(["test"])).toStrictEqual({ secrets: [], metadata: {} });
