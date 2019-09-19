@@ -58,7 +58,8 @@ test('stripe webhook', () => {
 test('mailchimp api key', () => {
   const service = Services.MAILCHIMP;
   expect(Secret.check(["e8dce5838970d83428c97c574c435b3d-us3"])).toStrictEqual(generateResponse("e8dce5838970d83428c97c574c435b3d-us3", service));
-  expect(Secret.check(["5f3290914054a7b2030ed7ccc3b98e72-c50f4a19-c3e64fd6"])).toStrictEqual(generateResponse("5f3290914054a7b2030ed7ccc3b98e72-c50f4a19-c3e64fd6", service));
+  expect(Secret.check(["1021115cfd2835ee42ca41e335e7bcf5-us3"])).toStrictEqual(generateResponse("1021115cfd2835ee42ca41e335e7bcf5-us3", service));
+  expect(Secret.check(["bf2898d2af6d91b23e21a9c49d32cf7a-us3"])).toStrictEqual(generateResponse("bf2898d2af6d91b23e21a9c49d32cf7a-us3", service));
 });
 
 test('sqreen api key', () => {
@@ -77,13 +78,6 @@ test('asana api key', () => {
   const service = Services.ASANA;
   expect(Secret.check(["0/cc0c5ef726096a8cf7c11ba53e596443"])).toStrictEqual(generateResponse("0/cc0c5ef726096a8cf7c11ba53e596443", service));
   expect(Secret.check(["0/47ed1b9ef4a32dd30bf4f18ab33cff35"])).toStrictEqual(generateResponse("0/47ed1b9ef4a32dd30bf4f18ab33cff35", service));
-});
-
-test('vault service token', () => {
-  const service = Services.HASHICORP_VAULT;
-  expect(Secret.check(["s.Cy1cZb3SxPt0AyrItnfsYKOt"])).toStrictEqual(generateResponse("s.Cy1cZb3SxPt0AyrItnfsYKOt", service));
-  expect(Secret.check(["s.qEyxgivQEIoR9QyCW0ZPFsve"])).toStrictEqual(generateResponse("s.qEyxgivQEIoR9QyCW0ZPFsve", service));
-  expect(Secret.check(["s.CuqM2F9yV20Z5B30sAorMDrg"])).toStrictEqual(generateResponse("s.CuqM2F9yV20Z5B30sAorMDrg", service));
 });
 
 test('not a key', () => {

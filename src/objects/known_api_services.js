@@ -11,7 +11,6 @@ const services = {
   SQREEN: "sqreen",
   SQUARE: "square",
   ASANA: "asana",
-  HASHICORP_VAULT: "hashicorp-vault",
 };
 Object.freeze(services);
 

@@ -2,7 +2,7 @@
   "audio": ["*.aif", "*.cda", "*.mid", "*.mp3", "*.mpa", "*.ogg", "*.wav", "*.wma", "*.wpl", "*.dts", "*.ac3"],
   "video": ["*.3g2", "*.3gp", "*.avi", "*.flv", "*.h264", "*.h265", "*.m4v", "*.mkv", "*.mov", "*.mp4", "*.mpg", "*.mpeg", "*.rm", "*.swf", "*.vob", "*.wmv", "*.webm", "*.idx"],
   "image": ["*.ai", "*.bmp", "*.gif", "*.ico", "*.jpeg", "*.jpg", "*.png", "*.ps", "*.psd", "*.svg", "*.tif", "*.tiff", "*.icns"],
-  "compressed": ["*.7z", "*.arj", "*.pkg", "*.rar", "*.rpm", "*.gz", "*.z", "*.zip", "*.tar.gz", "*.tar", "*.bz2", "*.whl", "*.phar", "*.tgz"],
+  "compressed": ["*.7z", "*.arj", "*.pkg", "*.rar", "*.rpm", "*.gz", "*.z", "*.zip", "*.tar.gz", "*.tar", "*.bz2", "*.whl", "*.phar", "*.tgz", "*.car"],
   "font": ["*.otf", "*.ttf", "*.woff", "*.woff2", "*.eot"],
   "document": ["*.pdf", "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx", "*.txt", "*.rtf", "*.asciidoc"],
   "binary": ["*.o", "*.exe", "*.dmg", "*.deb", "*.msi", "*.node", "*.bin", "*.s", "*.so", "*.so.0", "*.jar", "*.war", "*.har", "*.hqx", "*.sa", "*.asm", "*.nasm", "*.a51", "*.syso", "*.xbf", "*.ipa", "*.app"],

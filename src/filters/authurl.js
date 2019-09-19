@@ -24,13 +24,14 @@ class AuthURL extends Filter {
 
     const authUsername = isAuthUrl[1];
     const authPassword = isAuthUrl[2];
-    return !AuthURL.isVariable(authUsername) && !AuthURL.isVariable(authPassword);
+    return !this.isVariable(authUsername) && !this.isVariable(authPassword);
   }
 
-  static isVariable(text) {
+  isVariable(text) {
     return text.startsWith('$') || text.startsWith('#')
       || (text.startsWith('{') && text.endsWith('}'))
-      || (text.startsWith('<') && text.endsWith('>'));
+      || (text.startsWith('<') && text.endsWith('>'))
+      || (/^\*+$/.test(text));
   }
 }
 

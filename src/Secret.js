@@ -31,15 +31,11 @@ class Secret {
    */
   check(terms) {
     const secrets = terms.filter((term) => {
-      const matchesAnyPreFilters = this._preFilters.reduce((acc, preFilter) => (
-        acc || preFilter.isMatch(term)
-      ), false);
+      const matchesAnyPreFilters = this._preFilters.some(preFilter => preFilter.isMatch(term));
       return !matchesAnyPreFilters;
     })
       .filter((term) => {
-        const matchesAnyFilters = this._filters.reduce((acc, filter) => (
-          acc || filter.isMatch(term)
-        ), false);
+        const matchesAnyFilters = this._filters.some(filter => filter.isMatch(term));
         return matchesAnyFilters;
       });
 

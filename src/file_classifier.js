@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const File = require('./objects/file');
 const FileTags = require('./objects/file_tags');
 
 class FileClassifier {

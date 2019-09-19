@@ -27,6 +27,7 @@ program
 
       if (!isValidCommand) {
         console.log("Invalid command:", command);
+        program.help();
         return;
       }
     }
