@@ -2,11 +2,11 @@
 
 const program = require('commander');
 
-const packageFile = require('../package');
+const Radar = require('./radar');
 
 program
   .name("radar")
-  .version(packageFile.version)
+  .version(Radar.version())
   .description("Detect API keys, credentials, and other sensitive secrets in your codebase")
   .command("scan <path>", "Scan a file, directory, or remote git repo for secrets", { executableFile: 'cli/scan' })
   .command("list <type>", "List available configuration", { executableFile: 'cli/list' })
