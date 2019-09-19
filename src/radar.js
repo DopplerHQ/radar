@@ -64,7 +64,7 @@ class Radar {
 
     if (filesToScan !== null) {
       this._onFilesToScan(filesToScan.length);
-      let results = await asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile);
+      const results = await asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile);
       return Radar._getResultsMap(path, results.filter(result => result.hasSecrets()));
     }
   }
