@@ -22,34 +22,32 @@ class Dictionary extends Filter {
       }
     });
 
-    Object.keys(ExcludedFiletypes).forEach((type) => {
-      ExcludedFiletypes[type].forEach((fileExt) => {
-        if (fileExt.startsWith("*.")) {
-          fileExt = fileExt.substring(2);
-        }
-        else if (fileExt.startsWith('.')) {
-          fileExt = fileExt.substring(1);
-        }
+    const buildCustomDictionary = (fileTypes) => {
+      Object.keys(fileTypes).forEach((type) => {
+        fileTypes[type].forEach((fileExt) => {
+          // *.js -> js
+          if (fileExt.startsWith("*.")) {
+            fileExt = fileExt.substring(2);
+          }
+          // .js -> js
+          else if (fileExt.startsWith('.')) {
+            fileExt = fileExt.substring(1);
+          }
 
-        if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
-          this.customDictionaryMap[fileExt.toLowerCase()] = true;
-        }
-      });
-    });
-    Object.keys(IncludedFiletypes).forEach((type) => {
-      IncludedFiletypes[type].forEach((fileExt) => {
-        if (fileExt.startsWith("*.")) {
-          fileExt = fileExt.substring(2);
-        }
-        else if (fileExt.startsWith('.')) {
-          fileExt = fileExt.substring(1);
-        }
+          // js.* -> js
+          if (fileExt.endsWith(".*")) {
+            fileExt = fileExt.substring(0, fileExt.length - 2)
+          }
 
-        if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
-          this.customDictionaryMap[fileExt.toLowerCase()] = true;
-        }
+          if ((fileExt.length >= this.minimumWordLength) && (this.alphaNumericRegex.test(fileExt))) {
+            this.customDictionaryMap[fileExt.toLowerCase()] = true;
+          }
+        });
       });
-    });
+    };
+
+    buildCustomDictionary(ExcludedFiletypes);
+    buildCustomDictionary(IncludedFiletypes);
   }
 
   isMatch(term) {
