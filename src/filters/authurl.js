@@ -4,12 +4,13 @@ class AuthURL extends Filter {
   constructor() {
     super('Auth URL');
 
+    this.otpAuthRegex = /otpauth:\/\/\w+/;
     // look for protocol (//), username (any chars except / : @ .), colon (:), password (any chars except / : @ .), @ symbol
     this.authUrlRegex = /\/\/([^/:@.]{3,}):([^/:@.]{3,})@/;
   }
 
   isMatch(term) {
-    if (term.includes("otpauth://")) {
+    if (this.otpAuthRegex.test(term)) {
       return true;
     }
 
