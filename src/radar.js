@@ -8,6 +8,7 @@ const Scanner = require('./Scanner');
 const Config = require('./config');
 const FileClassifier = require('./file_classifier');
 const globs = require('./globs');
+const packageFile = require('../package');
 
 const OneMebibyte = 1024 * 1024;
 
@@ -268,6 +269,10 @@ class Radar {
 
   config() {
     return this._config;
+  }
+
+  static version() {
+    return packageFile.version;
   }
 }
 
