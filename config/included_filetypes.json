@@ -21,7 +21,8 @@
     "*.pkcs",
     "*.pkcs12",
     "*.ppk",
-    "*.spc"
+    "*.spc",
+    "*.ssh"
   ],
   "public_keys": [
     "*.cert",
@@ -81,9 +82,15 @@
   ],
   "html": [
     "*.html",
+    "*.mhtml",
     "*.xhtml",
     "*.xht",
-    "*.htm"
+    "*.phtml",
+    "*.ihtml",
+    "*.shtml",
+    "*.htm",
+    "*.jsp",
+    "*.jsx"
   ],
   "julia": [
     "*.jl"
@@ -113,8 +120,9 @@
     "*.py",
     "*.py3",
     "*.ipynb",
+    "*.pyde",
     "*.pyi",
-    "*.pyde"
+    "*.pyw"
   ],
   "rust": [
     "*.rs"
