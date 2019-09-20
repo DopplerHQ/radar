@@ -10,7 +10,8 @@
     "npm-shrinkwrap.json",
     "yarn.lock",
     "go.sum",
-    "certs.go"
+    "certs.go",
+    "changelog.md"
   ],
   "excludedDirectories": [
     "**/.git",
