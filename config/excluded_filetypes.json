@@ -357,7 +357,9 @@
     "*.tmp",
     "*.part",
     "*.part.*",
-    "*.ini"
+    "*.ini",
+    "*.example.*",
+    "*.examples.*"
   ],
   "translation": [
     "*.po",
