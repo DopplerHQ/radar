@@ -264,3 +264,22 @@ test("results map", () => {
     }
   );
 });
+
+test('filter results', () => {
+  const config = { maxFindingsPerFile: 1 };
+  const radar = new Radar(config);
+
+  const file1 = new ScannedFile(new File("test1.txt", "/root", "", 0));
+  file1.addSecret("", "api_key", "", 0);
+  file1.addSecret("", "api_key", "", 0);
+  file1.addSecret("", "type2", "", 0);
+  const file2 = new ScannedFile(new File("test2.txt", "/root", "", 0));
+  file2.addSecret("", "api_key", "", 0);
+  file2.addSecret("", "type2", "", 0);
+
+  expect(file1.numSecrets()).toStrictEqual(3);
+  expect(file2.numSecrets()).toStrictEqual(2);
+  radar.filterResults([file1, file2]);
+  expect(file1.numSecrets()).toStrictEqual(1);
+  expect(file2.numSecrets()).toStrictEqual(2);
+});
