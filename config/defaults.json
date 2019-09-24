@@ -2,6 +2,7 @@
   "secretTypes": [],
   "maxFileSizeMiB": 10,
   "maxConcurrentFileReads": 10,
+  "maxFindingsPerFile": 25,
   "includedFiles": [],
   "includedDirectories": [],
   "includedFileExts": [],

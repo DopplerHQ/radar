@@ -7,6 +7,7 @@ class ScannedFile {
    */
   constructor(file) {
     this._file = file;
+    this._numSecrets = 0;
     this._results = {};
     // used for tags identified by the static file classifier. these tags cannot be removed
     this._fileTags = new Set();
@@ -23,7 +24,34 @@ class ScannedFile {
   }
 
   hasSecrets() {
-    return (Object.keys(this._results).length !== 0);
+    return this._numSecrets > 0;
+  }
+
+  numSecrets() {
+    return this._numSecrets;
+  }
+
+  removeSecrets(type) {
+    if (!type) {
+      return;
+    }
+
+    Object.keys(this._results).forEach(lineNumber => {
+      const { findings } = this._results[lineNumber];
+      const preLength = findings.length;
+      this._results[lineNumber].findings = findings.filter(secret => secret.type() !== type);
+      const postLength = this._results[lineNumber].findings.length;
+      this._numSecrets -= (preLength - postLength);
+    })
+  }
+
+  secrets() {
+    const secrets = [];
+    Object.keys(this._results).forEach(lineNumber => {
+      const { findings } = this._results[lineNumber];
+      secrets.push(...findings);
+    })
+    return secrets;
   }
 
   /**
@@ -44,6 +72,7 @@ class ScannedFile {
 
     const secretsOnLine = this._results[lineNumber];
     secretsOnLine.findings.push(new Secret(secret, type, metadata));
+    this._numSecrets += 1;
   }
 
    /**

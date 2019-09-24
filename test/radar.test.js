@@ -214,7 +214,9 @@ test("file size exclusion", () => {
 test("results map", () => {
   const path = "/root"
   const scannedFile1 = new ScannedFile(new File("tester.txt", path, path, 123));
+  scannedFile1.addSecret("one", "one", "one", 0);
   const scannedFile2 = new ScannedFile(new File("anothertest.ext", path, path, 456));
+  scannedFile2.addSecret("two", "two", "two", 0);
   const scanResults = [scannedFile1, scannedFile2];
 
   expect(Radar._getResultsMap(path, scanResults)).toStrictEqual(
@@ -225,7 +227,19 @@ test("results map", () => {
           extension: ".txt",
           numLines: 0,
         },
-        lines: [],
+        lines: [
+          {
+            line: "one",
+            lineNumber: 0,
+            findings: [
+              {
+                metadata: {},
+                text: "one",
+                type: "one",
+              }
+            ]
+          }
+        ],
       },
       "anothertest.ext": {
         metadata: {
@@ -233,7 +247,19 @@ test("results map", () => {
           extension: ".ext",
           numLines: 0,
         },
-        lines: [],
+        lines: [
+          {
+            line: "two",
+            lineNumber: 0,
+            findings: [
+              {
+                metadata: {},
+                text: "two",
+                type: "two",
+              }
+            ]
+          }
+        ],
       },
     }
   );
