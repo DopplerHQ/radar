@@ -358,6 +358,7 @@
     "*.part",
     "*.part.*",
     "*.ini",
+    "*.db",
     "*.example.*",
     "*.examples.*"
   ],
