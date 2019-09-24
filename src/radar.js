@@ -72,7 +72,8 @@ class Radar {
   }
 
   /**
-   * Filter out results not matching our constraints
+   * Filter out results not matching our constraints.
+   * This function will directly modify its argument.
    * @param {Array<ScannedFile>} results
    */
   filterResults(results) {
