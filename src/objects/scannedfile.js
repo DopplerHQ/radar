@@ -46,12 +46,10 @@ class ScannedFile {
   }
 
   secrets() {
-    const secrets = [];
-    Object.keys(this._results).forEach(lineNumber => {
+    return Object.keys(this._results).reduce((acc, lineNumber) => {
       const { findings } = this._results[lineNumber];
-      secrets.push(...findings);
-    })
-    return secrets;
+      return acc.concat(findings);
+    }, []);
   }
 
   /**
