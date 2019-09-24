@@ -60,13 +60,13 @@ test("file exclusion- all possible states", async () => {
 });
 
 test("filename exclusion", () => {
-  const excludedFiles = ["test/one/file.txt1"];
+  const excludedFiles = ["tester/one/file.txt1"];
 
   expect(Radar._isNameBlacklisted("file.txt1", "", excludedFiles)).toBe(false);
   expect(Radar._isNameBlacklisted("file.txt1", "one/file.txt1", excludedFiles)).toBe(false);
-  expect(Radar._isNameBlacklisted("file.txt1", "test/one/file.txt1", excludedFiles)).toBe(true);
-  expect(Radar._isNameBlacklisted("file.txt1", "/test/one/file.txt1", excludedFiles)).toBe(false);
-  expect(Radar._isNameBlacklisted("file.txt1", "another/test/one/file.txt1", excludedFiles)).toBe(false);
+  expect(Radar._isNameBlacklisted("file.txt1", "tester/one/file.txt1", excludedFiles)).toBe(true);
+  expect(Radar._isNameBlacklisted("file.txt1", "/tester/one/file.txt1", excludedFiles)).toBe(false);
+  expect(Radar._isNameBlacklisted("file.txt1", "another/tester/one/file.txt1", excludedFiles)).toBe(false);
 })
 
 test("default file exclusions", () => {
@@ -87,19 +87,19 @@ test("default directory exclusions", () => {
   expect(Radar._isDirectoryBlacklisted("node_modules", "src/dir/node_modules", excludedDirectories)).toBe(true);
 
   // this dir shouldn't be explicitly excluded. rather, it'll never even be known about because its parent is excluded
-  expect(Radar._isDirectoryBlacklisted("test", "src/dir/node_modules/test", excludedDirectories)).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("tester", "src/dir/node_modules/tester", excludedDirectories)).toBe(false);
 });
 
 test("directory exclusion", () => {
-  const excludedDirectories = ["test/**/*"];
+  const excludedDirectories = ["tester/**/*"];
 
-  expect(Radar._isDirectoryBlacklisted("test", "test", excludedDirectories)).toBe(false);
-  expect(Radar._isDirectoryBlacklisted("file.txt", "test/file.txt", excludedDirectories)).toBe(true);
-  expect(Radar._isDirectoryBlacklisted("one", "test/one", excludedDirectories)).toBe(true);
-  expect(Radar._isDirectoryBlacklisted("two", "test/one/two", excludedDirectories)).toBe(true);
-  expect(Radar._isDirectoryBlacklisted("file.txt", "test/one/two/file.txt", excludedDirectories)).toBe(true);
-  expect(Radar._isDirectoryBlacklisted("file.txt", "/test/one/two/file.txt", excludedDirectories)).toBe(false);
-  expect(Radar._isDirectoryBlacklisted("file.txt", "another/test/one/two/file.txt", excludedDirectories)).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("tester", "tester", excludedDirectories)).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "tester/file.txt", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("one", "tester/one", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("two", "tester/one/two", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "tester/one/two/file.txt", excludedDirectories)).toBe(true);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "/tester/one/two/file.txt", excludedDirectories)).toBe(false);
+  expect(Radar._isDirectoryBlacklisted("file.txt", "another/tester/one/two/file.txt", excludedDirectories)).toBe(false);
 })
 
 test("file extensions", () => {
@@ -158,13 +158,13 @@ test("directory exclusion - all possible states", () => {
   config = { includedDirectories: ["gooddir"] };
   radar = new Radar(config);
   expect(radar._checkDirectory("gooddir")).toBe(true);
-  expect(radar._checkDirectory("test.gooddir")).toBe(true);
+  expect(radar._checkDirectory("tester.gooddir")).toBe(true);
 
   // blacklisted
   config = { excludedDirectories: ["baddir"] };
   radar = new Radar(config);
   expect(radar._checkDirectory("baddir")).toBe(false);
-  expect(radar._checkDirectory("test.baddir")).toBe(true);
+  expect(radar._checkDirectory("tester.baddir")).toBe(true);
 
   // whitelisted and blacklisted
   config = { includedDirectories: ["baddir"], excludedDirectories: ["baddir"] };
@@ -180,8 +180,8 @@ test("directory exclusion- relative paths", () => {
   expect(radar._checkDirectory("subdir", "nested/directory/subdir")).toBe(false);
   expect(radar._checkDirectory("subdir3", "nested/directory/subdir1/subdir2/subdir3")).toBe(false);
 
-  expect(radar._checkDirectory("test", "")).toBe(true);
-  expect(radar._checkDirectory("test", "/")).toBe(true);
+  expect(radar._checkDirectory("tester", "")).toBe(true);
+  expect(radar._checkDirectory("tester", "/")).toBe(true);
 
   // explicit inclusion overrides wildcard exclusion
   config = { includedDirectories: ["nested/directory/one"], excludedDirectories: ["nested/directory/**/*"] };
@@ -213,13 +213,13 @@ test("file size exclusion", () => {
 
 test("results map", () => {
   const path = "/root"
-  const scannedFile1 = new ScannedFile(new File("test.txt", path, path, 123));
+  const scannedFile1 = new ScannedFile(new File("tester.txt", path, path, 123));
   const scannedFile2 = new ScannedFile(new File("anothertest.ext", path, path, 456));
   const scanResults = [scannedFile1, scannedFile2];
 
   expect(Radar._getResultsMap(path, scanResults)).toStrictEqual(
     {
-      "test.txt": {
+      "tester.txt": {
         metadata: {
           size: 123,
           extension: ".txt",

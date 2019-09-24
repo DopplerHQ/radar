@@ -15,10 +15,12 @@
   ],
   "excludedDirectories": [
     "**/.git",
-    "**/node_modules",
-    "**/bower_components",
     "**/.vscode",
-    "**/.xcodeproj"
+    "**/.xcodeproj",
+    "**/bower_components",
+    "**/node_modules",
+    "**/test",
+    "**/tests"
   ],
   "excludedFileExts": []
 }
