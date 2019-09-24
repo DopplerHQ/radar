@@ -214,7 +214,9 @@ test("file size exclusion", () => {
 test("results map", () => {
   const path = "/root"
   const scannedFile1 = new ScannedFile(new File("tester.txt", path, path, 123));
+  scannedFile1.addSecret("one", "one", "one", 0);
   const scannedFile2 = new ScannedFile(new File("anothertest.ext", path, path, 456));
+  scannedFile2.addSecret("two", "two", "two", 0);
   const scanResults = [scannedFile1, scannedFile2];
 
   expect(Radar._getResultsMap(path, scanResults)).toStrictEqual(
@@ -225,7 +227,19 @@ test("results map", () => {
           extension: ".txt",
           numLines: 0,
         },
-        lines: [],
+        lines: [
+          {
+            line: "one",
+            lineNumber: 0,
+            findings: [
+              {
+                metadata: {},
+                text: "one",
+                type: "one",
+              }
+            ]
+          }
+        ],
       },
       "anothertest.ext": {
         metadata: {
@@ -233,8 +247,39 @@ test("results map", () => {
           extension: ".ext",
           numLines: 0,
         },
-        lines: [],
+        lines: [
+          {
+            line: "two",
+            lineNumber: 0,
+            findings: [
+              {
+                metadata: {},
+                text: "two",
+                type: "two",
+              }
+            ]
+          }
+        ],
       },
     }
   );
+});
+
+test('filter results', () => {
+  const config = { maxFindingsPerFile: 1 };
+  const radar = new Radar(config);
+
+  const file1 = new ScannedFile(new File("test1.txt", "/root", "", 0));
+  file1.addSecret("", "api_key", "", 0);
+  file1.addSecret("", "api_key", "", 0);
+  file1.addSecret("", "type2", "", 0);
+  const file2 = new ScannedFile(new File("test2.txt", "/root", "", 0));
+  file2.addSecret("", "api_key", "", 0);
+  file2.addSecret("", "type2", "", 0);
+
+  expect(file1.numSecrets()).toStrictEqual(3);
+  expect(file2.numSecrets()).toStrictEqual(2);
+  radar.filterResults([file1, file2]);
+  expect(file1.numSecrets()).toStrictEqual(1);
+  expect(file2.numSecrets()).toStrictEqual(2);
 });

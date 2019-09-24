@@ -66,8 +66,27 @@ class Radar {
     if (filesToScan !== null) {
       this._onFilesToScan(filesToScan.length);
       const results = await asyncPool(this._config.getMaxConcurrentFileReads(), filesToScan, this._scanFile);
+      this.filterResults(results);
       return Radar._getResultsMap(path, results.filter(result => result.hasSecrets()));
     }
+  }
+
+  /**
+   * Filter out results not matching our constraints.
+   * This function will directly modify its argument.
+   * @param {Array<ScannedFile>} results
+   */
+  filterResults(results) {
+    const apiKeyType = "api_key";
+    const maxApiKeyFindings = this._config.getMaxFindingsPerFile();
+
+    results.filter(val => val.hasSecrets())
+      .forEach((scannedFile) => {
+        const numApiKeysDetected = scannedFile.secrets().filter(secret => secret.type() === apiKeyType).length;
+        if (numApiKeysDetected > maxApiKeyFindings) {
+          scannedFile.removeSecrets(apiKeyType);
+        }
+      });
   }
 
   /**
@@ -251,10 +270,11 @@ class Radar {
    */
   static _getResultsMap(path, scanResults) {
     const results = {};
-    scanResults.forEach((scannedFile) => {
-      const relativePath = scannedFile.file().relativePath();
-      results[relativePath] = scannedFile.toObject();
-    });
+    scanResults.filter(scannedFile => scannedFile.hasSecrets())
+      .forEach((scannedFile) => {
+        const relativePath = scannedFile.file().relativePath();
+        results[relativePath] = scannedFile.toObject();
+      });
     return results;
   }
 

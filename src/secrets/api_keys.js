@@ -2,6 +2,7 @@ const FileTags = require('../objects/file_tags');
 const Secret = require('../Secret');
 const TimeZones = require('../dictionaries/timezones');
 const Countries = require('../dictionaries/countries');
+const ExcludedTerms = require('../dictionaries/excluded-terms');
 
 class APIKeys extends Secret {
   constructor() {
@@ -44,7 +45,7 @@ class APIKeys extends Secret {
     this.maxLineLength = 512;
 
     // exclude reserved terms that can appear without being separated by a space
-    this.excludedTerms = ['commit', 'regexp', 'ssh-dsa', 'ssh-rsa', 'ssh-ecdsa', 'ssh-ed25519', 'sha', 'http://', 'https://', 'file://', 'hdfs:/', 'data:', 'git', 'gitHead', 'function', 'example', 'return', 'assert', "utf-8", "struct<", "<T>", "tarsum"];
+    this.excludedTerms = ExcludedTerms.map(term => term.toLowerCase());
     TimeZones.forEach(tz => this.excludedTerms.push(tz));
     Countries.forEach(country => this.excludedTerms.push(country));
     // exclude terms matching at least one of these regexes

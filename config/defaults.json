@@ -2,6 +2,7 @@
   "secretTypes": [],
   "maxFileSizeMiB": 10,
   "maxConcurrentFileReads": 10,
+  "maxFindingsPerFile": 25,
   "includedFiles": [],
   "includedDirectories": [],
   "includedFileExts": [],
@@ -19,6 +20,7 @@
     "**/.xcodeproj",
     "**/bower_components",
     "**/node_modules",
+    "**/@types",
     "**/test",
     "**/tests"
   ],

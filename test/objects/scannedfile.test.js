@@ -57,7 +57,7 @@ test('toObject- with secrets', () => {
   });
 });
 
-test('hasSecrets', () => {
+test('has secrets', () => {
   const file = new File("test.txt", "/root", "", 123);
 
   const scannedFile = new ScannedFile(file);
@@ -65,4 +65,28 @@ test('hasSecrets', () => {
 
   scannedFile.addSecret("", "", "", 0);
   expect(scannedFile.hasSecrets()).toStrictEqual(true);
+});
+
+test('number of secrets', () => {
+  const file = new File("test.txt", "/root", "", 123);
+
+  const scannedFile = new ScannedFile(file);
+  expect(scannedFile.numSecrets()).toStrictEqual(0);
+  scannedFile.addSecret("", "", "", 0);
+  expect(scannedFile.numSecrets()).toStrictEqual(1);
+  scannedFile.addSecret("", "", "", 0);
+  expect(scannedFile.numSecrets()).toStrictEqual(2);
+});
+
+test('remove secrets', () => {
+  const file = new File("test.txt", "/root", "", 123);
+
+  const scannedFile = new ScannedFile(file);
+  scannedFile.addSecret("", "type1", "", 0);
+  scannedFile.addSecret("", "type1", "", 0);
+  scannedFile.addSecret("", "type2", "", 0);
+  expect(scannedFile.numSecrets()).toStrictEqual(3);
+
+  scannedFile.removeSecrets("type1");
+  expect(scannedFile.numSecrets()).toStrictEqual(1);
 });

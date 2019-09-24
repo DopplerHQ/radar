@@ -30,6 +30,13 @@ const getArray = (value = []) => {
   return [value];
 }
 
+const getInteger = (value) => {
+  if (Number.isSafeInteger(Number(value))) {
+    return value;
+  }
+  return undefined;
+}
+
 const normalizeFile = (file) => {
   return file.toLowerCase();
 };
@@ -53,6 +60,7 @@ class Config {
       secretTypes: DefaultConfig.secretTypes,
       maxFileSizeMiB: DefaultConfig.maxFileSizeMiB,
       maxConcurrentFileReads: DefaultConfig.maxConcurrentFileReads,
+      maxFindingsPerFile: DefaultConfig.maxFindingsPerFile,
       includedFiles: DefaultConfig.includedFiles,
       includedDirectories: DefaultConfig.includedDirectories,
       includedFileExts: DefaultConfig.includedFileExts,
@@ -67,8 +75,9 @@ class Config {
 
     this.data = {
       secretTypes: getValue(getArray(config.secretTypes), defaultConfig.secretTypes),
-      maxFileSizeMiB: getValue(config.maxFileSizeMiB, defaultConfig.maxFileSizeMiB),
-      maxConcurrentFileReads: getValue(config.maxConcurrentFileReads, defaultConfig.maxConcurrentFileReads),
+      maxFileSizeMiB: getValue(getInteger(config.maxFileSizeMiB), defaultConfig.maxFileSizeMiB),
+      maxConcurrentFileReads: getValue(getInteger(config.maxConcurrentFileReads), defaultConfig.maxConcurrentFileReads),
+      maxFindingsPerFile: getValue(getInteger(config.maxFindingsPerFile), defaultConfig.maxFindingsPerFile),
       includedFiles: getValue(getArray(config.includedFiles), defaultConfig.includedFiles).map(normalizeFile),
       includedDirectories: getValue(getArray(config.includedDirectories), defaultConfig.includedDirectories).map(normalizeDirectory),
       includedFileExts: getValue(getArray(config.includedFileExts), defaultConfig.includedFileExts).map(normalizeExtension),
@@ -92,6 +101,10 @@ class Config {
 
   getMaxConcurrentFileReads() {
     return this.data.maxConcurrentFileReads;
+  }
+
+  getMaxFindingsPerFile() {
+    return this.data.maxFindingsPerFile;
   }
 
   getIncludedFileExts() {

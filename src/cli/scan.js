@@ -8,11 +8,24 @@ const ProgressBar = require('../progressbar');
 const util = require('./util');
 
 const generateRadarConfig = (options)  =>{
-  const { secretTypes, maxFileSize, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = options;
+  const {
+    secretTypes,
+    maxFileSize,
+    maxConcurrentFileReads,
+    maxFindingsPerFile,
+    includeFiles,
+    excludeFiles,
+    includeDirs,
+    excludeDirs,
+    includeFileExts,
+    excludeFileExts,
+  } = options;
 
   return {
     secretTypes: util.parseStringArray(secretTypes),
     maxFileSizeMiB: util.parseNumber(maxFileSize),
+    maxConcurrentFileReads: util.parseNumber(maxConcurrentFileReads),
+    maxFindingsPerFile: util.parseNumber(maxFindingsPerFile),
     includedFiles: util.parseStringArray(includeFiles),
     excludedFiles: util.parseStringArray(excludeFiles),
     includedDirectories: util.parseStringArray(includeDirs),
@@ -36,14 +49,15 @@ const printScanResults = (results, json = false) => {
   // print results table
   const resultsArr = [];
   Object.keys(results).forEach((file) => {
-    results[file].lines.forEach((line, lineNumber) => {
-      line.findings.forEach((finding, findingNumber) => resultsArr.push({
-        File: (lineNumber === 0 && findingNumber === 0) ? file : "",
-        Line: line.lineNumber,
-        Secret: finding.text,
-        Type: finding.type,
-      }))
-    })
+    results[file].lines.filter(line => (line.findings.length > 0))
+      .forEach((line, lineNumber) => {
+        line.findings.forEach((finding, findingNumber) => resultsArr.push({
+          File: (lineNumber === 0 && findingNumber === 0) ? file : "",
+          Line: line.lineNumber,
+          Secret: finding.text,
+          Type: finding.type,
+        }))
+      });
   });
   console.log(Table.print(resultsArr));
 };
@@ -55,6 +69,8 @@ program
   .option("-b, --branch <name>", "Scan the git branch (specified path must be a git url)")
   .option("--secret-types <list>", "Secret types to scan for (from `radar list secrets`)")
   .option("--max-file-size <MiB>", "Don't scan any files larger than this")
+  .option("--max-concurrent-file-reads <integer>", "The number of files to scan at once")
+  .option("--max-findings-per-file <integer>", "Ignore files with more than this number of findings. This option is used to combat false positives.")
   .option("--include-files <list>", "File names to scan; overrides excluded files. Supports globs. Case-insensitive. Example: `--include-files \"yarn.lock\"`. See excluded files with `radar list defaults excludedFiles`")
   .option("--exclude-files <list>", "File names to exclude. Supports globs. Case-insensitive. Example: `--exclude-files \"test.*\"` to exclude all files named 'test' with any extension")
   .option("--include-dirs <list>", "Directory names to scan; overrides excluded directories. Supports globs. Case-insensitive. Example: `--include-dirs \"node_modules\"` to include 'node_modules' within the root directory. See excluded directories with `radar list defaults excludedDirectories`")
