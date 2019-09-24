@@ -20,6 +20,7 @@
     "**/.xcodeproj",
     "**/bower_components",
     "**/node_modules",
+    "**/@types",
     "**/test",
     "**/tests"
   ],
