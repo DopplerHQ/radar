@@ -8,11 +8,22 @@ const ProgressBar = require('../progressbar');
 const util = require('./util');
 
 const generateRadarConfig = (options)  =>{
-  const { secretTypes, maxFileSize, includeFiles, excludeFiles, includeDirs, excludeDirs, includeFileExts, excludeFileExts } = options;
+  const {
+    secretTypes,
+    maxFileSize,
+    maxConcurrentFileReads,
+    includeFiles,
+    excludeFiles,
+    includeDirs,
+    excludeDirs,
+    includeFileExts,
+    excludeFileExts,
+  } = options;
 
   return {
     secretTypes: util.parseStringArray(secretTypes),
     maxFileSizeMiB: util.parseNumber(maxFileSize),
+    maxConcurrentFileReads: util.parseNumber(maxConcurrentFileReads),
     includedFiles: util.parseStringArray(includeFiles),
     excludedFiles: util.parseStringArray(excludeFiles),
     includedDirectories: util.parseStringArray(includeDirs),
@@ -55,6 +66,7 @@ program
   .option("-b, --branch <name>", "Scan the git branch (specified path must be a git url)")
   .option("--secret-types <list>", "Secret types to scan for (from `radar list secrets`)")
   .option("--max-file-size <MiB>", "Don't scan any files larger than this")
+  .option("--max-concurrent-file-reads <integer>", "The number of files to scan at once")
   .option("--include-files <list>", "File names to scan; overrides excluded files. Supports globs. Case-insensitive. Example: `--include-files \"yarn.lock\"`. See excluded files with `radar list defaults excludedFiles`")
   .option("--exclude-files <list>", "File names to exclude. Supports globs. Case-insensitive. Example: `--exclude-files \"test.*\"` to exclude all files named 'test' with any extension")
   .option("--include-dirs <list>", "Directory names to scan; overrides excluded directories. Supports globs. Case-insensitive. Example: `--include-dirs \"node_modules\"` to include 'node_modules' within the root directory. See excluded directories with `radar list defaults excludedDirectories`")

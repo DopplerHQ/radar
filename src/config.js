@@ -30,6 +30,13 @@ const getArray = (value = []) => {
   return [value];
 }
 
+const getInteger = (value) => {
+  if (Number.isSafeInteger(Number(value))) {
+    return value;
+  }
+  return undefined;
+}
+
 const normalizeFile = (file) => {
   return file.toLowerCase();
 };
@@ -67,8 +74,8 @@ class Config {
 
     this.data = {
       secretTypes: getValue(getArray(config.secretTypes), defaultConfig.secretTypes),
-      maxFileSizeMiB: getValue(config.maxFileSizeMiB, defaultConfig.maxFileSizeMiB),
-      maxConcurrentFileReads: getValue(config.maxConcurrentFileReads, defaultConfig.maxConcurrentFileReads),
+      maxFileSizeMiB: getValue(getInteger(config.maxFileSizeMiB), defaultConfig.maxFileSizeMiB),
+      maxConcurrentFileReads: getValue(getInteger(config.maxConcurrentFileReads), defaultConfig.maxConcurrentFileReads),
       includedFiles: getValue(getArray(config.includedFiles), defaultConfig.includedFiles).map(normalizeFile),
       includedDirectories: getValue(getArray(config.includedDirectories), defaultConfig.includedDirectories).map(normalizeDirectory),
       includedFileExts: getValue(getArray(config.includedFileExts), defaultConfig.includedFileExts).map(normalizeExtension),
