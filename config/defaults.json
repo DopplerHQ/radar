@@ -21,6 +21,8 @@
     "**/bower_components",
     "**/node_modules",
     "**/@types",
+    "**/example",
+    "**/examples",
     "**/test",
     "**/tests"
   ],
