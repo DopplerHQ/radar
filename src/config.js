@@ -1,3 +1,4 @@
+// @ts-check
 const DefaultConfig = require('../config/defaults');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
 
@@ -15,9 +16,9 @@ const getValue = (value, defaultValue) => {
     const isValueEmpty = value.length === 0;
     const isDefaultValueEmpty = defaultValue.length === 0;
 
-    if (isValueEmpty) return defaultValue;
-    if (isDefaultValueEmpty) return value;
-    return [...defaultValue, ...value];
+    if (isValueEmpty) return dedupe(defaultValue);
+    if (isDefaultValueEmpty) return dedupe(value);
+    return dedupe([...defaultValue, ...value]);
   }
 
   return value;
@@ -35,6 +36,10 @@ const getInteger = (value) => {
     return value;
   }
   return undefined;
+}
+
+const dedupe = (arr = []) => {
+  return [...new Set(arr)]
 }
 
 const normalizeFile = (file) => {
