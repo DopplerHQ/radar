@@ -67,6 +67,7 @@ class Config {
       excludedFiles: DefaultConfig.excludedFiles,
       excludedDirectories: DefaultConfig.excludedDirectories,
       excludedFileExts: DefaultConfig.excludedFileExts,
+      customPatterns: DefaultConfig.customPatterns,
     };
 
     Object.keys(ExcludedFiletypes).forEach(filetype => (
@@ -84,7 +85,10 @@ class Config {
       excludedFiles: getValue(getArray(config.excludedFiles), defaultConfig.excludedFiles).map(normalizeFile),
       excludedDirectories: getValue(getArray(config.excludedDirectories), defaultConfig.excludedDirectories).map(normalizeDirectory),
       excludedFileExts: getValue(getArray(config.excludedFileExts), defaultConfig.excludedFileExts).map(normalizeExtension),
+      customPatterns: getValue(getArray(config.customPatterns), defaultConfig.customPatterns),
     };
+
+    global.customPatterns = this.data.customPatterns
   }
 
   config() {
@@ -129,6 +133,10 @@ class Config {
 
   getExcludedDirectories() {
     return this.data.excludedDirectories;
+  }
+
+  getCustomPatterns() {
+    return this.data.customPatterns;
   }
 }
 

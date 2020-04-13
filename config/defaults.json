@@ -26,5 +26,6 @@
     "**/test",
     "**/tests"
   ],
-  "excludedFileExts": []
+  "excludedFileExts": [],
+  "customPatterns": []
 }
