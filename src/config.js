@@ -1,3 +1,4 @@
+// @ts-check
 const DefaultConfig = require('../config/defaults');
 const ExcludedFiletypes = require('../config/excluded_filetypes');
 
@@ -15,9 +16,9 @@ const getValue = (value, defaultValue) => {
     const isValueEmpty = value.length === 0;
     const isDefaultValueEmpty = defaultValue.length === 0;
 
-    if (isValueEmpty) return defaultValue;
-    if (isDefaultValueEmpty) return value;
-    return [...defaultValue, ...value];
+    if (isValueEmpty) return dedupe(defaultValue);
+    if (isDefaultValueEmpty) return dedupe(value);
+    return dedupe([...defaultValue, ...value]);
   }
 
   return value;
@@ -35,6 +36,10 @@ const getInteger = (value) => {
     return value;
   }
   return undefined;
+}
+
+const dedupe = (arr = []) => {
+  return [...new Set(arr)]
 }
 
 const normalizeFile = (file) => {
@@ -67,6 +72,7 @@ class Config {
       excludedFiles: DefaultConfig.excludedFiles,
       excludedDirectories: DefaultConfig.excludedDirectories,
       excludedFileExts: DefaultConfig.excludedFileExts,
+      customPatterns: DefaultConfig.customPatterns,
     };
 
     Object.keys(ExcludedFiletypes).forEach(filetype => (
@@ -84,7 +90,10 @@ class Config {
       excludedFiles: getValue(getArray(config.excludedFiles), defaultConfig.excludedFiles).map(normalizeFile),
       excludedDirectories: getValue(getArray(config.excludedDirectories), defaultConfig.excludedDirectories).map(normalizeDirectory),
       excludedFileExts: getValue(getArray(config.excludedFileExts), defaultConfig.excludedFileExts).map(normalizeExtension),
+      customPatterns: getValue(getArray(config.customPatterns), defaultConfig.customPatterns),
     };
+
+    global.customPatterns = this.data.customPatterns
   }
 
   config() {
@@ -129,6 +138,10 @@ class Config {
 
   getExcludedDirectories() {
     return this.data.excludedDirectories;
+  }
+
+  getCustomPatterns() {
+    return this.data.customPatterns;
   }
 }
 

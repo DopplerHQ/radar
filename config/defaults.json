@@ -23,8 +23,11 @@
     "**/@types",
     "**/example",
     "**/examples",
+    "**/fixtures",
     "**/test",
-    "**/tests"
+    "**/tests",
+    "**/pods"
   ],
-  "excludedFileExts": []
+  "excludedFileExts": [],
+  "customPatterns": []
 }

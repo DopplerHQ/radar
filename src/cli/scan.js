@@ -19,6 +19,7 @@ const generateRadarConfig = (options)  =>{
     excludeDirs,
     includeFileExts,
     excludeFileExts,
+    customPatterns,
   } = options;
 
   return {
@@ -32,6 +33,7 @@ const generateRadarConfig = (options)  =>{
     excludedDirectories: util.parseStringArray(excludeDirs),
     includedFileExts: util.parseExtensionArray(includeFileExts),
     excludedFileExts: util.parseExtensionArray(excludeFileExts),
+    customPatterns: util.parseStringArray(customPatterns),
   };
 };
 
@@ -77,6 +79,7 @@ program
   .option("--exclude-dirs <list>", "Directory names to exclude. Supports globs. Case-insensitive. Example: `--exclude-dirs \"**/node_modules/\"` will exclude the 'node_modules' directory located in the root and any subdirectories. `--exclude-dirs \"node_modules/\"` will only exclude the 'node_modules' directory located in the root.")
   .option("--include-file-exts <list>", "File extensions to scan; overrides excluded file extensions. Supports globs. Case-insensitive. Example: `--include-file-exts \"*.txt,*.ini\"`. See excluded file extensions with `radar list defaults excludedFileExts`")
   .option("--exclude-file-exts <list>", "File extensions to exclude. Supports globs. Case-insensitive. Example: `--exclude-file-exts \"*.js,*example*\"` to exclude any file with an extension ending with '.js' (e.g. file.js, file.test.js) or containing 'example' (e.g. 'file.example', 'file.example.c', 'file.c.example')")
+  .option("--custom-patterns <list>", "Custom regex patterns to search for. Case-sensitive. Example: `--custom-patterns \"\\.innerHTML *=\"` to detect directly setting an element's innerHTML property (a common XSS vector).")
   .option("--json", "Output results as json blob")
   .option("--no-progress", "Disable the progress bar")
   .action(async (...params) => {
